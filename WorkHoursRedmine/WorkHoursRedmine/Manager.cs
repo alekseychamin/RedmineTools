@@ -13,47 +13,40 @@ namespace WinRedminePlaning
     {
         string host = "188.242.201.77";
         string apiKey = "70b1a875928636d8d3895248309344ea2bca6a5f";
+        RedmineManager redmineManager;
+
+        public List<RedmineUser> listUserRedmine = new List<RedmineUser>();
         public ExcelMethods excelMethods = new ExcelMethods();
 
-        RedmineProjects projects = new RedmineProjects();
-
-        public RedmineProjects Projects
+        public Manager()
         {
-            get
+            try
             {
-                return projects;
+                redmineManager = new RedmineManager(host, apiKey);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error! " + ex.Message);
             }
         }
 
-        public void LoadFromRedmine()
+        public void GetUserFromRedmine()
         {
-            var redmineManager = new RedmineManager(host, apiKey);
-            var parameters = new NameValueCollection { { "status_id", "*" } };
-
-            projects.ListProject.Clear();
-
-            foreach (var redmineProject in redmineManager.GetObjects<Project>(999, 0))
+            foreach (var user in redmineManager.GetObjects<User>(new NameValueCollection { { "id", "*" } }))
             {
-                projects.AddProject(redmineProject);
-                int count = projects.ListProject.Count;
+                RedmineUser redmUser = new RedmineUser();
+                redmUser.user = user;
+                listUserRedmine.Add(redmUser);
 
-                foreach (var redmineIssue in redmineManager.GetObjects<Issue>(999, 0)) 
-                {                    
-                    projects.ListProject[count - 1].AddIssue(redmineIssue);
-                    Console.WriteLine(redmineIssue.Id.ToString());
+                foreach (var time in redmineManager.GetObjects<TimeEntry>(new NameValueCollection { { user.Id.ToString(), "*"} }))
+                {
+                    redmUser.listTimeEntry.Add(time);
                 }
-
+                foreach (var issue in redmineManager.GetObjects<Issue>(new NameValueCollection { {user.Id.ToString(), "*" } }))
+                {
+                    redmUser.listIssue.Add(issue);
+                }
             }
-
-            int i = 0;
-            while (i < projects.ListProject.Count)
-            {
-                if (projects.ListProject[i].ListIssue.Count == 0)
-                    projects.ListProject.RemoveAt(i);
-                else
-                    i++;
-            }
-            
         }
 
 

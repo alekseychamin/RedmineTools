@@ -62,7 +62,7 @@ namespace WinRedminePlaning
 
         private void but_loadRedmine_Click(object sender, EventArgs e)
         {
-            manager.LoadFromRedmine();
+            manager.LoadProjectFromRedmine();
             ShowRedmineProjects(manager.Projects);
         }
 
