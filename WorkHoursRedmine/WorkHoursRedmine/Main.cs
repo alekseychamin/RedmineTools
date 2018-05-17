@@ -19,18 +19,18 @@ namespace WinRedminePlaning
             InitializeComponent();
             manager = new Manager();
                         
-            listViewProjects.Columns.Add("Id", -2, HorizontalAlignment.Left);
-            listViewProjects.Columns.Add("Название", -2, HorizontalAlignment.Left);
-            listViewProjects.Columns.Add("Статус", -2, HorizontalAlignment.Left);
-            listViewProjects.Columns.Add("Открытый", -2, HorizontalAlignment.Left);            
-            listViewProjects.Columns.Add("Дата создания", -2, HorizontalAlignment.Left);
-            listViewProjects.Columns.Add("Дата обновления", -2, HorizontalAlignment.Left);
+            listViewUser.Columns.Add("Id", -2, HorizontalAlignment.Left);
+            listViewUser.Columns.Add("ФИО", -2, HorizontalAlignment.Left);
+            //listViewUser.Columns.Add("Статус", -2, HorizontalAlignment.Left);
+            //listViewUser.Columns.Add("Открытый", -2, HorizontalAlignment.Left);            
+            //listViewUser.Columns.Add("Дата создания", -2, HorizontalAlignment.Left);
+            //listViewUser.Columns.Add("Дата обновления", -2, HorizontalAlignment.Left);
 
             listViewIssues.Columns.Add("Id", -2, HorizontalAlignment.Left);
             listViewIssues.Columns.Add("Название", -2, HorizontalAlignment.Left);
         }
 
-        private void ShowRedmineIssue(RedmineProjects projects, int Id)
+        private void ShowRedmineIssue(int Id)
         {
             if (Id > 0)
             {
@@ -48,38 +48,37 @@ namespace WinRedminePlaning
             }
         }
 
-        private void ShowRedmineProjects(RedmineProjects projects)
+        private void ShowUserRedmine()
         {
-            listViewProjects.Items.Clear();
-            foreach (RedmineProject proj in projects.ListProject)
+            listViewUser.Items.Clear();
+            foreach (RedmineUser user in manager.listUserRedmine)
             {
-                string[] line = {proj.Value.Id.ToString(), proj.Value.Name, proj.Value.Status.ToString(), proj.Value.IsPublic.ToString(),
-                                 proj.Value.CreatedOn.ToString(), proj.Value.UpdatedOn.ToString()};
+                string[] line = {user.Value.Id.ToString(), user.Value.FirstName + " " + user.Value.LastName};
                 ListViewItem lvi = new ListViewItem(line);
-                listViewProjects.Items.Add(lvi);
+                listViewUser.Items.Add(lvi);
             }
         }
 
         private void but_loadRedmine_Click(object sender, EventArgs e)
         {
-            manager.LoadProjectFromRedmine();
-            ShowRedmineProjects(manager.Projects);
-        }
-
-        private void listViewProjects_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (listViewProjects.SelectedItems[0] != null)
-            {
-                ListViewItem lvi = listViewProjects.SelectedItems[0];
-                ShowRedmineIssue(manager.Projects, Convert.ToInt16(lvi.SubItems[0].Text));
-                //Console.WriteLine(lvi.SubItems[0].ToString());
-            }
-        }
+            manager.GetUserFromRedmine();
+            ShowUserRedmine();
+        }        
 
         private void but_SaveExcel_Click(object sender, EventArgs e)
         {
-            if (manager.Projects.ListProject.Count != 0)
-                manager.excelMethods.UpdateExcelProject(manager.Projects, @"D:\Project C#\WinRedminePlaning\План УРАС.xlsx");
+            //if (manager.Projects.ListProject.Count != 0)
+            //    manager.excelMethods.UpdateExcelProject(manager.Projects, @"D:\Project C#\WinRedminePlaning\План УРАС.xlsx");
+        }
+
+        private void listViewUser_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (listViewUser.SelectedItems[0] != null)
+            {
+                ListViewItem lvi = listViewUser.SelectedItems[0];                
+                ShowRedmineIssue(manager.Projects, Convert.ToInt16(lvi.SubItems[0].Text));
+                //Console.WriteLine(lvi.SubItems[0].ToString());
+            }
         }
     }
 }

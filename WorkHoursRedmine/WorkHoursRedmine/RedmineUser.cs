@@ -9,7 +9,7 @@ namespace WinRedminePlaning
 {
     class RedmineUser
     {
-        public User user;
+        public User Value;
         public List<TimeEntry> listTimeEntry = new List<TimeEntry>();
         public List<Issue> listIssue = new List<Issue>();        
     }

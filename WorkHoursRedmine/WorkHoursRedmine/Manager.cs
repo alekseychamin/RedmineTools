@@ -35,7 +35,7 @@ namespace WinRedminePlaning
             foreach (var user in redmineManager.GetObjects<User>(new NameValueCollection { { "id", "*" } }))
             {
                 RedmineUser redmUser = new RedmineUser();
-                redmUser.user = user;
+                redmUser.Value = user;
                 listUserRedmine.Add(redmUser);
 
                 foreach (var time in redmineManager.GetObjects<TimeEntry>(new NameValueCollection { { user.Id.ToString(), "*"} }))
@@ -47,6 +47,15 @@ namespace WinRedminePlaning
                     redmUser.listIssue.Add(issue);
                 }
             }
+        }
+
+        public RedmineUser FindUser(int Id)
+        {
+            RedmineUser redmUser = null;
+
+
+
+            return redmUser;
         }
 
 

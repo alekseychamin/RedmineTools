@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listViewProjects = new System.Windows.Forms.ListView();
+            this.listViewUser = new System.Windows.Forms.ListView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.listViewIssues = new System.Windows.Forms.ListView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.but_loadRedmine = new System.Windows.Forms.Button();
             this.but_SaveExcel = new System.Windows.Forms.Button();
+            this.but_loadRedmine = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -55,7 +55,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.listViewProjects);
+            this.splitContainer1.Panel1.Controls.Add(this.listViewUser);
             this.splitContainer1.Panel1.Controls.Add(this.panel2);
             // 
             // splitContainer1.Panel2
@@ -66,18 +66,18 @@
             this.splitContainer1.SplitterDistance = 273;
             this.splitContainer1.TabIndex = 0;
             // 
-            // listViewProjects
+            // listViewUser
             // 
-            this.listViewProjects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewProjects.FullRowSelect = true;
-            this.listViewProjects.GridLines = true;
-            this.listViewProjects.Location = new System.Drawing.Point(0, 29);
-            this.listViewProjects.Name = "listViewProjects";
-            this.listViewProjects.Size = new System.Drawing.Size(273, 651);
-            this.listViewProjects.TabIndex = 1;
-            this.listViewProjects.UseCompatibleStateImageBehavior = false;
-            this.listViewProjects.View = System.Windows.Forms.View.Details;
-            this.listViewProjects.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewProjects_MouseClick);
+            this.listViewUser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewUser.FullRowSelect = true;
+            this.listViewUser.GridLines = true;
+            this.listViewUser.Location = new System.Drawing.Point(0, 29);
+            this.listViewUser.Name = "listViewUser";
+            this.listViewUser.Size = new System.Drawing.Size(273, 651);
+            this.listViewUser.TabIndex = 1;
+            this.listViewUser.UseCompatibleStateImageBehavior = false;
+            this.listViewUser.View = System.Windows.Forms.View.Details;
+            this.listViewUser.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewUser_MouseClick);
             // 
             // panel2
             // 
@@ -94,9 +94,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(85, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(106, 13);
+            this.label1.Size = new System.Drawing.Size(80, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Перечень проектов";
+            this.label1.Text = "Пользователи";
             // 
             // listViewIssues
             // 
@@ -138,16 +138,6 @@
             this.panel1.Size = new System.Drawing.Size(821, 32);
             this.panel1.TabIndex = 1;
             // 
-            // but_loadRedmine
-            // 
-            this.but_loadRedmine.Location = new System.Drawing.Point(12, 6);
-            this.but_loadRedmine.Name = "but_loadRedmine";
-            this.but_loadRedmine.Size = new System.Drawing.Size(141, 23);
-            this.but_loadRedmine.TabIndex = 0;
-            this.but_loadRedmine.Text = "Загрузить из Redmine";
-            this.but_loadRedmine.UseVisualStyleBackColor = true;
-            this.but_loadRedmine.Click += new System.EventHandler(this.but_loadRedmine_Click);
-            // 
             // but_SaveExcel
             // 
             this.but_SaveExcel.Location = new System.Drawing.Point(161, 5);
@@ -157,6 +147,16 @@
             this.but_SaveExcel.Text = "Сохранить в Excel";
             this.but_SaveExcel.UseVisualStyleBackColor = true;
             this.but_SaveExcel.Click += new System.EventHandler(this.but_SaveExcel_Click);
+            // 
+            // but_loadRedmine
+            // 
+            this.but_loadRedmine.Location = new System.Drawing.Point(12, 6);
+            this.but_loadRedmine.Name = "but_loadRedmine";
+            this.but_loadRedmine.Size = new System.Drawing.Size(141, 23);
+            this.but_loadRedmine.TabIndex = 0;
+            this.but_loadRedmine.Text = "Загрузить из Redmine";
+            this.but_loadRedmine.UseVisualStyleBackColor = true;
+            this.but_loadRedmine.Click += new System.EventHandler(this.but_loadRedmine_Click);
             // 
             // Main
             // 
@@ -186,7 +186,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView listViewProjects;
+        private System.Windows.Forms.ListView listViewUser;
         private System.Windows.Forms.ListView listViewIssues;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label2;
