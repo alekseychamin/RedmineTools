@@ -10,6 +10,9 @@ namespace NotificationRedmine
     {
         static void Main(string[] args)
         {
+            Manage manage = new Manage("", "");
+
+            Console.ReadKey();
         }
     }
 }
