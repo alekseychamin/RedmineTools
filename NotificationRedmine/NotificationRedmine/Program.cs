@@ -10,7 +10,8 @@ namespace NotificationRedmine
     {
         static void Main(string[] args)
         {
-            Manage manage = new Manage("", "");
+            Manage manage = new Manage("188.242.201.77", "70b1a875928636d8d3895248309344ea2bca6a5f");
+            manage.GetUserIssue();
 
             Console.ReadKey();
         }
