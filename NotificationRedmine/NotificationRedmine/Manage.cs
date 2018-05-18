@@ -35,14 +35,12 @@ namespace NotificationRedmine
                 {
                     UserRedmine userRedmine = new UserRedmine();
                     userRedmine.Value = user;
-                    listUserRedmine.Add(userRedmine);
-                    Console.WriteLine("User = {0}", userRedmine.Value.LastName.ToString());
+                    listUserRedmine.Add(userRedmine);                    
                     
                     param = new NameValueCollection { { "assigned_to_id", user.Id.ToString()}, { "status_id", "open" } };
                     foreach (var issue in redmineManager.GetObjects<Issue>(param))
                     {
-                        userRedmine.ListIssue.Add(issue);
-                        Console.WriteLine("Issue = {0}", issue.Subject.ToString());                                                                        
+                        userRedmine.ListIssue.Add(issue);                        
                     }
 
                 }
@@ -62,22 +60,42 @@ namespace NotificationRedmine
             return isMore;
         }
         
-        private void SetMessage(UserRedmine userRedmine)
+        private void SetMessage(UserRedmine userRedmine, Issue issue)
         {
+            string message = "";
 
+            if (userRedmine.message == "")
+            {
+                message = "Уважаемый(ая) " + userRedmine.Value.LastName + " " + userRedmine.Value.FirstName + "!" + "\n";
+                message += "У вас имеются открытые просроченные задания, которые в случае их выполнения необходимо закрыть или согласовать новую дату завершения : " + "\n";
+                
+                userRedmine.message = message;
+            }
+
+            userRedmine.message += "Проект: " + issue.Project.Name + " Id задачи: " + issue.Id + " задание: " + issue.Subject + "\n";
         }
 
         public void SetNotificationUser()
         {
             foreach (var userRedmine in listUserRedmine)
             {
+                userRedmine.message = "";                
+
                 foreach (var issue in userRedmine.ListIssue)
                 {
-                    if (IsMorePeriod(issue.DueDate.Value, 1))
+                    if ((issue.DueDate == null) || (IsMorePeriod(issue.DueDate.Value, 1)) )
                     {
-
+                        SetMessage(userRedmine, issue);
                     }
                 }
+            }
+        }
+
+        public void ShowNotification()
+        {
+            foreach (var userRedmine in listUserRedmine)
+            {
+                Console.WriteLine(userRedmine.message);
             }
         }
 

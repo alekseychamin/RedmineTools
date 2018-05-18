@@ -10,6 +10,7 @@ namespace NotificationRedmine
     class UserRedmine
     {
         public User Value;
+        public string message;
         public List<Issue> ListIssue = new List<Issue>();        
     }
 }
