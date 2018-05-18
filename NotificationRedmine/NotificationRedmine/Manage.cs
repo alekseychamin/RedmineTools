@@ -37,25 +37,50 @@ namespace NotificationRedmine
                 {
                     UserRedmine userRedmine = new UserRedmine();
                     userRedmine.Value = user;
-                    listUserRedmine.Add(userRedmine);                    
+                    listUserRedmine.Add(userRedmine);
+                }
 
-                    param = new NameValueCollection { { "status_id", "open" } };
-                    foreach (var issue in redmineManager.GetObjects<Issue>(param))
+                param = new NameValueCollection { { "status_id", "open" } };
+                foreach (var issue in redmineManager.GetObjects<Issue>(param))
+                {
+                    UserRedmine userRedmine = null;
+
+                    if (issue.AssignedTo == null)
                     {
-                        if ( (issue.AssignedTo == null) && (issue.Author.Id == userRedmine.Value.Id) || 
-                             ( (issue.AssignedTo != null) && (issue.AssignedTo.Id == userRedmine.Value.Id) ))
-                        {
-                            userRedmine.ListIssue.Add(issue);
-                        }                                                                
-                    }                    
-                }                
+                        userRedmine = listUserRedmine.Find(x => x.Value.Id == issue.Author.Id);
+                    } 
+                    else
+                    {
+                        userRedmine = listUserRedmine.Find(x => x.Value.Id == issue.AssignedTo.Id);
+                    }
+
+                    userRedmine.ListIssue.Add(issue);                    
+                }
             }
         }
 
-        public void SendEmail()
+        public void SendEmail(params string[] noNameSendMail)
         {
+            bool isNameSendMail = true;
+
             foreach (var userRedmine in listUserRedmine)
             {
+                isNameSendMail = true;
+                foreach (string name in noNameSendMail)
+                {
+                    if (userRedmine.FullName.Equals(name))
+                    {
+                        isNameSendMail = false;
+                        break;
+                    }
+                }
+
+                if (isNameSendMail)
+                {
+
+                }
+                   
+
                 if (userRedmine.Value.LastName == "Чамин")
                 {
                     email.SendMail(userRedmine, "Уведомление о просроченных задачах");
@@ -82,7 +107,7 @@ namespace NotificationRedmine
 
             if (userRedmine.message == "")
             {
-                message = "Уважаемый(ая) " + userRedmine.Value.LastName + " " + userRedmine.Value.FirstName + "!" + "\n";
+                message = "Уважаемый(ая) " + userRedmine.FullName + "!" + "\n";
                 message += "У вас имеются открытые просроченные задания, которые в случае их выполнения необходимо закрыть или согласовать новую дату завершения : " + "\n";
                 message += "\n";
 

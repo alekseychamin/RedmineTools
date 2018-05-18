@@ -33,6 +33,7 @@ namespace NotificationRedmine
                 c.Credentials = new System.Net.NetworkCredential(RedmineEmailAddress, password);
                 c.EnableSsl = true;
                 c.Send(msg);
+                Console.WriteLine("email send to " + userRedmine.Value.Email);
             }
             catch (Exception ex)
             {
