@@ -90,10 +90,10 @@ namespace NotificationRedmine
             }
 
             if (issue.DueDate != null)
-                userRedmine.message += "Проект: " + issue.Project.Name + " №: " + issue.Id + " задание: " + issue.Subject + ";" + 
+                userRedmine.message += "Проект: " + issue.Project.Name + "-> задание № " + issue.Id + ": " + issue.Subject.Trim() + "->" + 
                                     " дата завершения: " + issue.DueDate.Value.ToShortDateString() + "\n";
             else
-                userRedmine.message += "Проект: " + issue.Project.Name + " №: " + issue.Id + " задание: " + issue.Subject + ";" +
+                userRedmine.message += "Проект: " + issue.Project.Name + "-> задание № " + issue.Id + ": " + issue.Subject.Trim() + "->" +
                                     " дата завершения: -" + "\n";
 
             userRedmine.message += "\n";
