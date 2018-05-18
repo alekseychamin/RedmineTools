@@ -12,7 +12,7 @@ namespace NotificationRedmine
     class Manage
     {
         List<UserRedmine> listUserRedmine = new List<UserRedmine>();
-        RedmineManager redmineManager = null;
+        RedmineManager redmineManager = null;        
 
         public Manage(string host, string key)
         {
@@ -25,7 +25,7 @@ namespace NotificationRedmine
                 Console.WriteLine("Could not connect to redmine host! " + ex.Message);
             }
         }
-
+        
         public void GetUserOpenIssue()
         {
             if (redmineManager != null)
@@ -36,14 +36,17 @@ namespace NotificationRedmine
                     UserRedmine userRedmine = new UserRedmine();
                     userRedmine.Value = user;
                     listUserRedmine.Add(userRedmine);                    
-                    
-                    param = new NameValueCollection { { "assigned_to_id", user.Id.ToString()}, { "status_id", "open" } };
+
+                    param = new NameValueCollection { { "status_id", "open" } };
                     foreach (var issue in redmineManager.GetObjects<Issue>(param))
                     {
-                        userRedmine.ListIssue.Add(issue);                        
-                    }
-
-                }
+                        if ( (issue.AssignedTo == null) && (issue.Author.Id == userRedmine.Value.Id) || 
+                             ( (issue.AssignedTo != null) && (issue.AssignedTo.Id == userRedmine.Value.Id) ))
+                        {
+                            userRedmine.ListIssue.Add(issue);
+                        }                                                                
+                    }                    
+                }                
             }
         }
 
