@@ -26,7 +26,7 @@ namespace NotificationRedmine
             }
         }
 
-        public void GetUserIssue()
+        public void GetUserOpenIssue()
         {
             if (redmineManager != null)
             {
@@ -45,6 +45,38 @@ namespace NotificationRedmine
                         Console.WriteLine("Issue = {0}", issue.Subject.ToString());                                                                        
                     }
 
+                }
+            }
+        }
+
+        private bool IsMorePeriod(DateTime issueDate, int days = 0)
+        {
+            bool isMore = false;
+
+            DateTime now = DateTime.Now;
+            TimeSpan dt = (now - issueDate);
+
+            if ((dt.TotalDays > days) & (days != 0))
+                isMore = true;            
+
+            return isMore;
+        }
+        
+        private void SetMessage(UserRedmine userRedmine)
+        {
+
+        }
+
+        public void SetNotificationUser()
+        {
+            foreach (var userRedmine in listUserRedmine)
+            {
+                foreach (var issue in userRedmine.ListIssue)
+                {
+                    if (IsMorePeriod(issue.DueDate.Value, 1))
+                    {
+
+                    }
                 }
             }
         }
