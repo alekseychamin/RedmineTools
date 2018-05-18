@@ -13,7 +13,8 @@ namespace NotificationRedmine
             Manage manage = new Manage("188.242.201.77", "70b1a875928636d8d3895248309344ea2bca6a5f");
             manage.GetUserOpenIssue();
             manage.SetNotificationUser();
-            manage.ShowNotification();            
+            manage.ShowNotification();
+            manage.SendEmail();       
 
             Console.ReadKey();
         }

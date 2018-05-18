@@ -12,12 +12,14 @@ namespace NotificationRedmine
     class Manage
     {
         List<UserRedmine> listUserRedmine = new List<UserRedmine>();
-        RedmineManager redmineManager = null;        
+        RedmineManager redmineManager = null;
+        Email email;
 
         public Manage(string host, string key)
         {
             try
             {
+                email = new Email();
                 redmineManager = new RedmineManager(host, key);
             }
             catch (Exception ex)
@@ -50,6 +52,17 @@ namespace NotificationRedmine
             }
         }
 
+        public void SendEmail()
+        {
+            foreach (var userRedmine in listUserRedmine)
+            {
+                if (userRedmine.Value.LastName == "Чамин")
+                {
+                    email.SendMail(userRedmine, "Уведомление о просроченных задачах");
+                }
+            }
+        }
+
         private bool IsMorePeriod(DateTime issueDate, int days = 0)
         {
             bool isMore = false;
@@ -71,11 +84,19 @@ namespace NotificationRedmine
             {
                 message = "Уважаемый(ая) " + userRedmine.Value.LastName + " " + userRedmine.Value.FirstName + "!" + "\n";
                 message += "У вас имеются открытые просроченные задания, которые в случае их выполнения необходимо закрыть или согласовать новую дату завершения : " + "\n";
-                
+                message += "\n";
+
                 userRedmine.message = message;
             }
 
-            userRedmine.message += "Проект: " + issue.Project.Name + " Id задачи: " + issue.Id + " задание: " + issue.Subject + "\n";
+            if (issue.DueDate != null)
+                userRedmine.message += "Проект: " + issue.Project.Name + " №: " + issue.Id + " задание: " + issue.Subject + ";" + 
+                                    " дата завершения: " + issue.DueDate.Value.ToShortDateString() + "\n";
+            else
+                userRedmine.message += "Проект: " + issue.Project.Name + " №: " + issue.Id + " задание: " + issue.Subject + ";" +
+                                    " дата завершения: -" + "\n";
+
+            userRedmine.message += "\n";
         }
 
         public void SetNotificationUser()
