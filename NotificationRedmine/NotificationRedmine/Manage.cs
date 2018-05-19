@@ -15,6 +15,12 @@ namespace NotificationRedmine
         RedmineManager redmineManager = null;
         Email email;
 
+        struct DayTimeStart
+        {
+            public string dayOfWeek;
+            public string timeStart;
+        }
+
         public Manage(string host, string key)
         {
             try
@@ -30,9 +36,9 @@ namespace NotificationRedmine
         
         public void GetUserOpenIssue()
         {
-            if (redmineManager != null)
+            try
             {
-                NameValueCollection param = new NameValueCollection { {"Id", "*" } };
+                NameValueCollection param = new NameValueCollection { { "Id", "*" } };
                 foreach (var user in redmineManager.GetObjects<User>(param))
                 {
                     UserRedmine userRedmine = new UserRedmine();
@@ -48,15 +54,20 @@ namespace NotificationRedmine
                     if (issue.AssignedTo == null)
                     {
                         userRedmine = listUserRedmine.Find(x => x.Value.Id == issue.Author.Id);
-                    } 
+                    }
                     else
                     {
                         userRedmine = listUserRedmine.Find(x => x.Value.Id == issue.AssignedTo.Id);
                     }
 
-                    userRedmine.ListIssue.Add(issue);                    
+                    userRedmine.ListIssue.Add(issue);
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in GetUserOpenIssue: {0}", ex.Message);
+            }
+            
         }
 
         public void SendEmail(params string[] noNameSendMail)
