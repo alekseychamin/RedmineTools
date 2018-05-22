@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NotificationRedmine
@@ -14,6 +15,8 @@ namespace NotificationRedmine
         List<UserRedmine> listUserRedmine = new List<UserRedmine>();
         RedmineManager redmineManager = null;
         Email email;
+        TimeSpan dt;
+        string[] noEmailSend;
 
         struct DayTimeStart
         {
@@ -33,6 +36,8 @@ namespace NotificationRedmine
 
             dayTimeStart[2].dayOfWeek = DayOfWeek.Friday;
             dayTimeStart[2].timeStart = "9:00";
+
+            noEmailSend = new[] {"Арбузов Владимир Леонидович"};
 
             try
             {
@@ -101,12 +106,31 @@ namespace NotificationRedmine
             return dt;
         }
 
+        private void Sort()
+        {
+            foreach (UserRedmine userRedmine in listUserRedmine)
+            {
+                userRedmine.ListUserIssue.Sort();
+            }
+        }
+
         public void MakeNotificationToTime()
         {
             GetUserOpenIssue();
-            SetNotificationUser();
-            ShowNotification();
-            SendEmail();
+            SetUserIssueNotification();
+            SetEmailMessage();
+            //ShowNotification();
+            SendEmail(noEmailSend);
+        }
+
+        public void StartMakeNotification()
+        {
+            while (true)
+            {
+                dt = GetTimeStart();
+                Task.Delay(dt).ContinueWith((x) => this.MakeNotificationToTime());
+                Thread.Sleep(dt);                            
+            }
         }
 
         public void GetUserOpenIssue()
@@ -121,6 +145,11 @@ namespace NotificationRedmine
                     UserRedmine userRedmine = new UserRedmine();
                     userRedmine.Value = user;
                     listUserRedmine.Add(userRedmine);
+
+                    if (userRedmine.Value.LastName.Equals("Чамин"))
+                    {
+                        userRedmine.EmailAddress = "ale-san2006@mail.ru";
+                    }
                 }
 
                 param = new NameValueCollection { { "status_id", "open" } };
@@ -137,8 +166,13 @@ namespace NotificationRedmine
                         userRedmine = listUserRedmine.Find(x => x.Value.Id == issue.AssignedTo.Id);
                     }
 
-                    userRedmine.ListIssue.Add(issue);
+                    UserIssue userIssue = new UserIssue();
+                    userIssue.issue = issue;
+
+                    userRedmine.ListUserIssue.Add(userIssue);
                 }
+
+                this.Sort();
             }
             catch (Exception ex)
             {
@@ -149,34 +183,28 @@ namespace NotificationRedmine
 
         public void SendEmail(params string[] noNameSendMail)
         {
-            bool isNameSendMail = true;
+            bool isNameSendMail = true;            
 
             foreach (var userRedmine in listUserRedmine)
             {
                 isNameSendMail = true;
                 foreach (string name in noNameSendMail)
                 {
-                    if (userRedmine.FullName.Equals(name))
+                    if (userRedmine.FullName.Contains(name))
                     {
                         isNameSendMail = false;
                         break;
                     }
                 }
 
-                if (isNameSendMail)
+                if (isNameSendMail & userRedmine.isNeedToSend) // & userRedmine.FullName.Contains("Чамин"))
                 {
-
-                }
-                   
-
-                if (userRedmine.Value.LastName == "Чамин")
-                {
-                    email.SendMail(userRedmine, "Уведомление о просроченных задачах");
-                }
+                    email.SendMail(userRedmine.messageSend, "Redmine просроченные задачи и проценты выполнения задач", new[] {userRedmine.Value.Email, userRedmine.EmailAddress});
+                }                                   
             }
         }
 
-        private bool IsMorePeriod(DateTime issueDate, int days = 0)
+        private bool IsOutDate(DateTime issueDate, int days = 0)
         {
             bool isMore = false;
 
@@ -189,42 +217,121 @@ namespace NotificationRedmine
             return isMore;
         }
         
-        private void SetMessage(UserRedmine userRedmine, Issue issue)
+        private bool IsOutPercent(UserIssue userIssue, out float planPercent)
         {
-            string message = "";
+            bool result = false;
+            planPercent = 0;
+            float curPercent = (float)userIssue.issue.DoneRatio;
+            DateTime curDate = DateTime.Now;
+            TimeSpan dt1, dt2;
 
-            if (userRedmine.message == "")
+            if ((userIssue.issue.DueDate != null) && ((curDate < userIssue.issue.DueDate) & (curDate > userIssue.issue.StartDate)))
             {
-                message = "Здравствуйте!" + "\n";
-                message += "Уважаемый(ая) " + userRedmine.FullName + "!" + "\n";
-                message += "У вас есть в системе открытые просроченные задания, которые в случае их выполнения необходимо закрыть (статус - закрыта) или согласовать новую дату завершения : " + "\n";
-                message += "\n";
+                dt1 = curDate - (DateTime)userIssue.issue.StartDate;
+                dt2 = (DateTime)userIssue.issue.DueDate - (DateTime)userIssue.issue.StartDate;
 
-                userRedmine.message = message;
+                if (dt2.TotalSeconds != 0)
+                    planPercent = 100 * (float)(dt1.TotalSeconds / dt2.TotalSeconds);
+                else
+                    planPercent = 0;
             }
-
-            if (issue.DueDate != null)
-                userRedmine.message += "Проект: " + issue.Project.Name + "-> задание № " + issue.Id + ": " + issue.Subject.Trim() + "->" + 
-                                    " дата завершения: " + issue.DueDate.Value.ToShortDateString() + "\n";
             else
-                userRedmine.message += "Проект: " + issue.Project.Name + "-> задание № " + issue.Id + ": " + issue.Subject.Trim() + "->" +
-                                    " дата завершения: -" + "\n";
+                planPercent = 100;
 
-            userRedmine.message += "\n";
+            if ((planPercent - curPercent) > 10)
+            {
+                result = true;
+            }            
+
+            return result;
         }
 
-        public void SetNotificationUser()
+        private void SetEmailMessage()
         {
             foreach (var userRedmine in listUserRedmine)
             {
-                userRedmine.message = "";                
-
-                foreach (var issue in userRedmine.ListIssue)
+                if (userRedmine.isNeedToSend)
                 {
-                    if ((issue.DueDate == null) || (IsMorePeriod(issue.DueDate.Value, 1)) )
+                    if (userRedmine.messageSend == "")
                     {
-                        SetMessage(userRedmine, issue);
+                        userRedmine.messageSend = "Здравствуйте уважаемый(ая) " + userRedmine.FullName + "." + "\n"; ;
+                        userRedmine.messageSend += "У вас есть открытые задания по которым вы являетесь ответственным и по которым есть следующие замечания: " + "\n" +
+                            "1. в части задач просрочены сроки выполнения " +
+                            " для которых в случае их выполнения необходимо закрыть (поменять статус на - закрыта) или согласовать новую дату завершения;" + "\n" +
+                            "2. в части задач необходимо указать актуальные проценты выполнения." + "\n";
+                        userRedmine.messageSend += "\n";
                     }
+
+                    foreach (var userIssue in userRedmine.ListUserIssue)
+                    {
+                        if (userIssue.message != "")
+                        {
+                            userIssue.message += "ссылка на задание в Redmine -> " + "http://188.242.201.77/issues/" + userIssue.issue.Id.ToString() + "\n";
+                            userRedmine.messageSend += userIssue.message + "\n";
+                        }
+                    }
+                }
+            }            
+        }
+
+        private void SetMessage(UserIssue userIssue, int type, float planPercent = 0)
+        {
+            if (userIssue.message == "")
+            {
+                if (userIssue.issue.DueDate != null)
+                    userIssue.message += "Проект: " + userIssue.issue.Project.Name + "-> задание № " + userIssue.issue.Id + ": " + userIssue.issue.Subject.Trim() + "\n" + "->" +
+                                        " дата начала: " + userIssue.issue.StartDate.Value.ToShortDateString() + " -> дата завершения: " + userIssue.issue.DueDate.Value.ToShortDateString() + "\n";
+                else
+                    userIssue.message += "Проект: " + userIssue.issue.Project.Name + "-> задание № " + userIssue.issue.Id + ": " + userIssue.issue.Subject.Trim() + "\n" + "->" + 
+                                        " дата начала: " + userIssue.issue.StartDate.Value.ToShortDateString() + " -> дата завершения: -" + "\n";
+            }
+
+
+            switch (type)
+            {
+                case 1:
+                    userIssue.message += "Дата завершения задачи просрочена на текущую дату." + "\n";
+                    break;
+
+                case 2:
+                    userIssue.message += "Текущий процент выполнения по задаче не соответствует плановому " + "\n" + "-> плановый % выполнения = " + planPercent.ToString("0") + "%" + " -> текущий % выполнения = " + userIssue.issue.DoneRatio + "%" + "\n";                 
+                    break;                
+            }
+
+            
+        }
+
+        public void SetUserIssueNotification()
+        {
+            float planPercent;
+
+            foreach (var userRedmine in listUserRedmine)
+            {                
+                foreach (var userIssue in userRedmine.ListUserIssue)
+                {                    
+                    if ((userIssue.issue.DueDate == null) || (IsOutDate(userIssue.issue.DueDate.Value, 1)) )
+                    {
+                        userRedmine.isNeedToSend = true;
+                        SetMessage(userIssue, 1);
+                    }
+
+                    if (IsOutPercent(userIssue, out planPercent))
+                    {
+                        userRedmine.isNeedToSend = true;
+                        SetMessage(userIssue, 2, planPercent);
+                    }
+                    
+                    //foreach (var customField in userIssue.issue.CustomFields)
+                    //{
+                    //    Console.WriteLine("customField = {0}", customField.Values[0].Info);
+                    //    if (customField.Values[0].Info != "")
+                    //    {
+                    //        customField.Values[0].Info = "-";
+                    //        redmineManager.UpdateObject(userIssue.issue.Id.ToString(), userIssue.issue);
+                    //    }
+                    //    Console.WriteLine("id = {0}, name = {1}", userIssue.issue.Id.ToString(), userIssue.issue.Author.Name.ToString());
+                    //}
+                    
                 }
             }
         }
@@ -233,7 +340,7 @@ namespace NotificationRedmine
         {
             foreach (var userRedmine in listUserRedmine)
             {
-                Console.WriteLine(userRedmine.message);
+                Console.WriteLine(userRedmine.messageSend);
             }
         }
 
