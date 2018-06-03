@@ -235,8 +235,9 @@ namespace NotificationRedmine
                 else
                     planPercent = 0;
             }
-            else
-                planPercent = 100;
+            else if (curDate >= userIssue.issue.DueDate) planPercent = 100;
+                else planPercent = 0;
+            
 
             if ((planPercent - curPercent) > 10)
             {

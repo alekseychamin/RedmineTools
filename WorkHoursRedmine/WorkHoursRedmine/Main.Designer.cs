@@ -31,11 +31,13 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewUser = new System.Windows.Forms.ListView();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.listViewIssues = new System.Windows.Forms.ListView();
+            this.labelUserName = new System.Windows.Forms.Label();
+            this.listViewTimeEntry = new System.Windows.Forms.ListView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboMounth = new System.Windows.Forms.ComboBox();
             this.but_SaveExcel = new System.Windows.Forms.Button();
             this.but_loadRedmine = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -60,7 +62,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.listViewIssues);
+            this.splitContainer1.Panel2.Controls.Add(this.listViewTimeEntry);
             this.splitContainer1.Panel2.Controls.Add(this.panel3);
             this.splitContainer1.Size = new System.Drawing.Size(821, 680);
             this.splitContainer1.SplitterDistance = 273;
@@ -71,6 +73,7 @@
             this.listViewUser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewUser.FullRowSelect = true;
             this.listViewUser.GridLines = true;
+            this.listViewUser.HideSelection = false;
             this.listViewUser.Location = new System.Drawing.Point(0, 29);
             this.listViewUser.Name = "listViewUser";
             this.listViewUser.Size = new System.Drawing.Size(273, 651);
@@ -81,33 +84,36 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.labelUserName);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(273, 29);
             this.panel2.TabIndex = 0;
             // 
-            // label1
+            // labelUserName
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(85, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Пользователи";
+            this.labelUserName.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.labelUserName.AutoSize = true;
+            this.labelUserName.Location = new System.Drawing.Point(85, 8);
+            this.labelUserName.Name = "labelUserName";
+            this.labelUserName.Size = new System.Drawing.Size(89, 13);
+            this.labelUserName.TabIndex = 0;
+            this.labelUserName.Text = "Пользователь: -";
             // 
-            // listViewIssues
+            // listViewTimeEntry
             // 
-            this.listViewIssues.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewIssues.Location = new System.Drawing.Point(0, 29);
-            this.listViewIssues.Name = "listViewIssues";
-            this.listViewIssues.Size = new System.Drawing.Size(544, 651);
-            this.listViewIssues.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.listViewIssues.TabIndex = 2;
-            this.listViewIssues.UseCompatibleStateImageBehavior = false;
-            this.listViewIssues.View = System.Windows.Forms.View.Details;
+            this.listViewTimeEntry.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewTimeEntry.FullRowSelect = true;
+            this.listViewTimeEntry.GridLines = true;
+            this.listViewTimeEntry.HideSelection = false;
+            this.listViewTimeEntry.Location = new System.Drawing.Point(0, 29);
+            this.listViewTimeEntry.Name = "listViewTimeEntry";
+            this.listViewTimeEntry.Size = new System.Drawing.Size(544, 651);
+            this.listViewTimeEntry.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.listViewTimeEntry.TabIndex = 2;
+            this.listViewTimeEntry.UseCompatibleStateImageBehavior = false;
+            this.listViewTimeEntry.View = System.Windows.Forms.View.Details;
             // 
             // panel3
             // 
@@ -130,6 +136,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.comboMounth);
             this.panel1.Controls.Add(this.but_SaveExcel);
             this.panel1.Controls.Add(this.but_loadRedmine);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -137,6 +145,24 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(821, 32);
             this.panel1.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(320, 10);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Месяц";
+            // 
+            // comboMounth
+            // 
+            this.comboMounth.FormattingEnabled = true;
+            this.comboMounth.Location = new System.Drawing.Point(364, 7);
+            this.comboMounth.Name = "comboMounth";
+            this.comboMounth.Size = new System.Drawing.Size(100, 21);
+            this.comboMounth.TabIndex = 2;
+            this.comboMounth.SelectionChangeCommitted += new System.EventHandler(this.comboMounth_SelectionChangeCommitted);
             // 
             // but_SaveExcel
             // 
@@ -176,6 +202,7 @@
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -185,13 +212,15 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelUserName;
         private System.Windows.Forms.ListView listViewUser;
-        private System.Windows.Forms.ListView listViewIssues;
+        private System.Windows.Forms.ListView listViewTimeEntry;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button but_loadRedmine;
         private System.Windows.Forms.Button but_SaveExcel;
+        private System.Windows.Forms.ComboBox comboMounth;
+        private System.Windows.Forms.Label label3;
     }
 }
 
