@@ -97,11 +97,7 @@ namespace WinRedminePlaning
             }
             return res;         
         }
-        
-        public void GetExcelIssue()
-        {
-
-        }
+                
 
         private bool isActivityWork(string activityName, params string[] activityNotWorkingHours)
         {

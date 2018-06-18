@@ -110,7 +110,6 @@
             this.listViewTimeEntry.Location = new System.Drawing.Point(0, 29);
             this.listViewTimeEntry.Name = "listViewTimeEntry";
             this.listViewTimeEntry.Size = new System.Drawing.Size(544, 651);
-            this.listViewTimeEntry.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewTimeEntry.TabIndex = 2;
             this.listViewTimeEntry.UseCompatibleStateImageBehavior = false;
             this.listViewTimeEntry.View = System.Windows.Forms.View.Details;

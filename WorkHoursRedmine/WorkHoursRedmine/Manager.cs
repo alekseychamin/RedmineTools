@@ -54,6 +54,7 @@ namespace WinRedminePlaning
         public void GetUserFromRedmine(Dictionary<string, string> bossName, params string[] noNameForReport)
         {
             listIssue.Clear();
+            listProject.Clear();
             listUserRedmine.Clear();
 
             NameValueCollection parametr = new NameValueCollection { { "user_id", "*" } };
@@ -151,6 +152,7 @@ namespace WinRedminePlaning
                             userRedmine.listMounthUserTimeEntry.Add(userTimeEntry);
                         }
                     }
+                    userRedmine.listMounthUserTimeEntry.Sort();
                 }
             }
         }

@@ -17,7 +17,7 @@ namespace WinRedminePlaning
             this.id = id;
         }
     }
-    class UserTimeEntry
+    class UserTimeEntry : IComparable
     {
         public TimeEntry Value;
         public UserRedmine AssignedTo;
@@ -265,6 +265,12 @@ namespace WinRedminePlaning
             }
 
             return lastWorkDay;
+        }
+
+        public int CompareTo(object obj)
+        {
+            UserTimeEntry userTimeEntry = obj as UserTimeEntry;
+            return this.DateStart.CompareTo(userTimeEntry.DateStart);
         }
     }
     class UserRedmine : IComparable

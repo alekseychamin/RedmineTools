@@ -46,7 +46,8 @@ namespace NotificationRedmine
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Could not connect to redmine host! " + ex.Message);
+                Console.WriteLine(DateTime.Now.ToString() + " Could not connect to redmine host! " + ex);
+                SaveError.SaveMessage(ex.ToString());
             }
         }
         
@@ -115,12 +116,12 @@ namespace NotificationRedmine
         }
 
         public void MakeNotificationToTime()
-        {
+        {            
             GetUserOpenIssue();
             SetUserIssueNotification();
             SetEmailMessage();
             //ShowNotification();
-            SendEmail(noEmailSend);
+            SendEmail(noEmailSend);            
         }
 
         public void StartMakeNotification()
@@ -176,7 +177,8 @@ namespace NotificationRedmine
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in GetUserOpenIssue: {0}", ex.Message);
+                Console.WriteLine(DateTime.Now.ToString() + " Error in GetUserOpenIssue: {0}", ex);
+                SaveError.SaveMessage(ex.ToString());
             }
             
         }
@@ -283,6 +285,7 @@ namespace NotificationRedmine
                     userIssue.message += "Проект: " + userIssue.issue.Project.Name + "-> задание № " + userIssue.issue.Id + ": " + userIssue.issue.Subject.Trim() + "\n" + "->" +
                                         " дата начала: " + userIssue.issue.StartDate.Value.ToShortDateString() + " -> дата завершения: " + userIssue.issue.DueDate.Value.ToShortDateString() + "\n";
                 else
+                    if (userIssue.issue.StartDate != null)
                     userIssue.message += "Проект: " + userIssue.issue.Project.Name + "-> задание № " + userIssue.issue.Id + ": " + userIssue.issue.Subject.Trim() + "\n" + "->" + 
                                         " дата начала: " + userIssue.issue.StartDate.Value.ToShortDateString() + " -> дата завершения: -" + "\n";
             }
@@ -309,17 +312,25 @@ namespace NotificationRedmine
             foreach (var userRedmine in listUserRedmine)
             {                
                 foreach (var userIssue in userRedmine.ListUserIssue)
-                {                    
-                    if ((userIssue.issue.DueDate == null) || (IsOutDate(userIssue.issue.DueDate.Value, 1)) )
+                {
+                    try
                     {
-                        userRedmine.isNeedToSend = true;
-                        SetMessage(userIssue, 1);
-                    }
+                        if ((userIssue.issue.DueDate == null) || (IsOutDate(userIssue.issue.DueDate.Value, 1)))
+                        {
+                            userRedmine.isNeedToSend = true;
+                            SetMessage(userIssue, 1);
+                        }
 
-                    if (IsOutPercent(userIssue, out planPercent))
+                        if (IsOutPercent(userIssue, out planPercent))
+                        {
+                            userRedmine.isNeedToSend = true;
+                            SetMessage(userIssue, 2, planPercent);
+                        }
+                    }
+                    catch (Exception ex)
                     {
-                        userRedmine.isNeedToSend = true;
-                        SetMessage(userIssue, 2, planPercent);
+                        Console.WriteLine(DateTime.Now.ToString() + " Error in " + ex);
+                        SaveError.SaveMessage(ex.ToString());
                     }
                     
                     //foreach (var customField in userIssue.issue.CustomFields)
@@ -343,8 +354,6 @@ namespace NotificationRedmine
             {
                 Console.WriteLine(userRedmine.messageSend);
             }
-        }
-
-        
+        }        
     }
 }

@@ -37,7 +37,8 @@ namespace NotificationRedmine
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in sending email! " + ex.Message);
+                Console.WriteLine("Error in sending email! " + ex);
+                SaveError.SaveMessage(ex.ToString());
             }
         }
         public void SendMail(string body, string subject, params string[] toEmailAddress)
