@@ -124,13 +124,20 @@ namespace NotificationRedmine
             SendEmail(noEmailSend);            
         }
 
-        public void StartMakeNotification()
+        public void StartMakeNotification(int type)
         {
-            while (true)
+            if (type == 1)
             {
-                dt = GetTimeStart();
-                Task.Delay(dt).ContinueWith((x) => this.MakeNotificationToTime());
-                Thread.Sleep(dt);                            
+                while (true)
+                {
+                    dt = GetTimeStart();
+                    Task.Delay(dt).ContinueWith((x) => this.MakeNotificationToTime());
+                    Thread.Sleep(dt);
+                }
+            }
+            else
+            {
+                MakeNotificationToTime();
             }
         }
 

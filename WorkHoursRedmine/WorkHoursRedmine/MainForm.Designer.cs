@@ -1,6 +1,6 @@
 ﻿namespace WinRedminePlaning
 {
-    partial class Main
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -38,6 +38,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.comboMounth = new System.Windows.Forms.ComboBox();
+            this.butReportExcel = new System.Windows.Forms.Button();
             this.but_SaveExcel = new System.Windows.Forms.Button();
             this.but_loadRedmine = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -80,6 +81,7 @@
             this.listViewUser.TabIndex = 1;
             this.listViewUser.UseCompatibleStateImageBehavior = false;
             this.listViewUser.View = System.Windows.Forms.View.Details;
+            this.listViewUser.SelectedIndexChanged += new System.EventHandler(this.listViewUser_SelectedIndexChanged);
             this.listViewUser.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewUser_MouseClick);
             // 
             // panel2
@@ -137,6 +139,7 @@
             // 
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.comboMounth);
+            this.panel1.Controls.Add(this.butReportExcel);
             this.panel1.Controls.Add(this.but_SaveExcel);
             this.panel1.Controls.Add(this.but_loadRedmine);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -163,13 +166,23 @@
             this.comboMounth.TabIndex = 2;
             this.comboMounth.SelectionChangeCommitted += new System.EventHandler(this.comboMounth_SelectionChangeCommitted);
             // 
+            // butReportExcel
+            // 
+            this.butReportExcel.Location = new System.Drawing.Point(479, 6);
+            this.butReportExcel.Name = "butReportExcel";
+            this.butReportExcel.Size = new System.Drawing.Size(138, 23);
+            this.butReportExcel.TabIndex = 1;
+            this.butReportExcel.Text = "Отчет в Excel";
+            this.butReportExcel.UseVisualStyleBackColor = true;
+            this.butReportExcel.Click += new System.EventHandler(this.butReportExcel_Click);
+            // 
             // but_SaveExcel
             // 
             this.but_SaveExcel.Location = new System.Drawing.Point(161, 5);
             this.but_SaveExcel.Name = "but_SaveExcel";
             this.but_SaveExcel.Size = new System.Drawing.Size(138, 23);
             this.but_SaveExcel.TabIndex = 1;
-            this.but_SaveExcel.Text = "Сохранить в Excel";
+            this.but_SaveExcel.Text = "Трудозатраты в Excel";
             this.but_SaveExcel.UseVisualStyleBackColor = true;
             this.but_SaveExcel.Click += new System.EventHandler(this.but_SaveExcel_Click);
             // 
@@ -183,14 +196,14 @@
             this.but_loadRedmine.UseVisualStyleBackColor = true;
             this.but_loadRedmine.Click += new System.EventHandler(this.but_loadRedmine_Click);
             // 
-            // Main
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 680);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.splitContainer1);
-            this.Name = "Main";
+            this.Name = "MainForm";
             this.Text = "Main";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -220,6 +233,7 @@
         private System.Windows.Forms.Button but_SaveExcel;
         private System.Windows.Forms.ComboBox comboMounth;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button butReportExcel;
     }
 }
 

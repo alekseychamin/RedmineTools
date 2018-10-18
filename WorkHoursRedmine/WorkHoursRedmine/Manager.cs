@@ -34,7 +34,7 @@ namespace WinRedminePlaning
             }
         }
 
-        private bool checkName(string[] noNameForReport, string name)
+        /*private bool checkName(string[] noNameForReport, string name)
         {
             bool res = false;
 
@@ -49,9 +49,9 @@ namespace WinRedminePlaning
             }
 
             return res;
-        }
+        }*/
 
-        public void GetUserFromRedmine(Dictionary<string, string> bossName, params string[] noNameForReport)
+        public void GetUserFromRedmine(Dictionary<string, string> bossName) //params string[] noNameForReport)
         {
             listIssue.Clear();
             listProject.Clear();
@@ -65,12 +65,26 @@ namespace WinRedminePlaning
                     UserRedmine userRedmine = new UserRedmine();
                     userRedmine.bossName = bossName;
                     userRedmine.Value = user;
-                    if (!checkName(noNameForReport, userRedmine.FullName))
+
+                    bool isNameWorkHour = false;
+                    string res = "";
+                    foreach (var customField in user.CustomFields)
+                    {
+                        if (customField.Name.Contains("Учет трудозатратах/месяц"))
+                        {
+                            res = customField.Values[0].Info;
+                            if (res.ToLower().Contains("1"))
+                                isNameWorkHour = true;                            
+                        }
+                    }
+
+                    if (isNameWorkHour)
                     {
                         userRedmine.listIssue = this.listIssue;
                         userRedmine.listProject = this.listProject;
                         listUserRedmine.Add(userRedmine);
                     }
+                    
 
                     //parametr = new NameValueCollection { { "user_id", user.Id.ToString() } };
                     //int count = redmineManager.GetObjects<TimeEntry>(parametr).Count;
@@ -116,7 +130,7 @@ namespace WinRedminePlaning
                     Project project = listProject.Find(x => x.Id == time.Project.Id);                    
 
                     if (userRedmine != null)
-                    {
+                    {                        
                         if (project != null)
                         {
                             if (project.IsPublic)
@@ -144,6 +158,11 @@ namespace WinRedminePlaning
             {
                 foreach (UserRedmine userRedmine in listUserRedmine)
                 {
+                    if (userRedmine.BossName.Contains("Першин"))
+                    {
+                        int a = 0;
+                    }
+
                     userRedmine.listMounthUserTimeEntry.Clear();
                     foreach (UserTimeEntry userTimeEntry in userRedmine.listUserTimeEntry)
                     {

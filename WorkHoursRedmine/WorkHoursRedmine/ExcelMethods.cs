@@ -33,7 +33,7 @@ namespace WinRedminePlaning
         private Worksheet workSheet;
                
         private int iRowHeader = 8;
-        private int iRowData = 24;
+        private int iRowData = 2;
 
         private Dictionary<int, string> column = new Dictionary<int, string>();
         
@@ -86,6 +86,7 @@ namespace WinRedminePlaning
             {
                 workBook = applicationExcel.Workbooks.Open(fileName);
                 applicationExcel.Visible = true;
+                //applicationExcel.ScreenUpdating = false;
                 //, 0, false, 5, "", "", false, XlPlatform.xlWindows, 
                 //                                        "", true, false, 0, true, false, false);
             }
@@ -115,11 +116,12 @@ namespace WinRedminePlaning
             return res;
         }
 
-        public void MakeSheetWorkingHours(UserRedmine userRedmine, string startPath, params string[] activityNotWorkingHours)
+        public void MakeSheetWorkingHours(UserRedmine userRedmine, string startPath, out string filePrint, params string[] activityNotWorkingHours)
         {
-            int iCurRow = iRowData;
+            int iCurRow = 24;
             int num = 1;
             string filename = startPath + @"\Pattern.xls";
+            filePrint = null;
 
             if (userRedmine.listMounthUserTimeEntry.Count != 0)
             {
@@ -193,11 +195,66 @@ namespace WinRedminePlaning
                     Directory.CreateDirectory(dir);
 
                     filename = string.Format(dir + @"\" + "{0} трудозатраты за {1}.xls", 
-                                            userRedmine.ShortName, dateFirstWork.ToString("MMM yyy"));
+                                            userRedmine.ShortName, dateFirstWork.ToString("Y"));
+                    workBook.SaveAs(filename);
+                    filePrint = filename;
+                }
+            }
+
+            //applicationExcel.Quit();
+            //applicationExcel.ScreenUpdating = true;
+            //applicationExcel.Visible = true;
+        }
+
+        public void MakeSheetReportUsers(List<UserRedmine> listUserRedmine, string startPath)
+        {
+            int iCurRow = 2;
+            int num = 1;
+            string filename = startPath + @"\Report.xls";
+
+            if (listUserRedmine.Count != 0)
+            {
+                if (OpenExcel(filename) == -1)
+                    return;
+
+                FindExcelSheet(workBook.Sheets, "Лист1");
+
+                if (workSheet != null)
+                {
+                    foreach (UserRedmine user in listUserRedmine)
+                    {
+                        if (num > 1)
+                        {
+
+                            iCurRow++;
+                            workSheet.Rows[iCurRow].Insert();
+                        }
+
+                        workSheet.Cells[iCurRow, 1].Value2 = num;
+                        workSheet.Cells[iCurRow, 2].Value2 = user.FullName;
+                        workSheet.Cells[iCurRow, 3].Value2 = user.GroupName;
+                        workSheet.Cells[iCurRow, 4].Value2 = user.TotalMonthHours;
+                        workSheet.Cells[iCurRow, 5].Value2 = user.TotalWorkHours;
+                        workSheet.Cells[iCurRow, 6].Value2 = user.TotalOfficeHours;
+                        workSheet.Cells[iCurRow, 7].Value2 = user.TotalOverOfficeHours;
+                        workSheet.Cells[iCurRow, 8].Value2 = user.TotalTripHours;
+                        workSheet.Cells[iCurRow, 9].Value2 = user.TotalOverTripHours;
+                        workSheet.Cells[iCurRow, 10].Value2 = user.TotalVacaitionHours;
+                        workSheet.Cells[iCurRow, 11].Value2 = user.TotalSeekHours;
+                        workSheet.Cells[iCurRow, 12].Value2 = user.TotalFreeHours;
+
+                        num++;
+                    }
+
+                    string dir = startPath + @"\Отчеты";
+
+                    Directory.CreateDirectory(dir);
+
+                    filename = string.Format(dir + @"\Отчет за {0}.xls", DateTime.Now.ToString("Y"));
                     workBook.SaveAs(filename);
                 }
             }
-            
+
             //applicationExcel.Quit();
         }
     }

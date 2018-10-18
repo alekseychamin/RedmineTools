@@ -228,14 +228,15 @@ namespace WinRedminePlaning
             get
             {
                 DateTime spentOn = (DateTime)Value.SpentOn;
-                DateTime dateForstWork = new DateTime(spentOn.Year, spentOn.Month, 1);
+                //DateTime spentOn = DateStart;
+                DateTime dateFirstWork = new DateTime(spentOn.Year, spentOn.Month, 1);
 
-                while ((dateForstWork.DayOfWeek == DayOfWeek.Saturday) | (dateForstWork.DayOfWeek == DayOfWeek.Sunday))
+                while ((dateFirstWork.DayOfWeek == DayOfWeek.Saturday) | (dateFirstWork.DayOfWeek == DayOfWeek.Sunday))
                 {
-                    dateForstWork = dateForstWork.AddDays(1);
+                    dateFirstWork = dateFirstWork.AddDays(1);
                 }
 
-                return dateForstWork;
+                return dateFirstWork;
             }
         }
 
@@ -383,11 +384,66 @@ namespace WinRedminePlaning
             }
         }
 
-        public decimal TotalOfficeWork
+        public decimal TotalOverOfficeHours
         {
             get
             {
-                return TotalMonthHours - TotalSeekHours - TotalFreeHours - TotalVacaitionHours - TotalTripHours;
+                decimal hours = 0;
+                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
+                {
+                    if (userTimeEntry.ActivtyName.Contains("Сверхурочные офис"))
+                        hours += userTimeEntry.Hours;
+                }
+                return hours;
+            }
+        }
+
+        public decimal TotalOverTripHours
+        {
+            get
+            {
+                decimal hours = 0;
+                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
+                {
+                    if (userTimeEntry.ActivtyName.Contains("Сверхурочные ПНР"))
+                        hours += userTimeEntry.Hours;
+                }
+                return hours;
+            }
+        }
+
+        public decimal TotalOfficeHours
+        {
+            get
+            {
+                decimal hours = 0;
+                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
+                {
+                    if (!userTimeEntry.ActivtyName.Contains("Сверхурочные ПНР") &
+                        !userTimeEntry.ActivtyName.Contains("Сверхурочные офис") &
+                        !userTimeEntry.ActivtyName.Contains("ПНР") &
+                        !userTimeEntry.ActivtyName.Contains("Отгул") &
+                        !userTimeEntry.ActivtyName.Contains("Отпуск") &
+                        !userTimeEntry.ActivtyName.Contains("Больничный"))
+                        hours += userTimeEntry.Hours;
+                }
+                return hours;
+            }
+        }
+
+        public decimal TotalWorkHours
+        {
+            get
+            {
+                decimal hours = 0;
+                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
+                {
+                    if (!userTimeEntry.ActivtyName.Contains("Отгул") &
+                        !userTimeEntry.ActivtyName.Contains("Отпуск") &
+                        !userTimeEntry.ActivtyName.Contains("Больничный"))
+                        hours += userTimeEntry.Hours;
+                }
+                return hours;
             }
         }
 
