@@ -18,7 +18,7 @@ namespace WinRedminePlaning
         {
             this.name = name;
         }
-    }
+    }   
 
     class ExcelIssue
     {
@@ -27,10 +27,10 @@ namespace WinRedminePlaning
     }
 
     class ExcelMethods
-    {
+    {        
         private Application applicationExcel;
         private Workbook workBook;
-        private Worksheet workSheet;
+        private Worksheet workSheet;        
                
         private int iRowHeader = 8;
         private int iRowData = 2;
@@ -115,6 +115,8 @@ namespace WinRedminePlaning
 
             return res;
         }
+        
+
 
         public void MakeSheetWorkingHours(UserRedmine userRedmine, string startPath, out string filePrint, params string[] activityNotWorkingHours)
         {
@@ -131,10 +133,10 @@ namespace WinRedminePlaning
                 FindExcelSheet(workBook.Sheets, "Лист1");
 
                 if (workSheet != null)
-                {
-                    foreach (UserTimeEntry userTimeEntry in userRedmine.listMounthUserTimeEntry)
+                {                    
+                    foreach (ExcelUserTimeEntry excelUserTimeEntry in userRedmine.listExcelUserTimeEntry)
                     {
-                        if (isActivityWork(userTimeEntry.ActivtyName, activityNotWorkingHours))
+                        if (isActivityWork(excelUserTimeEntry.ActivityName, activityNotWorkingHours))
                         {
                             if (num > 1)
                             {
@@ -142,28 +144,28 @@ namespace WinRedminePlaning
                                 iCurRow++;
                                 workSheet.Rows[iCurRow].Insert();
                             }
-
+                            
                             //A = column[1] + iCurRow.ToString();
                             workSheet.Cells[iCurRow, 1].Value2 = num;
 
                             //A = column[2] + iCurRow.ToString();
-                            workSheet.Cells[iCurRow, 2].Value2 = userTimeEntry.IssueName;
+                            workSheet.Cells[iCurRow, 2].Value2 = excelUserTimeEntry.IssueName;
 
-                            workSheet.Cells[iCurRow, 3].Value2 = userTimeEntry.ProjectName;
+                            workSheet.Cells[iCurRow, 3].Value2 = excelUserTimeEntry.ProjectName;
 
                             //workSheet.Cells[iCurRow, 8].FormulaLocal = string.Format("=СУММ(A1:A4)");
 
-                            workSheet.Cells[iCurRow, 8].Value2 = userTimeEntry.DateFinish.ToShortDateString();
+                            workSheet.Cells[iCurRow, 8].Value2 = excelUserTimeEntry.DateFinish.ToShortDateString();
 
-                            workSheet.Cells[iCurRow, 9].Value2 = userTimeEntry.Hours;
+                            workSheet.Cells[iCurRow, 9].Value2 = excelUserTimeEntry.Hours;
 
-                            workSheet.Cells[iCurRow, 10].Value2 = userTimeEntry.Hours;
+                            workSheet.Cells[iCurRow, 10].Value2 = excelUserTimeEntry.Hours;
 
-                            workSheet.Cells[iCurRow, 11].Value2 = userTimeEntry.DateFinish.ToShortDateString();
+                            workSheet.Cells[iCurRow, 11].Value2 = excelUserTimeEntry.DateFinish.ToShortDateString();
 
-                            workSheet.Cells[iCurRow, 13].Value2 = userTimeEntry.DateFinish.ToShortDateString();
+                            workSheet.Cells[iCurRow, 13].Value2 = excelUserTimeEntry.DateFinish.ToShortDateString();
 
-                            workSheet.Cells[iCurRow, 14].Value2 = userTimeEntry.HeadName;
+                            workSheet.Cells[iCurRow, 14].Value2 = excelUserTimeEntry.HeadName;
 
                             num++;
 

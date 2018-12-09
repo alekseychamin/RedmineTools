@@ -152,6 +152,77 @@ namespace WinRedminePlaning
             listUserRedmine.Sort();
         }
 
+        private bool isExistExcelTimeEntry(UserTimeEntry userTimeEntry, List<ExcelUserTimeEntry> listExcelTimeEntry)
+        {
+            bool isEqual = false;
+
+            ExcelUserTimeEntry excelUserTimeEntry = listExcelTimeEntry.Find(x => ((x.ProjectName == userTimeEntry.ProjectName) & 
+                                                                                  (x.IssueName == userTimeEntry.IssueName) & 
+                                                                                  (x.Comment == userTimeEntry.Comment)));
+
+            if (excelUserTimeEntry != null)
+            {
+                isEqual = true;                
+            }                       
+
+            return isEqual;
+        }
+
+        private void FindEqualTimeEntry(UserTimeEntry iUserTimeEntry, 
+                                        List<UserTimeEntry> listUserTimeEntry, out ExcelUserTimeEntry excelTimeEntry)
+        {            
+            excelTimeEntry = new ExcelUserTimeEntry(iUserTimeEntry.ProjectName, iUserTimeEntry.IssueName, 
+                                                    iUserTimeEntry.Comment, iUserTimeEntry.ActivityName, 
+                                                    iUserTimeEntry.HeadName, iUserTimeEntry.DateStart, 
+                                                    iUserTimeEntry.DateFinish, iUserTimeEntry.Hours);
+
+            int iIndex = 0;
+            while (iIndex < listUserTimeEntry.Count)
+            {
+                UserTimeEntry jUserTimeEntry = listUserTimeEntry[iIndex];
+                if (((jUserTimeEntry.ProjectName == iUserTimeEntry.ProjectName) &
+                    (jUserTimeEntry.IssueName == iUserTimeEntry.IssueName) &
+                    (jUserTimeEntry.ActivityName == iUserTimeEntry.ActivityName) &
+                    (jUserTimeEntry.Value.Id != iUserTimeEntry.Value.Id)) ||
+                    
+                    ((jUserTimeEntry.ProjectName == iUserTimeEntry.ProjectName) &
+                    (jUserTimeEntry.Comment == iUserTimeEntry.Comment) & 
+                    (jUserTimeEntry.ActivityName == iUserTimeEntry.ActivityName) &
+                    (jUserTimeEntry.Value.Id != iUserTimeEntry.Value.Id)))
+                {                    
+                    if (jUserTimeEntry.DateFinish > excelTimeEntry.DateFinish)
+                    {
+                        excelTimeEntry.DateFinish = jUserTimeEntry.DateFinish;
+                    }
+                    excelTimeEntry.Hours = excelTimeEntry.Hours + jUserTimeEntry.Hours;
+                }
+                iIndex++;
+            }            
+        }
+
+        public void GetExcelTimeEntry(UserRedmine userRedmine)
+        {            
+            userRedmine.listExcelUserTimeEntry.Clear();
+
+            int iIndex = 0;
+
+            while (iIndex < userRedmine.listMounthUserTimeEntry.Count)
+            {                    
+                UserTimeEntry iUserTimeEntry = userRedmine.listMounthUserTimeEntry[iIndex];
+                if (!isExistExcelTimeEntry(iUserTimeEntry, userRedmine.listExcelUserTimeEntry))
+                {
+                    ExcelUserTimeEntry excelUserTimeEntry = null;
+                    FindEqualTimeEntry(iUserTimeEntry, userRedmine.listMounthUserTimeEntry, out excelUserTimeEntry);
+
+                    if (excelUserTimeEntry != null)
+                    {
+                        userRedmine.listExcelUserTimeEntry.Add(excelUserTimeEntry);
+                    }
+                }
+                iIndex++;
+            }                            
+        }
+
         public void GetMounthUserTimeEntry(int year, int mounth)
         {
             if (mounth > 0 & mounth <= 12)
@@ -172,6 +243,8 @@ namespace WinRedminePlaning
                         }
                     }
                     userRedmine.listMounthUserTimeEntry.Sort();
+
+                    GetExcelTimeEntry(userRedmine);
                 }
             }
         }

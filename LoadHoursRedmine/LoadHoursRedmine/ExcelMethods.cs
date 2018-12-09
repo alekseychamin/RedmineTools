@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace WinRedminePlaning
 {
 
-    class FieldProp
+    public class FieldProp
     {
         public Object value;
         public String name;
@@ -20,13 +20,13 @@ namespace WinRedminePlaning
         }
     }
 
-    class ExcelIssue
+    public class ExcelIssue
     {
         public FieldProp id = new FieldProp("Id задачи");
 
     }
 
-    class ExcelMethods
+    public class ExcelMethods
     {
         private Application applicationExcel;
         private Workbook workBook;
@@ -116,14 +116,14 @@ namespace WinRedminePlaning
             return res;
         }
 
-        public void MakeSheetWorkingHours(UserRedmine userRedmine, string startPath, out string filePrint, params string[] activityNotWorkingHours)
+        /*public void MakeSheetWorkingHours(UserRedmine userRedmine, string startPath, out string filePrint, params string[] activityNotWorkingHours)
         {
             int iCurRow = 24;
             int num = 1;
             string filename = startPath + @"\Pattern.xls";
             filePrint = null;
 
-            if (userRedmine.listMounthUserTimeEntry.Count != 0)
+            if (userRedmine.listMounthUserIssueEntry.Count != 0)
             {
                 if (OpenExcel(filename) == -1)
                     return;
@@ -132,7 +132,7 @@ namespace WinRedminePlaning
 
                 if (workSheet != null)
                 {
-                    foreach (UserTimeEntry userTimeEntry in userRedmine.listMounthUserTimeEntry)
+                    foreach (UserIssueEntry userTimeEntry in userRedmine.listMounthUserIssueEntry)
                     {
                         if (isActivityWork(userTimeEntry.ActivtyName, activityNotWorkingHours))
                         {
@@ -155,9 +155,9 @@ namespace WinRedminePlaning
 
                             workSheet.Cells[iCurRow, 8].Value2 = userTimeEntry.DateFinish.ToShortDateString();
 
-                            workSheet.Cells[iCurRow, 9].Value2 = userTimeEntry.Hours;
+                            workSheet.Cells[iCurRow, 9].Value2 = userTimeEntry.TotalEstimatedHours;
 
-                            workSheet.Cells[iCurRow, 10].Value2 = userTimeEntry.Hours;
+                            workSheet.Cells[iCurRow, 10].Value2 = userTimeEntry.TotalEstimatedHours;
 
                             workSheet.Cells[iCurRow, 11].Value2 = userTimeEntry.DateFinish.ToShortDateString();
 
@@ -178,7 +178,7 @@ namespace WinRedminePlaning
                     workSheet.Cells[iCurRow + 1, 10].FormulaLocal = string.Format("=СУММ({0}:{1})",
                                                                                  column[10] + iRowData.ToString(), column[10] + iCurRow.ToString());
 
-                    DateTime dateFirstWork = userRedmine.listMounthUserTimeEntry[0].DateFirstWork;                    
+                    DateTime dateFirstWork = userRedmine.listMounthUserIssueEntry[0].DateFirstWork;                    
 
                     workSheet.Cells[18, 1].Value2 = dateFirstWork;
                     workSheet.Cells[18, 7].Value2 = dateFirstWork;
@@ -204,9 +204,9 @@ namespace WinRedminePlaning
             //applicationExcel.Quit();
             //applicationExcel.ScreenUpdating = true;
             //applicationExcel.Visible = true;
-        }
+        }*/
 
-        public void MakeSheetReportUsers(List<UserRedmine> listUserRedmine, string startPath)
+        /*public void MakeSheetReportUsers(List<UserRedmine> listUserRedmine, string startPath)
         {
             int iCurRow = 2;
             int num = 1;
@@ -256,6 +256,6 @@ namespace WinRedminePlaning
             }
 
             //applicationExcel.Quit();
-        }
+        }*/
     }
 }

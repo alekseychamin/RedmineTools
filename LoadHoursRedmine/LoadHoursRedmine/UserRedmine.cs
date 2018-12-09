@@ -7,171 +7,134 @@ using Redmine.Net.Api.Types;
 
 namespace WinRedminePlaning
 {
-    class UserGroup
+    public class UserGroupRedmine
     {
-        public string name;
-        public int id;
-        public UserGroup(string name, int id)
+        public string name { get; }
+        public int id { get; }
+        public UserGroupRedmine(string name, int id)
         {
             this.name = name;
             this.id = id;
         }
     }
-    class UserTimeEntry : IComparable
+    public class UserIssueEntry : IComparable
     {
-        public TimeEntry Value;
+        public Issue issue;
+        public Project project;
         public UserRedmine AssignedTo;
-        private List<Issue> listIssue;
-        private List<Project> listProject;
+        
         public string IssueName
         {
             get
             {
-                if (Value != null)
+                if (issue != null)
                 {
-                    if (Value.Issue != null)
+                    return issue.Subject;
+
+                    /*if (listIssue != null)
                     {
-                        if (listIssue != null)
+                        int Id = Value.Id;
+                        Issue issue = listIssue.Find(x => x.Id == Id);
+                        if (issue != null)
                         {
-                            int Id = Value.Issue.Id;
-                            Issue issue = listIssue.Find(x => x.Id == Id);
-                            if (issue != null)
-                            {
+                            if (issue.Subject != "")
                                 return issue.Subject;
-                            }
                             else
                                 return "";
                         }
                         else
                             return "";
-                        
                     }
                     else
-                        return Comment;
+                        return "";*/
                 }
                 else
                     return "";
             }
-        }
-        public string Comment
-        {
-            get
-            {
-                if (Value != null)
-                {
-                    if (Value.Comments != null)
-                        return Value.Comments;
-                    else
-                        return "";
-                }
-                return "";
-            }
-        }
+        }        
         
         public string HeadName
         {
             get
             {
-                if (Value != null)
+                if (project != null)
                 {
-                    if (Value.Project != null)
+                    string res = "";
+
+                    foreach (var customField in project.CustomFields)
                     {
-                        int Id = Value.Project.Id;
-                        Project project = listProject.Find(x => x.Id == Id);
-                        if (project != null)
+                        if (customField.Name.Contains("ТРП"))
                         {
-                            string res = "";
-
-                            foreach (var customField in project.CustomFields)
-                            {
-                                if (customField.Name.Contains("ТРП"))
-                                {
-                                    res = customField.Values[0].Info;
-                                }
-                            }
-
-                            if (res.Contains(AssignedTo.Value.LastName))
-                            {
-                                res = AssignedTo.BossName;
-                            }                                                        
-
-                            if (res == "")
-                            {
-                                foreach (var customField in Value.CustomFields)
-                                {
-                                    if (customField.Name.Contains("Руководитель"))
-                                    {
-                                        res = customField.Values[0].Info;
-                                    }
-                                }
-                            }
-
-                            return res;
+                            res = customField.Values[0].Info;
                         }
-                        else return "";
                     }
-                    else return "";
+
+                    if (res.Contains(AssignedTo.Value.LastName))
+                    {
+                        res = AssignedTo.BossName;
+                    }
+
+                    if (res == "")
+                    {
+                        foreach (var customField in issue.CustomFields)
+                        {
+                            if (customField.Name.Contains("Руководитель"))
+                            {
+                                res = customField.Values[0].Info;
+                            }
+                        }
+                    }
+                    return res;
                 }
                 else return "";
-            }
+            }                            
         }
 
         public string ProjectName
         {
             get
             {
-                if (Value != null)
+                if (project != null)
                 {
-                    if (Value.Project != null)
-                    {
-                        return Value.Project.Name;
-                    }
-                    else
-                        return "";
+                    return project.Name;
                 }
                 else
                     return "";
             }
         }
 
-        public string ActivtyName
-        {
-            get
-            {
-                if (Value != null)
-                {
-                    if (Value.Activity != null)
-                    {
-                        return Value.Activity.Name;
-                    } else
-                        return "";
-                } else
-                    return "";
-            }
-        }
+        //public string ProjectName
+        //{
+        //    get
+        //    {
+        //        if (issue != null)
+        //        {
+        //            if (issue.Project != null)
+        //            {
+        //                return issue.Project.Name;
+        //            }
+        //            else
+        //                return "";
+        //        }
+        //        else
+        //            return "";
+        //    }
+        //}        
 
         public DateTime DateStart
         {
             get
             {
                 //return (DateTime)Value.SpentOn;
-                string res = "";
-                foreach (var customField in Value.CustomFields)
+                if (issue != null)
                 {
-                    if (customField.Name.Contains("Дата старта"))
-                    {
-                        res = customField.Values[0].Info;
-                    }
-                }
-
-                if (res != "")
-                {
-                    DateTime date;
-                    date = Convert.ToDateTime(res);
-                    return date;
+                    if (issue.StartDate != null)
+                        return (DateTime)issue.StartDate;
+                    else
+                        return new DateTime();
                 }
                 else
-                    return DateFirstWork;
+                    return new DateTime();                               
             }
         }
 
@@ -179,47 +142,15 @@ namespace WinRedminePlaning
         {
             get
             {
-                //DateTime stepDate = DateStart;
-                //DateTime lastDate = GetLastWorkDay(stepDate.Year, stepDate.Month);
-
-                //int countDay = (int)Hours / 8;
-
-                //int i = 1;
-                //while (i <= countDay)
-                //{
-                //    if (stepDate.Equals(lastDate))
-                //        break;
-                //    stepDate = stepDate.AddDays(1);
-                //    if ((stepDate.DayOfWeek != DayOfWeek.Saturday) & (stepDate.DayOfWeek != DayOfWeek.Sunday))
-                //        i++;
-                //}
-
-                //return stepDate;
-
-                string res = "";
-                DateTime lastWorkDay = GetLastWorkDay(DateFirstWork.Year, DateFirstWork.Month);
-
-                foreach (var customField in Value.CustomFields)
+                if (issue != null)
                 {
-                    if (customField.Name.Contains("Дата завершения"))
-                    {
-                        res = customField.Values[0].Info;
-                    }
-                }
-
-                if (res != "")
-                {
-                    DateTime date;
-                    date = Convert.ToDateTime(res);
-                    if (date.CompareTo(lastWorkDay) == 1)
-                    {
-                        date = lastWorkDay;
-                    }
-                    return date;
+                    if (issue.DueDate != null)
+                        return (DateTime)issue.DueDate;
+                    else
+                        return new DateTime();
                 }
                 else
-                    return lastWorkDay;
-
+                    return new DateTime();
             }
         }
 
@@ -227,7 +158,7 @@ namespace WinRedminePlaning
         {
             get
             {
-                DateTime spentOn = (DateTime)Value.SpentOn;
+                DateTime spentOn = (DateTime)issue.DueDate;
                 //DateTime spentOn = DateStart;
                 DateTime dateFirstWork = new DateTime(spentOn.Year, spentOn.Month, 1);
 
@@ -238,21 +169,6 @@ namespace WinRedminePlaning
 
                 return dateFirstWork;
             }
-        }
-
-        public decimal Hours
-        {
-            get
-            {
-                return Value.Hours;
-            }
-        }
-
-        public UserTimeEntry(List<Issue> listIssue, List<Project> listProject, UserRedmine AssignedTo)
-        {
-            this.listIssue = listIssue;
-            this.listProject = listProject;
-            this.AssignedTo = AssignedTo;
         }
 
         public DateTime GetLastWorkDay(int year, int month)
@@ -268,13 +184,31 @@ namespace WinRedminePlaning
             return lastWorkDay;
         }
 
+        public float EstimatedHours
+        {
+            get
+            {
+                if (issue.EstimatedHours != null)
+                    return (float)issue.EstimatedHours;
+                else
+                    return 0;
+            }
+        }
+
+        public UserIssueEntry(Issue issue, Project project, UserRedmine AssignedTo)
+        {
+            this.issue = issue;
+            this.project = project;            
+            this.AssignedTo = AssignedTo;
+        }        
+
         public int CompareTo(object obj)
         {
-            UserTimeEntry userTimeEntry = obj as UserTimeEntry;
-            return this.DateStart.CompareTo(userTimeEntry.DateStart);
+            UserIssueEntry userIssueEntry = obj as UserIssueEntry;
+            return this.DateStart.CompareTo(userIssueEntry.DateStart);
         }
     }
-    class UserRedmine : IComparable
+    public class UserRedmine : IComparable
     {
         public User Value;
         public string FullName
@@ -305,7 +239,7 @@ namespace WinRedminePlaning
             get
             {
                 string result = "";
-                foreach (UserGroup userGroup in listUserGroup)
+                foreach (UserGroupRedmine userGroup in listUserGroup)
                 {
                     if (result == "")
                         result += userGroup.name;
@@ -315,138 +249,7 @@ namespace WinRedminePlaning
                 return result;                
             }
         }
-        public decimal TotalMonthHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
-        public decimal TotalSeekHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    if (userTimeEntry.ActivtyName.Contains("Больничный"))
-                        hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
-        public decimal TotalVacaitionHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    if (userTimeEntry.ActivtyName.Contains("Отпуск"))
-                        hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
-        public decimal TotalFreeHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    if (userTimeEntry.ActivtyName.Contains("Отгул"))
-                        hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
-        public decimal TotalTripHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    if (userTimeEntry.ActivtyName.Contains("ПНР"))
-                        hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
-        public decimal TotalOverOfficeHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    if (userTimeEntry.ActivtyName.Contains("Сверхурочные офис"))
-                        hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
-        public decimal TotalOverTripHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    if (userTimeEntry.ActivtyName.Contains("Сверхурочные ПНР"))
-                        hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
-        public decimal TotalOfficeHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    if (!userTimeEntry.ActivtyName.Contains("Сверхурочные ПНР") &
-                        !userTimeEntry.ActivtyName.Contains("Сверхурочные офис") &
-                        !userTimeEntry.ActivtyName.Contains("ПНР") &
-                        !userTimeEntry.ActivtyName.Contains("Отгул") &
-                        !userTimeEntry.ActivtyName.Contains("Отпуск") &
-                        !userTimeEntry.ActivtyName.Contains("Больничный"))
-                        hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
-        public decimal TotalWorkHours
-        {
-            get
-            {
-                decimal hours = 0;
-                foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
-                {
-                    if (!userTimeEntry.ActivtyName.Contains("Отгул") &
-                        !userTimeEntry.ActivtyName.Contains("Отпуск") &
-                        !userTimeEntry.ActivtyName.Contains("Больничный"))
-                        hours += userTimeEntry.Hours;
-                }
-                return hours;
-            }
-        }
-
+        
         public string BossName
         {
             get
@@ -468,11 +271,11 @@ namespace WinRedminePlaning
             return this.GroupName.CompareTo(userToCompare.GroupName);                
         }
 
-        public List<UserTimeEntry> listUserTimeEntry = new List<UserTimeEntry>();
-        public List<UserTimeEntry> listMounthUserTimeEntry = new List<UserTimeEntry>();
+        public List<UserIssueEntry> listUserIssueEntry = new List<UserIssueEntry>();
+        public List<UserIssueEntry> listMounthUserIssueEntry = new List<UserIssueEntry>();
         public List<Issue> listIssue = null; //для сохранения ссылки на список, который хранится в классе manager
         public List<Project> listProject = null; //для сохранения ссылки на список, который хранится в классе manager
-        public List<UserGroup> listUserGroup = new List<UserGroup>();
+        public List<UserGroupRedmine> listUserGroup = new List<UserGroupRedmine>();
         public Dictionary<string, string> bossName;
     }
 }

@@ -7,6 +7,32 @@ using Redmine.Net.Api.Types;
 
 namespace WinRedminePlaning
 {
+    class ExcelUserTimeEntry
+    {
+        public string ProjectName;
+        public string IssueName;
+        public string Comment;
+        public string ActivityName;
+        public string HeadName;
+        public DateTime DateStart;
+        public DateTime DateFinish;
+        public decimal Hours;
+
+        public ExcelUserTimeEntry(string ProjectName, string IssueName, 
+                                  string Comment, string ActivityName, string HeadName,
+                                  DateTime DateStart, DateTime DateFinish, decimal Hours)
+        {
+            this.ProjectName = ProjectName;
+            this.IssueName = IssueName;
+            this.Comment = Comment;
+            this.ActivityName = ActivityName;
+            this.HeadName = HeadName;
+            this.DateStart = DateStart;
+            this.DateFinish = DateFinish;
+            this.Hours = Hours;
+        }
+    }
+
     class UserGroup
     {
         public string name;
@@ -134,7 +160,7 @@ namespace WinRedminePlaning
             }
         }
 
-        public string ActivtyName
+        public string ActivityName
         {
             get
             {
@@ -335,7 +361,7 @@ namespace WinRedminePlaning
                 decimal hours = 0;
                 foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
                 {
-                    if (userTimeEntry.ActivtyName.Contains("Больничный"))
+                    if (userTimeEntry.ActivityName.Contains("Больничный"))
                         hours += userTimeEntry.Hours;
                 }
                 return hours;
@@ -349,7 +375,7 @@ namespace WinRedminePlaning
                 decimal hours = 0;
                 foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
                 {
-                    if (userTimeEntry.ActivtyName.Contains("Отпуск"))
+                    if (userTimeEntry.ActivityName.Contains("Отпуск"))
                         hours += userTimeEntry.Hours;
                 }
                 return hours;
@@ -363,7 +389,7 @@ namespace WinRedminePlaning
                 decimal hours = 0;
                 foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
                 {
-                    if (userTimeEntry.ActivtyName.Contains("Отгул"))
+                    if (userTimeEntry.ActivityName.Contains("Отгул"))
                         hours += userTimeEntry.Hours;
                 }
                 return hours;
@@ -377,7 +403,7 @@ namespace WinRedminePlaning
                 decimal hours = 0;
                 foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
                 {
-                    if (userTimeEntry.ActivtyName.Contains("ПНР"))
+                    if (userTimeEntry.ActivityName.Contains("ПНР"))
                         hours += userTimeEntry.Hours;
                 }
                 return hours;
@@ -391,7 +417,7 @@ namespace WinRedminePlaning
                 decimal hours = 0;
                 foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
                 {
-                    if (userTimeEntry.ActivtyName.Contains("Сверхурочные офис"))
+                    if (userTimeEntry.ActivityName.Contains("Сверхурочные офис"))
                         hours += userTimeEntry.Hours;
                 }
                 return hours;
@@ -405,7 +431,7 @@ namespace WinRedminePlaning
                 decimal hours = 0;
                 foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
                 {
-                    if (userTimeEntry.ActivtyName.Contains("Сверхурочные ПНР"))
+                    if (userTimeEntry.ActivityName.Contains("Сверхурочные ПНР"))
                         hours += userTimeEntry.Hours;
                 }
                 return hours;
@@ -419,12 +445,12 @@ namespace WinRedminePlaning
                 decimal hours = 0;
                 foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
                 {
-                    if (!userTimeEntry.ActivtyName.Contains("Сверхурочные ПНР") &
-                        !userTimeEntry.ActivtyName.Contains("Сверхурочные офис") &
-                        !userTimeEntry.ActivtyName.Contains("ПНР") &
-                        !userTimeEntry.ActivtyName.Contains("Отгул") &
-                        !userTimeEntry.ActivtyName.Contains("Отпуск") &
-                        !userTimeEntry.ActivtyName.Contains("Больничный"))
+                    if (!userTimeEntry.ActivityName.Contains("Сверхурочные ПНР") &
+                        !userTimeEntry.ActivityName.Contains("Сверхурочные офис") &
+                        !userTimeEntry.ActivityName.Contains("ПНР") &
+                        !userTimeEntry.ActivityName.Contains("Отгул") &
+                        !userTimeEntry.ActivityName.Contains("Отпуск") &
+                        !userTimeEntry.ActivityName.Contains("Больничный"))
                         hours += userTimeEntry.Hours;
                 }
                 return hours;
@@ -438,9 +464,9 @@ namespace WinRedminePlaning
                 decimal hours = 0;
                 foreach (UserTimeEntry userTimeEntry in listMounthUserTimeEntry)
                 {
-                    if (!userTimeEntry.ActivtyName.Contains("Отгул") &
-                        !userTimeEntry.ActivtyName.Contains("Отпуск") &
-                        !userTimeEntry.ActivtyName.Contains("Больничный"))
+                    if (!userTimeEntry.ActivityName.Contains("Отгул") &
+                        !userTimeEntry.ActivityName.Contains("Отпуск") &
+                        !userTimeEntry.ActivityName.Contains("Больничный"))
                         hours += userTimeEntry.Hours;
                 }
                 return hours;
@@ -469,7 +495,8 @@ namespace WinRedminePlaning
         }
 
         public List<UserTimeEntry> listUserTimeEntry = new List<UserTimeEntry>();
-        public List<UserTimeEntry> listMounthUserTimeEntry = new List<UserTimeEntry>();
+        public List<UserTimeEntry> listMounthUserTimeEntry = new List<UserTimeEntry>();        
+        public List<ExcelUserTimeEntry> listExcelUserTimeEntry = new List<ExcelUserTimeEntry>();
         public List<Issue> listIssue = null; //для сохранения ссылки на список, который хранится в классе manager
         public List<Project> listProject = null; //для сохранения ссылки на список, который хранится в классе manager
         public List<UserGroup> listUserGroup = new List<UserGroup>();

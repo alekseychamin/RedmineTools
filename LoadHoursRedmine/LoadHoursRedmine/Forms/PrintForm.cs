@@ -16,7 +16,7 @@ namespace WinRedminePlaning
         int num;
         public PrintForm()
         {
-            InitializeComponent();
+            InitializeComponent();            
             num = 1;
             listFiles.View = View.Details;
             listFiles.Columns.Add("№", -2, HorizontalAlignment.Left);

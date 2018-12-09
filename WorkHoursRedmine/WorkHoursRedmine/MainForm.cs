@@ -95,7 +95,7 @@ namespace WinRedminePlaning
                     {
                         string[] line = { num.ToString(),
                                           userTimeEntry.ProjectName,
-                                          userTimeEntry.ActivtyName,
+                                          userTimeEntry.ActivityName,
                                           userTimeEntry.IssueName,
                                           userTimeEntry.DateStart.ToShortDateString(),
                                           userTimeEntry.DateFinish.ToShortDateString(),
@@ -156,11 +156,12 @@ namespace WinRedminePlaning
         private void but_loadRedmine_Click(object sender, EventArgs e)
         {
             int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
-
+            but_loadRedmine.Enabled = false;
             manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
             manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
             ShowUserRedmine();
             labelUserName.Text = "Пользователь: -";
+            but_loadRedmine.Enabled = true;
         }        
 
         private void but_SaveExcel_Click(object sender, EventArgs e)
