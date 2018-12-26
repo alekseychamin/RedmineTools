@@ -50,7 +50,7 @@ namespace WinRedminePlaning
 
             return res;
         }*/
-
+                
         public void GetUserFromRedmine(Dictionary<string, string> bossName) //params string[] noNameForReport)
         {
             listIssue.Clear();
@@ -80,7 +80,7 @@ namespace WinRedminePlaning
 
                     if (isNameWorkHour)
                     {
-                        userRedmine.listIssue = this.listIssue;
+                        //userRedmine.listIssue = this.listIssue;
                         userRedmine.listProject = this.listProject;
                         listUserRedmine.Add(userRedmine);
                     }
@@ -115,6 +115,7 @@ namespace WinRedminePlaning
                 foreach (Issue issue in redmineManager.GetObjects<Issue>(parametr))
                 {
                     listIssue.Add(issue);
+
                 }
 
                 parametr = new NameValueCollection { { "project_id", "*" } };

@@ -82,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Email.cs" />
     <Compile Include="ExcelMethods.cs" />
     <Compile Include="Forms\IssueDayForm.cs">
       <SubType>Form</SubType>
@@ -111,6 +112,7 @@
     <Compile Include="Forms\ReportForm.Designer.cs">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="RedmineData.cs" />
     <Compile Include="UserRedmine.cs" />
     <Compile Include="Forms\LoadMWHForm.cs">
       <SubType>Form</SubType>
@@ -126,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PrintForm.resx">
       <DependentUpon>PrintForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ReportForm.resx">
+      <DependentUpon>ReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

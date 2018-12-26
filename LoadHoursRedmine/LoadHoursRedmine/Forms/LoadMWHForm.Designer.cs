@@ -28,13 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labName = new System.Windows.Forms.Label();
             this.comboYear = new System.Windows.Forms.ComboBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.listLoadMWH = new System.Windows.Forms.ListView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -50,7 +52,7 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.labName);
             this.panel2.Controls.Add(this.comboYear);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
@@ -58,15 +60,15 @@
             this.panel2.Size = new System.Drawing.Size(890, 49);
             this.panel2.TabIndex = 1;
             // 
-            // label1
+            // labName
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(287, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 24);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Год";
+            this.labName.AutoSize = true;
+            this.labName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labName.Location = new System.Drawing.Point(287, 12);
+            this.labName.Name = "labName";
+            this.labName.Size = new System.Drawing.Size(44, 24);
+            this.labName.TabIndex = 1;
+            this.labName.Text = "Год";
             // 
             // comboYear
             // 
@@ -108,6 +110,11 @@
             this.listLoadMWH.UseCompatibleStateImageBehavior = false;
             this.listLoadMWH.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listLoad_ColumnClick);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 26);
+            // 
             // LoadMWHForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -132,9 +139,10 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labName;
         private System.Windows.Forms.ComboBox comboYear;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.ListView listLoadMWH;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

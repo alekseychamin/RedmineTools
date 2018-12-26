@@ -4,9 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Types;
+using System.Drawing;
 
 namespace WinRedminePlaning
 {
+
+    class MonthHours
+    {        
+        public int Year { get; set; }                          
+        public Dictionary<int, int> Hours { get; }
+        public MonthHours(Issue issue)
+        {
+
+        }
+    }
     class ExcelUserTimeEntry
     {
         public string ProjectName;
@@ -18,6 +29,26 @@ namespace WinRedminePlaning
         public DateTime DateFinish;
         public decimal Hours;
 
+        private string ShortName(string name)
+        {            
+            string res = name;
+            int isShort = name.IndexOf(".");
+            if (isShort == -1)
+            {
+                res = "";
+                string[] array_name = name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                for (int i = 0; i < array_name.Length; i++)
+                {
+                    if (i == 0)
+                        res += array_name[i] + " ";
+                    else                    
+                        res += array_name[i][0] + ".";
+                }
+            }
+            return res;            
+        }
+
         public ExcelUserTimeEntry(string ProjectName, string IssueName, 
                                   string Comment, string ActivityName, string HeadName,
                                   DateTime DateStart, DateTime DateFinish, decimal Hours)
@@ -25,8 +56,8 @@ namespace WinRedminePlaning
             this.ProjectName = ProjectName;
             this.IssueName = IssueName;
             this.Comment = Comment;
-            this.ActivityName = ActivityName;
-            this.HeadName = HeadName;
+            this.ActivityName = ActivityName;            
+            this.HeadName = ShortName(HeadName);
             this.DateStart = DateStart;
             this.DateFinish = DateFinish;
             this.Hours = Hours;
@@ -494,6 +525,9 @@ namespace WinRedminePlaning
             return this.GroupName.CompareTo(userToCompare.GroupName);                
         }
 
+        private int maxMonthHour;
+        private int minMontHour = 0;
+
         public List<UserTimeEntry> listUserTimeEntry = new List<UserTimeEntry>();
         public List<UserTimeEntry> listMounthUserTimeEntry = new List<UserTimeEntry>();        
         public List<ExcelUserTimeEntry> listExcelUserTimeEntry = new List<ExcelUserTimeEntry>();
@@ -501,5 +535,16 @@ namespace WinRedminePlaning
         public List<Project> listProject = null; //для сохранения ссылки на список, который хранится в классе manager
         public List<UserGroup> listUserGroup = new List<UserGroup>();
         public Dictionary<string, string> bossName;
+        public Color CellColor
+        {
+            get
+            {
+                Color color = Color.White;
+
+
+
+                return color;
+            }
+        }
     }
 }

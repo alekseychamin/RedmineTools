@@ -41,7 +41,8 @@ namespace WinRedminePlaning
 
             bossName.Add("Испытатель", "Гульнев А.В.");
             bossName.Add("Конструктор", "Чамин А.Н.");
-            bossName.Add("Программист", "Чамин А.Н.");
+            bossName.Add("Программист ПЛК", "Чамин А.Н.");
+            bossName.Add("Программист SCADA", "Чамин А.Н.");
             bossName.Add("Схемотехник", "Чамин А.Н.");
             bossName.Add("ТРП", "Чамин А.Н.");
             bossName.Add("Менеджер", "Першин П.И.");

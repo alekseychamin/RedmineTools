@@ -12,39 +12,47 @@ using System.Windows.Forms;
 
 namespace WinRedminePlaning
 {
-    public enum TypeView { LoadUser = 0, LoadYWH, LoadGroup, LoadProject, LoadIssueDWH, LoadShortIssueDWH, LoadTimeDWH, LoadShortTimeDWH };
+    public enum TypeView { LoadUser = 0, LoadExperiedUser, LoadYWH, LoadGroup,
+                           LoadProject, LoadExperiedProject, LoadIssueDWH, LoadShortIssueDWH,
+                           LoadTimeDWH, LoadShortTimeDWH, LoadShortExpProject, LoadShortExpUser };
     public enum Operation { Equal, More, Less };
 
+    public enum TypeSave { WorkHours, HumansMonth };
+        
+         
     public delegate void UpdateFormInfo();
     public class Manager
     {
+        public Issue EmailSaveIssue { get; set; }
+
         string host = "188.242.201.77";
         string apiKey = "70b1a875928636d8d3895248309344ea2bca6a5f";
         RedmineManager redmineManager;
 
-        public event UpdateFormInfo Update;
+        public event UpdateFormInfo Update;        
+        public List<UserRedmine> listUserRedmine = new List<UserRedmine>();               
 
-        public List<UserRedmine> listUserRedmine = new List<UserRedmine>();
-        public List<Project> listProject = new List<Project>();
-        //public List<IssueRelation> listIssueRelation = new List<IssueRelation>();
+        public List<EmailMessage> listEmailMessage = new List<EmailMessage>();
 
-        public List<LoadGroup> listLoadGroup = new List<LoadGroup>();
-        public List<Issue> listIssue = new List<Issue>();
-        public List<User> listUser = new List<User>();
-        public List<UserTimeEntry> listUserTimeEntry = new List<UserTimeEntry>();        
+        public List<LoadGroup> listLoadGroup = new List<LoadGroup>();                               
+
         public List<LoadYWH> listLoadYWH = new List<LoadYWH>();
+
         public List<LoadUser> listLoadUser = new List<LoadUser>();
+        
         public List<LoadProject> listLoadProject = new List<LoadProject>();
 
-        public ExcelMethods excelMethods = new ExcelMethods();
+        //public ExcelMethods excelMethods = new ExcelMethods();
+        public RedmineData redmineData;
 
         public List<int> listYear { get; }
         
-        public Manager()
+        public Manager(RedmineData redmineData)
         {
             try
             {
                 redmineManager = new RedmineManager(host, apiKey);
+                this.redmineData = redmineData;
                 listYear = new List<int>();
             }
             catch (Exception ex)
@@ -53,24 +61,248 @@ namespace WinRedminePlaning
             }
         }
 
-        public void SaveCSVFileListIssue(string fileName)
+        public void SetHeadUser(List<LoadIssue> listLoadOpenIssue)
         {
+            foreach (LoadIssue loadOpenIssue in listLoadOpenIssue)
+            {
+                LoadProject loadProject = listLoadProject.Find(x => x.userProject.Id == loadOpenIssue.issue.Project.Id);
+                if (loadProject != null)
+                {
+                    loadOpenIssue.NameHeadUser = loadProject.userProject.NameHeadUser;
+                    loadOpenIssue.EmailHeadUser = loadProject.userProject.EmailHeadUser;
+                }
+            }
+        }
+
+        public void SendEmail()
+        {
+            Email email = new Email();
+            foreach (EmailMessage emailMessage in listEmailMessage)
+            {                
+                email.SendMail(emailMessage.Message, emailMessage.Title, emailMessage.ListToEmail, emailMessage.ListCCEmail);
+            }
+            MessageBox.Show("Messages are sent!");
+        }
+
+        public void SaveDateToRedmineEmailIssue()
+        {
+            string note = "";
+            if (EmailSaveIssue != null)
+            {
+                listEmailMessage.Sort();
+
+                foreach (EmailMessage emailMessage in listEmailMessage)
+                {                    
+                    note += "*" + emailMessage.Title + "*";
+                    note += "\n";
+                    note += emailMessage.Message;                    
+                }
+
+                EmailSaveIssue.Notes = note;
+                redmineManager.UpdateObject(EmailSaveIssue.Id.ToString(), EmailSaveIssue);
+            }
+        }
+
+        public void MakeEmailMessages(List<LoadIssue> listLoadOpenIssue, string title)
+        {
+            //listEmailMessage.Clear();
+            string message;
+            string addrTo;
+            string addrCC;
+
+            foreach (LoadIssue loadIssue in listLoadOpenIssue)
+            {
+                if (loadIssue.isExperied)
+                {
+                    LoadUser loadUser = listLoadUser.Find(x => x.user.Id == loadIssue.issue.AssignedTo.Id);
+                    if (loadUser != null)
+                    {
+                        addrTo = loadUser.user.Email;
+                        addrCC = loadIssue.EmailHeadUser;
+
+                        message = "Здравствуйте уважаемый(ая) " + loadUser.user.LastName + " " + loadUser.user.FirstName + "." + "\n";
+                        message += "\n";
+                        message += "У вас есть открытые задания по которым вы являетесь ответственным и по которым есть следующие замечания: " + "\n" +
+                            "1. в части задач просрочены сроки выполнения " +
+                            " для которых в случае их выполнения необходимо закрыть (поменять статус на - закрыта) или согласовать новую дату завершения;" + "\n" +
+                            "2. в части задач необходимо указать актуальные проценты выполнения." + "\n";
+                        message += "\n";
+                        message += loadIssue.Message;
+
+                        EmailMessage emailMessage = listEmailMessage.Find(x => (x.Id == loadUser.user.Id) & (x.Title.Equals(title)));
+                        if (emailMessage != null)
+                        {
+                            emailMessage.Message += loadIssue.Message;
+                        }
+                        else
+                        {
+                            emailMessage = new EmailMessage();
+                            emailMessage.ListToEmail.Add(addrTo);
+                            emailMessage.ListCCEmail.Add(addrCC);
+                            emailMessage.Message = message;
+                            emailMessage.Id = loadUser.user.Id;
+                            emailMessage.ProjectId = loadIssue.issue.Project.Id;
+                            emailMessage.Title = title;
+                            listEmailMessage.Add(emailMessage);
+                        }
+                    }                                        
+                }
+            }
+        }
+
+        public void MakeListLoadUserSave(out List<CSVLoadUserYWH> listCSVLoadUserYWH)
+        {
+            listCSVLoadUserYWH = new List<CSVLoadUserYWH>();
+            CSVLoadUserYWH csvLoadUserYWH;
+            listLoadUser.Sort();
+
+            foreach (LoadUser loadUser in listLoadUser)
+            {
+                foreach (LoadYWH loadYWH in loadUser.listLoadYWH)
+                {
+                    csvLoadUserYWH = new CSVLoadUserYWH();
+                    csvLoadUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                    csvLoadUserYWH.GroupName = loadUser.GroupName;
+                    csvLoadUserYWH.SetMWH(TypeSave.WorkHours, "план", loadYWH);
+                    listCSVLoadUserYWH.Add(csvLoadUserYWH);
+
+                    csvLoadUserYWH = new CSVLoadUserYWH();
+                    csvLoadUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                    csvLoadUserYWH.GroupName = loadUser.GroupName;
+                    csvLoadUserYWH.SetMWH(TypeSave.HumansMonth, "план", loadYWH);
+                    listCSVLoadUserYWH.Add(csvLoadUserYWH);
+
+                    csvLoadUserYWH = new CSVLoadUserYWH();
+                    csvLoadUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                    csvLoadUserYWH.GroupName = loadUser.GroupName;
+                    csvLoadUserYWH.SetMWH(TypeSave.WorkHours, "факт", loadYWH);
+                    listCSVLoadUserYWH.Add(csvLoadUserYWH);
+
+                    csvLoadUserYWH = new CSVLoadUserYWH();
+                    csvLoadUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                    csvLoadUserYWH.GroupName = loadUser.GroupName;
+                    csvLoadUserYWH.SetMWH(TypeSave.HumansMonth, "факт", loadYWH);
+                    listCSVLoadUserYWH.Add(csvLoadUserYWH);
+                }
+            }
+        }
+
+        public void MakeListLoadProjectSave(out List<CSVLoadProjectYWH> listCSVLoadProjectYWH)
+        {
+            listCSVLoadProjectYWH = new List<CSVLoadProjectYWH>();
+            CSVLoadProjectYWH csvLoadProjectYWH;
+
+            foreach (LoadProject loadProject in listLoadProject)
+            {
+                foreach (LoadYWH loadYWH in loadProject.listLoadYWH)
+                {
+                    csvLoadProjectYWH = new CSVLoadProjectYWH();
+                    csvLoadProjectYWH.NameProject = loadProject.userProject.Name;
+                    csvLoadProjectYWH.StartDate = loadProject.StartProject.ToShortDateString();
+                    csvLoadProjectYWH.FinishDate = loadProject.FinishProject.ToShortDateString();
+                    csvLoadProjectYWH.SetMWH(TypeSave.WorkHours, "план", loadYWH);
+                    listCSVLoadProjectYWH.Add(csvLoadProjectYWH);
+
+                    csvLoadProjectYWH = new CSVLoadProjectYWH();
+                    csvLoadProjectYWH.NameProject = loadProject.userProject.Name;
+                    csvLoadProjectYWH.StartDate = loadProject.StartProject.ToShortDateString();
+                    csvLoadProjectYWH.FinishDate = loadProject.FinishProject.ToShortDateString();
+                    csvLoadProjectYWH.SetMWH(TypeSave.HumansMonth, "план", loadYWH);
+                    listCSVLoadProjectYWH.Add(csvLoadProjectYWH);
+
+                    csvLoadProjectYWH = new CSVLoadProjectYWH();
+                    csvLoadProjectYWH.NameProject = loadProject.userProject.Name;
+                    csvLoadProjectYWH.StartDate = loadProject.StartProject.ToShortDateString();
+                    csvLoadProjectYWH.FinishDate = loadProject.FinishProject.ToShortDateString();
+                    csvLoadProjectYWH.SetMWH(TypeSave.WorkHours, "факт", loadYWH);
+                    listCSVLoadProjectYWH.Add(csvLoadProjectYWH);
+
+                    csvLoadProjectYWH = new CSVLoadProjectYWH();
+                    csvLoadProjectYWH.NameProject = loadProject.userProject.Name;
+                    csvLoadProjectYWH.StartDate = loadProject.StartProject.ToShortDateString();
+                    csvLoadProjectYWH.FinishDate = loadProject.FinishProject.ToShortDateString();
+                    csvLoadProjectYWH.SetMWH(TypeSave.HumansMonth, "факт", loadYWH);
+                    listCSVLoadProjectYWH.Add(csvLoadProjectYWH);
+                }
+            }
+        }
+
+        public void MakeListLoadGroupSave(out List<CSVLoadGroupYWH> listCSVLoadGroupYWH)
+        {
+            listCSVLoadGroupYWH = new List<CSVLoadGroupYWH>();
+            CSVLoadGroupYWH csvLoadGroupYWH;            
+
+            foreach (LoadGroup loadGroup in listLoadGroup)
+            {                                               
+                foreach (LoadUser loadUser in loadGroup.listLoadUser)
+                {
+                    if (loadUser.user.LastName.Equals(loadGroup.name))
+                    {
+                        foreach (LoadYWH loadYWH in loadUser.listLoadYWH)
+                        {
+                            csvLoadGroupYWH = new CSVLoadGroupYWH();
+                            csvLoadGroupYWH.NameGroup = loadGroup.name;
+                            csvLoadGroupYWH.CountUser = loadGroup.CountUser;
+                            csvLoadGroupYWH.SetMWH(TypeSave.WorkHours, "план", loadYWH);
+                            listCSVLoadGroupYWH.Add(csvLoadGroupYWH);
+
+                            csvLoadGroupYWH = new CSVLoadGroupYWH();
+                            csvLoadGroupYWH.NameGroup = loadGroup.name;
+                            csvLoadGroupYWH.CountUser = loadGroup.CountUser;
+                            csvLoadGroupYWH.SetMWH(TypeSave.HumansMonth, "план", loadYWH);
+                            listCSVLoadGroupYWH.Add(csvLoadGroupYWH);
+
+                            csvLoadGroupYWH = new CSVLoadGroupYWH();
+                            csvLoadGroupYWH.NameGroup = loadGroup.name;
+                            csvLoadGroupYWH.CountUser = loadGroup.CountUser;
+                            csvLoadGroupYWH.SetMWH(TypeSave.WorkHours, "факт", loadYWH);
+                            listCSVLoadGroupYWH.Add(csvLoadGroupYWH);
+
+                            csvLoadGroupYWH = new CSVLoadGroupYWH();
+                            csvLoadGroupYWH.NameGroup = loadGroup.name;
+                            csvLoadGroupYWH.CountUser = loadGroup.CountUser;
+                            csvLoadGroupYWH.SetMWH(TypeSave.HumansMonth, "факт", loadYWH);
+                            listCSVLoadGroupYWH.Add(csvLoadGroupYWH);
+                        }
+
+                    }
+                }
+            }
+        }       
+
+        public void MakeListLoadYWHSave(out List<CSVLoadYWH> listCSVLoadYWH)
+        {
+            listCSVLoadYWH = new List<CSVLoadYWH>();
+            CSVLoadYWH csvLoadYWH;
+
+            foreach (LoadYWH loadYWH in listLoadYWH)
+            {
+                csvLoadYWH = new CSVLoadYWH();
+                csvLoadYWH.SetMWH(TypeSave.WorkHours, "план", loadYWH);
+                listCSVLoadYWH.Add(csvLoadYWH);
+
+                csvLoadYWH = new CSVLoadYWH();
+                csvLoadYWH.SetMWH(TypeSave.HumansMonth, "план", loadYWH);
+                listCSVLoadYWH.Add(csvLoadYWH);
+
+                csvLoadYWH = new CSVLoadYWH();
+                csvLoadYWH.SetMWH(TypeSave.WorkHours, "факт", loadYWH);
+                listCSVLoadYWH.Add(csvLoadYWH);
+
+                csvLoadYWH = new CSVLoadYWH();
+                csvLoadYWH.SetMWH(TypeSave.HumansMonth, "факт", loadYWH);
+                listCSVLoadYWH.Add(csvLoadYWH);
+            }
+        }
+
+        public void SaveCSVFileListIssue<T>(string fileName, List<T> listToSave)
+        {
+            fileName = fileName.Replace(":", "_");
             var stream = new StreamWriter(fileName, false, System.Text.Encoding.UTF8);
             var csv = new CsvWriter(stream);
-            List<Issue> listOut = new List<Issue>();            
+                        
+            csv.WriteRecords(listToSave);
             
-            //foreach (Issue issue in listIssue)
-            //{
-                
-            
-            ////    //Project project = listProject.Find(x => x.Id == issue.Project.Id);
-            ////    //if (project != null)
-            ////    //    listOut.Add(issue);
-            ////    //string line = issue.Project.Name + ";" + issue.Project.Id;
-            ////    //csv.WriteField(line);
-            ////    //csv.NextRecord();
-            //}            
-            csv.WriteRecords(listIssue);            
             stream.Flush();
             stream.Close();            
         }
@@ -81,17 +313,36 @@ namespace WinRedminePlaning
                 Update();
         }
 
+        private int GetCountWorkUsers()
+        {
+            int count = 0;
+
+            foreach (LoadGroup loadGroup in listLoadGroup)
+            {
+                if (!(loadGroup.name.Contains("Испытатели") | loadGroup.name.Contains("Руководители") | loadGroup.name.Contains("Менеджеры")))
+                {
+                    count += loadGroup.CountUser;
+                }
+            }
+
+            return count;
+        }
+
         public void CreateListLoadYWH()
         {
             listLoadYWH.Clear();
             //LoadHours.GetYearsFromListIssue(listYear, listIssue);
 
+            int countWorkUser = GetCountWorkUsers();
+            double maxYearHumansHours = countWorkUser * 12;
+            double maxMonthHumansHours = countWorkUser;
+
             foreach (int year in listYear)
             {
                 if (year > 0)
-                {
-                    LoadYWH loadYMH = new LoadYWH(year, listIssue, listUserTimeEntry);
-                    loadYMH.MakeMonth(listProject);
+                {                    
+                    LoadYWH loadYMH = new LoadYWH(redmineData, maxYearHumansHours, year);
+                    loadYMH.MakeMonth(maxMonthHumansHours, redmineData.listProject);
                     listLoadYWH.Add(loadYMH);
                 }
             }
@@ -101,15 +352,19 @@ namespace WinRedminePlaning
         {
             //listLoadUser.Clear();
             //LoadHours.GetYearsFromListIssue(listYear, listIssue);
-            
+                        
+            double maxYearHumansHours = 1 * 12;
+            double maxMonthHumansHours = 1;
+
             foreach (LoadUser loadUser in listLoadUser)
             {
                 //LoadUser loadUser = new LoadUser(loadUser, listIssue);
                 foreach (int year in listYear)
                 {                    
-                    loadUser.AddYear(year, listProject, listLoadUser);
+                    loadUser.AddYear(maxYearHumansHours, maxMonthHumansHours, year, redmineData.listProject, listLoadUser);
                 }
 
+                SetHeadUser(loadUser.listLoadOpenIssue);
                 //listLoadUser.Add(loadUser);
             }
         }       
@@ -123,18 +378,23 @@ namespace WinRedminePlaning
                 user.Id = loadGroup.id;
                 UserGroupRedmine userGroupRedmine = new UserGroupRedmine(loadGroup.name, loadGroup.id);
 
-                LoadUser loadUserGroup = new LoadUser(user, listIssue, listUserTimeEntry);
+                LoadUser loadUserGroup = new LoadUser(redmineData, user);
                 loadUserGroup.listGroup.Add(userGroupRedmine);
                 loadGroup.listLoadUser.Insert(0, loadUserGroup);
             }
 
             foreach (LoadGroup loadGroup in listLoadGroup)
             {
+                int countWorkUser = loadGroup.CountUser;
+                double maxYearHumansHours = countWorkUser * 12;
+                double maxMonthHumansHours = countWorkUser;
+
                 foreach (LoadUser loadUser in loadGroup.listLoadUser)
                 {
                     foreach (int year in listYear)
                     {
-                        loadUser.AddYear(year, listProject, loadGroup.listLoadUser);
+                        if (loadUser.listLoadYWH.Count < listYear.Count)
+                            loadUser.AddYear(maxYearHumansHours, maxMonthHumansHours, year, redmineData.listProject, loadGroup.listLoadUser);
                     }
                 }
             }
@@ -144,7 +404,11 @@ namespace WinRedminePlaning
         {
             listLoadProject.Clear();
 
-            foreach (Project project in listProject)
+            int countWorkUser = GetCountWorkUsers();
+            double maxYearHumansHours = countWorkUser * 12;
+            double maxMonthHumansHours = countWorkUser;            
+
+            foreach (Project project in redmineData.listProject)
             {
                 bool isPlaned = false;
                 foreach (var customField in project.CustomFields)
@@ -153,67 +417,74 @@ namespace WinRedminePlaning
                     {
                         string res = customField.Values[0].Info;
                         isPlaned = (res.Contains("1"));
-                    }
+                    }                    
                 }
 
                 if ((project.Status == ProjectStatus.Active) & (isPlaned))
                 {
-                    UserProject userProject = new UserProject(project.Name, project.Id);
-                    LoadProject loadProject = new LoadProject(userProject, listIssue, listUserTimeEntry);
+                    UserProject userProject = new UserProject(redmineData, project.Name, project.Id);
+                    LoadProject loadProject = new LoadProject(redmineData, userProject);
 
                     foreach (int year in listYear)
                     {
-                        loadProject.AddYear(year);
+                        loadProject.AddYear(maxYearHumansHours, maxMonthHumansHours, year);
                     }
 
                     listLoadProject.Add(loadProject);
+                    SetHeadUser(loadProject.listLoadOpenIssue);
                 }
             }
-        }
-
-        //public void GetGroupFromRedmine()
-        //{
-        //    listLoadGroup.Clear();
-        //    try
-        //    {
-        //        NameValueCollection parametr = new NameValueCollection { { "group_id", "*" } };
-        //        foreach (Group group in redmineManager.GetObjects<Group>(parametr))
-        //        {
-        //            LoadGroup loadGroup = new LoadGroup(group.Name, group.Id, listIssue);
-        //            listLoadGroup.Add(loadGroup);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Error - " + ex.Message);
-        //    }
-        //}                               
+        }                        
 
         public void GetIssue_ProjectFromRedmine()
         {
-            listIssue.Clear();
-            listProject.Clear();
+            redmineData.listIssue.Clear();
+            redmineData.listOpenIssue.Clear();
+            redmineData.listProject.Clear();
             try
             {
                 NameValueCollection parametr = new NameValueCollection { { "project_id", "*" } };
                 foreach (Project project in redmineManager.GetObjects<Project>(parametr))
                 {
                     //MessageBox.Show(project.Status.ToString());
-                    listProject.Add(project);                    
+                    redmineData.listProject.Add(project);                    
                 }
-
-                parametr = new NameValueCollection { { "status_id", "*" } };
+                
+                parametr = new NameValueCollection { { "status_id", "open" } };
                 foreach (Issue issue in redmineManager.GetObjects<Issue>(parametr))
                 {
-                    
-                    Project project = listProject.Find(x => x.Id == issue.Project.Id);
+
+                    Project project = redmineData.listProject.Find(x => x.Id == issue.Project.Id);
 
                     if (project != null)
                     {
                         if ((issue.StartDate != null) & (issue.DueDate != null) &
                             (issue.AssignedTo != null))
                         {
-                            listIssue.Add(issue);
+                            redmineData.listOpenIssue.Add(issue);
+                        }
+                    }
+                }
+
+                parametr = new NameValueCollection { { "status_id", "*" } };
+                foreach (Issue issue in redmineManager.GetObjects<Issue>(parametr))
+                {
+                    
+                    Project project = redmineData.listProject.Find(x => x.Id == issue.Project.Id);
+
+                    if (issue.Id == 936)
+                    {
+                        Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(), 
+                                                                              new NameValueCollection { { "include", "journals" } });
+                        this.EmailSaveIssue = issue_jornals;
+                    }
+
+                    if (project != null)
+                    {
+                        if ((issue.StartDate != null) & (issue.DueDate != null) &
+                            (issue.AssignedTo != null))
+                        {
+                            redmineData.listIssue.Add(issue);
 
                             //if (!issue.Status.Name.Contains("Закрыта") & !issue.Status.Name.Contains("Решена") &
                             //    !issue.Status.Name.Contains("Отклонена"))
@@ -237,16 +508,15 @@ namespace WinRedminePlaning
             catch (Exception ex)
             {
                 MessageBox.Show("Error - " + ex.Message);
-                MessageBox.Show(listIssue[(listIssue.Count - 1)].Id.ToString());
+                MessageBox.Show(redmineData.listIssue[(redmineData.listIssue.Count - 1)].Id.ToString());
             }
-
-    LoadHours.GetYearsFromListIssue(listYear, listIssue);
+        LoadHours.GetYearsFromListIssue(listYear, redmineData.listIssue);
         }
 
         public void GetUser_GroupFromRedmine()
         {
             NameValueCollection parametr;
-            listUser.Clear();
+            redmineData.listUser.Clear();
             listLoadUser.Clear();
             listLoadGroup.Clear();
 
@@ -255,8 +525,8 @@ namespace WinRedminePlaning
                 parametr = new NameValueCollection { { "user_id", "*" } };
                 foreach (User user in redmineManager.GetObjects<User>(parametr))
                 {
-                    listUser.Add(user);
-                    LoadUser loadUser = new LoadUser(user, listIssue, listUserTimeEntry);
+                    redmineData.listUser.Add(user);
+                    LoadUser loadUser = new LoadUser(redmineData, user);
                     listLoadUser.Add(loadUser);
                 }
             }
@@ -271,7 +541,7 @@ namespace WinRedminePlaning
                 foreach (Group group in redmineManager.GetObjects<Group>(parametr))
                 {
                     UserGroupRedmine userGroup = new UserGroupRedmine(group.Name, group.Id);
-                    LoadGroup loadGroup = new LoadGroup(group.Name, group.Id, listIssue);
+                    LoadGroup loadGroup = new LoadGroup(group.Name, group.Id, redmineData.listIssue);
                     LoadGroup findLoadGroup = listLoadGroup.Find(x => x.id == loadGroup.id);
 
                     if (findLoadGroup == null)
@@ -304,130 +574,16 @@ namespace WinRedminePlaning
 
         public void GetTimeEntryFromRedmine()
         {
-            listUserTimeEntry.Clear();
-
+            redmineData.listUserTimeEntry.Clear();
+            
             NameValueCollection parametr = new NameValueCollection { { "user_id", "*" } };
             foreach (var time in redmineManager.GetObjects<TimeEntry>(parametr))
-            {
-                UserTimeEntry userTimeEntry = new UserTimeEntry(time, listIssue, listUser);
-                listUserTimeEntry.Add(userTimeEntry);
+            {                           
+                UserTimeEntry userTimeEntry = new UserTimeEntry(time, redmineData.listIssue, redmineData.listUser);
+                redmineData.listUserTimeEntry.Add(userTimeEntry);             
             }          
         }
-
-        //public void GetUserFromRedmine(Dictionary<string, string> bossName) //params string[] noNameForReport)
-        //{
-        //    listIssue.Clear();
-        //    listProject.Clear();
-        //    listUserRedmine.Clear();
-
-        //    NameValueCollection parametr = new NameValueCollection { { "user_id", "*" } };
-        //    try
-        //    {
-        //        foreach (var user in redmineManager.GetObjects<User>(parametr))
-        //        {
-        //            UserRedmine userRedmine = new UserRedmine();
-        //            userRedmine.bossName = bossName;
-        //            userRedmine.Value = user;
-
-        //            userRedmine.listIssue = this.listIssue;
-        //            userRedmine.listProject = this.listProject;
-        //            listUserRedmine.Add(userRedmine);                                      
-                    
-
-        //            //parametr = new NameValueCollection { { "user_id", user.Id.ToString() } };
-        //            //int count = redmineManager.GetObjects<TimeEntry>(parametr).Count;
-        //            //if (count > 0)
-        //            //{
-        //            //    UserRedmine userRedmine = new UserRedmine();
-        //            //    userRedmine.Value = user;
-        //            //    listUserRedmine.Add(userRedmine);
-        //            //    Console.WriteLine("Name = {0}, Count time entry = {1}", user.LastName, count);
-        //            //}
-        //        }
-
-        //        parametr = new NameValueCollection { { "group_id", "*" } };
-        //        foreach (Group group in redmineManager.GetObjects<Group>(parametr))
-        //        {
-        //            UserGroupRedmine userGroup = new UserGroupRedmine(group.Name, group.Id);
-        //            foreach (User user in redmineManager.GetObjects<User>(new NameValueCollection { { "group_id", group.Id.ToString() } }))
-        //            {
-        //                UserRedmine userRedmine = listUserRedmine.Find(x => x.Value.Id == user.Id);
-        //                if (userRedmine != null)
-        //                {
-        //                    userRedmine.listUserGroup.Add(userGroup);
-        //                }
-        //            }
-        //        }
-
-        //        parametr = new NameValueCollection { { "status_id", "*" } };
-        //        foreach (Issue issue in redmineManager.GetObjects<Issue>(parametr))
-        //        {
-        //            listIssue.Add(issue);
-        //        }
-
-        //        parametr = new NameValueCollection { { "project_id", "*" } };
-        //        foreach (Project project in redmineManager.GetObjects<Project>(parametr))
-        //        {                    
-        //            listProject.Add(project);
-        //        }
-
-        //        parametr = new NameValueCollection { { "user_id", "*" } };
-        //        foreach (var issue in redmineManager.GetObjects<Issue>(parametr))
-        //        {
-        //            if (issue.AssignedTo != null)
-        //            {
-        //                UserRedmine userRedmine = listUserRedmine.Find(x => x.Value.Id == issue.AssignedTo.Id);
-        //                Project project = listProject.Find(x => x.Id == issue.Project.Id);
-
-        //                if (userRedmine != null)
-        //                {
-        //                    if (project != null)
-        //                    {                                                               
-        //                        if ((issue.StartDate != null) & (issue.DueDate != null))
-        //                        {
-        //                            UserIssueEntry userIssueEntry = new UserIssueEntry(issue, project, userRedmine);                                        
-        //                            userRedmine.listUserIssueEntry.Add(userIssueEntry);
-        //                        }
-                                
-        //                    }
-        //                    userRedmine.listUserIssueEntry.Sort();
-        //                }                        
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Error - " + ex.Message);
-        //    }
-
-        //    listUserRedmine.Sort();
-        //}
-
-        /*public void GetMounthUserTimeEntry(int year, int mounth)
-        {
-            if (mounth > 0 & mounth <= 12)
-            {
-                foreach (UserRedmine userRedmine in listUserRedmine)
-                {
-                    if (userRedmine.BossName.Contains("Першин"))
-                    {
-                        int a = 0;
-                    }
-
-                    userRedmine.listMounthUserIssueEntry.Clear();
-                    foreach (UserIssueEntry userTimeEntry in userRedmine.listUserIssueEntry)
-                    {
-                        if ( (userTimeEntry.DateStart.Month == mounth) & (userTimeEntry.DateStart.Year == year))
-                        {
-                            userRedmine.listMounthUserIssueEntry.Add(userTimeEntry);
-                        }
-                    }
-                    userRedmine.listMounthUserIssueEntry.Sort();
-                }
-            }
-        }
-        */
-
+              
         public LoadYWH FindLoadYWH(int numberYear, List<LoadYWH> listLoadYWH)
         {
             LoadYWH loadYWH = null;

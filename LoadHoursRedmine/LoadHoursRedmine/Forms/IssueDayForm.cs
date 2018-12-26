@@ -16,14 +16,43 @@ namespace WinRedminePlaning
         LoadMWH loadMWH;
         Manager manager;
 
-        TypeView typeView;                        
+        int IDLoadProject;
+        int IDLoadUser;        
 
-        public IssueDayForm(LoadMWH loadMWH, Manager manager, TypeView typeView)
+        private TypeView typeView;
+        private TypeView typeViewSelect;
+
+        public IssueDayForm(LoadProject loadProject, Manager manager, TypeView typeView, TypeView typeViewSelect)
+        {
+            InitializeComponent();            
+            this.IDLoadProject = loadProject.userProject.Id;                      
+            this.manager = manager;
+            this.typeView = typeView;
+            this.typeViewSelect = typeViewSelect;
+
+            MakeCaptionColumnsDWH();
+            ShowLoad_TimeDWH();
+        }
+
+        public IssueDayForm(LoadUser loadUser, Manager manager, TypeView typeView, TypeView typeViewSelect)
+        {
+            InitializeComponent();            
+            this.IDLoadUser = loadUser.user.Id;
+            this.manager = manager;
+            this.typeView = typeView;
+            this.typeViewSelect = typeViewSelect;
+
+            MakeCaptionColumnsDWH();
+            ShowLoad_TimeDWH();
+        }
+
+        public IssueDayForm(LoadMWH loadMWH, Manager manager, TypeView typeView, TypeView typeViewSelect)
         {
             InitializeComponent();
             this.loadMWH = loadMWH;
             this.manager = manager;
             this.typeView = typeView;
+            this.typeViewSelect = typeViewSelect;
 
             MakeCaptionColumnsDWH();
             ShowLoad_TimeDWH();
@@ -31,7 +60,7 @@ namespace WinRedminePlaning
 
         public void UpdateIssueInfo()
         {
-            MessageBox.Show("Hi! " + this.Text);
+            //MessageBox.Show("Hi! " + this.Text);
             ShowLoad_TimeDWH();
         }
 
@@ -39,6 +68,17 @@ namespace WinRedminePlaning
         {
             listLoadDWH.Columns.Clear();
             listLoadDWH.View = View.Details;
+
+            if (typeView == TypeView.LoadShortExpProject | typeView == TypeView.LoadShortExpUser)
+            {
+                listLoadDWH.Columns.Add("Id", -2, HorizontalAlignment.Left);
+                listLoadDWH.Columns.Add("Проект", -2, HorizontalAlignment.Left);
+                listLoadDWH.Columns.Add("Наименование задачи", -2, HorizontalAlignment.Left);
+                listLoadDWH.Columns.Add("Старт", -2, HorizontalAlignment.Left);
+                listLoadDWH.Columns.Add("Финиш", -2, HorizontalAlignment.Left);
+                listLoadDWH.Columns.Add("Кол-во ч", -2, HorizontalAlignment.Left);
+                listLoadDWH.Columns.Add("Исполнитель", -2, HorizontalAlignment.Left);
+            }                       
 
             if ((typeView == TypeView.LoadIssueDWH) | (typeView == TypeView.LoadTimeDWH))
             {
@@ -120,6 +160,48 @@ namespace WinRedminePlaning
             }
         }
 
+        private void AddLineLoadExperiedIssue(LoadIssue loadIssue)
+        {
+            List<string> list = new List<string>();
+
+            User user = manager.redmineData.listUser.Find(x => x.Id == loadIssue.issue.AssignedTo.Id);
+            list.Clear();
+            ListViewItem lvi;
+            string[] array;
+
+            string userName = "";
+            if (user != null)
+                userName = user.LastName + " " + user.FirstName;
+            else
+                userName = loadIssue.issue.AssignedTo.Name;
+
+            float estimatedHours = 0;
+
+            if (loadIssue.issue.EstimatedHours != null)
+                estimatedHours = loadIssue.issue.EstimatedHours.Value;
+
+            string[] line = { loadIssue.issue.Id.ToString(),
+                              loadIssue.issue.Project.Name,
+                              loadIssue.issue.Subject,
+                              loadIssue.issue.StartDate.Value.ToShortDateString(),
+                              loadIssue.issue.DueDate.Value.ToShortDateString(),
+                              estimatedHours.ToString("0.0"),
+                              userName };
+            foreach (string s in line)
+            {
+                list.Add(s);
+            }
+
+            array = list.Select(i => i.ToString()).ToArray();
+            lvi = new ListViewItem(array);
+            listLoadDWH.Items.Add(lvi);
+
+            //SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
+
+            //if (this.typeViewSelect == TypeView.LoadUser)
+            //    SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
+        }
+
         private void ShowLoad_TimeDWH()
         {
             List<string> list = new List<string>();
@@ -128,19 +210,51 @@ namespace WinRedminePlaning
             string[] array;
             int iLine = 0;
 
-            loadMWH.listLoadIssue.Sort();
-            loadMWH.listLoadTimeEntry.Sort();
+            if (loadMWH != null)
+            {
+                loadMWH.listLoadIssue.Sort();
+                loadMWH.listLoadTimeEntry.Sort();
+            }
 
             switch (typeView)
             {
+                case TypeView.LoadShortExpUser:
+                    LoadUser loadUser = manager.listLoadUser.Find(x => x.user.Id == IDLoadUser);
+                    if (loadUser != null)
+                    {
+                        foreach (LoadIssue loadIssue in loadUser.listLoadOpenIssue)
+                        {
+                            if (loadIssue.isExperied)
+                            {
+                                AddLineLoadExperiedIssue(loadIssue);
+                            }
+                        }
+                    }
+                    break;
+
+                case TypeView.LoadShortExpProject:
+                    LoadProject loadProject = manager.listLoadProject.Find(x => x.userProject.Id == IDLoadProject);
+                    if (loadProject != null)
+                    {
+                        foreach (LoadIssue loadIssue in loadProject.listLoadOpenIssue)
+                        {
+                            if (loadIssue.isExperied)
+                            {
+                                AddLineLoadExperiedIssue(loadIssue);
+                            }
+                            iLine++;
+                        }
+                    }
+                    break;
+
                 case TypeView.LoadShortIssueDWH:
-                    foreach (LoadProject loadProject in loadMWH.listLoadProject)
+                    foreach (LoadProject loadProject_cur in loadMWH.listLoadProject)
                     {
                         list.Clear();
 
-                        string[] line = { loadProject.userProject.Id.ToString(),
-                                          loadProject.userProject.Name,                                    
-                                          loadProject.EstimatedMWH.ToString("0.0") };
+                        string[] line = { loadProject_cur.userProject.Id.ToString(),
+                                          loadProject_cur.userProject.Name,                                    
+                                          loadProject_cur.EstimatedMWH.ToString("0.0") };
                         foreach (string s in line)
                         {
                             list.Add(s);
@@ -180,13 +294,13 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadShortTimeDWH:
-                    foreach (LoadProject loadProject in loadMWH.listLoadProject)
+                    foreach (LoadProject loadProject_cur in loadMWH.listLoadProject)
                     {
                         list.Clear();
 
-                        string[] line = { loadProject.userProject.Id.ToString(),
-                                          loadProject.userProject.Name,
-                                          loadProject.FactMWH.ToString("0.0") };
+                        string[] line = { loadProject_cur.userProject.Id.ToString(),
+                                          loadProject_cur.userProject.Name,
+                                          loadProject_cur.FactMWH.ToString("0.0") };
                         foreach (string s in line)
                         {
                             list.Add(s);
@@ -228,7 +342,7 @@ namespace WinRedminePlaning
                 case TypeView.LoadIssueDWH:
                     foreach (LoadIssue loadIssue in loadMWH.listLoadIssue)
                     {
-                        User user = manager.listUser.Find(x => x.Id == loadIssue.issue.AssignedTo.Id);
+                        User user = manager.redmineData.listUser.Find(x => x.Id == loadIssue.issue.AssignedTo.Id);
                         list.Clear();
 
                         string userName = "";
@@ -258,7 +372,9 @@ namespace WinRedminePlaning
                         listLoadDWH.Items.Add(lvi);
 
                         SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
-                        SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
+
+                        if (this.typeViewSelect == TypeView.LoadUser)
+                            SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
 
                         iLine++;
                     }
@@ -289,8 +405,10 @@ namespace WinRedminePlaning
                     lvi = new ListViewItem(array);
                     listLoadDWH.Items.Add(lvi);
 
-                    SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);                    
-                    SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
+                    SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
+
+                    if (this.typeViewSelect == TypeView.LoadUser)
+                        SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
 
                     AutoFitColumn(listLoadDWH);
 
@@ -300,7 +418,7 @@ namespace WinRedminePlaning
 
                     foreach (LoadTimeEntry loadTime in loadMWH.listLoadTimeEntry)
                     {
-                        User user = manager.listUser.Find(x => x.Id == loadTime.userTime.time.User.Id);
+                        User user = manager.redmineData.listUser.Find(x => x.Id == loadTime.userTime.time.User.Id);
                         list.Clear();
 
                         string userName = "";
@@ -330,7 +448,10 @@ namespace WinRedminePlaning
                         listLoadDWH.Items.Add(lvi);
 
                         SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
-                        SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
+
+                        if (this.typeViewSelect == TypeView.LoadUser)
+                            SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
+
                         iLine++;
                     }
 
@@ -361,6 +482,9 @@ namespace WinRedminePlaning
                     listLoadDWH.Items.Add(lvi);
 
                     SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
+
+                    if (this.typeViewSelect == TypeView.LoadUser)
+                        SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
 
                     AutoFitColumn(listLoadDWH);
 
@@ -397,13 +521,13 @@ namespace WinRedminePlaning
             switch (typeView)
             {
                 case TypeView.LoadIssueDWH:
-                    issueMonthForm = new IssueDayForm(loadMWH, manager, TypeView.LoadShortIssueDWH);
+                    issueMonthForm = new IssueDayForm(loadMWH, manager, TypeView.LoadShortIssueDWH, this.typeViewSelect);
                     manager.Update += issueMonthForm.UpdateIssueInfo;
                     issueMonthForm.Text = this.Text;
                     issueMonthForm.Show();
                     break;
                 case TypeView.LoadTimeDWH:
-                    issueMonthForm = new IssueDayForm(loadMWH, manager, TypeView.LoadShortTimeDWH);
+                    issueMonthForm = new IssueDayForm(loadMWH, manager, TypeView.LoadShortTimeDWH, this.typeViewSelect);
                     manager.Update += issueMonthForm.UpdateIssueInfo;
                     issueMonthForm.Text = this.Text;
                     issueMonthForm.Show();
