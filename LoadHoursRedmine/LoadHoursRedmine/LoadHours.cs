@@ -95,7 +95,8 @@ namespace WinRedminePlaning
                 }
             }
             return isItemInPlanProject;
-        }
+        }        
+
         public static bool IsItemInMonth(Object item, DateTime dateStartMonth, DateTime dateFinishMonth)
         {
             bool result = false;
@@ -277,9 +278,14 @@ namespace WinRedminePlaning
 
     public class CSVLoadUserYWH : CSVLoadYWH
     {
-        public string UserName { get; set; }
+        public string UserName { get; set; }        
         public string GroupName { get; set; }
 
+    }
+    
+    public class CSVLoadProjectUserYWH : CSVLoadProjectYWH
+    {
+        public string UserName { get; set; }
     }
 
     public class CSVLoadProjectYWH :  CSVLoadYWH
@@ -867,8 +873,8 @@ namespace WinRedminePlaning
                     listLoadIssue.Add(loadIssue);
                 }
             }
-        }
-        
+        }       
+
         public void GetListLoadTime(List<Project> listProject, int numberYear)
         {
             listLoadTimeEntry.Clear();
@@ -882,7 +888,7 @@ namespace WinRedminePlaning
                     listLoadTimeEntry.Add(loadTimeEntry);
                 }
             }
-        }
+        }        
 
         public void GetListLoadTime(List<Project> listProject, int numberYear, LoadUser loadUser, List<LoadUser> listLoadUser)
         {
@@ -920,6 +926,43 @@ namespace WinRedminePlaning
             }
         }
 
+        public void GetListLoadTime(List<Project> listProject, LoadProject loadProject, 
+                                    int numberYear, LoadUser loadUser, List<LoadUser> listLoadUser)
+        {
+            listLoadTimeEntry.Clear();
+
+            bool isGroup = false;
+            if (loadUser.user.LastName.Equals(loadUser.GroupName))
+                isGroup = true;
+
+            foreach (var userTimeEntry in listUserTimeEntry)
+            {
+                if (isGroup)
+                {
+                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
+                        LoadHours.IsItemInPlanProject(userTimeEntry, listProject))
+                    {
+                        LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == userTimeEntry.time.User.Id);
+                        if (findLoadUser != null)
+                        {
+                            LoadTimeEntry loadTimeEntry = new LoadTimeEntry(userTimeEntry, dateStartMonth, dateFinishMonth);
+                            listLoadTimeEntry.Add(loadTimeEntry);
+                        }
+                    }
+                }
+                else
+                {
+                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
+                        LoadHours.IsItemInPlanProject(userTimeEntry, listProject) &
+                       (userTimeEntry.time.User.Id == loadUser.user.Id) & (userTimeEntry.time.Project.Id == loadProject.userProject.Id))
+                    {
+                        LoadTimeEntry loadTimeEntry = new LoadTimeEntry(userTimeEntry, dateStartMonth, dateFinishMonth);
+                        listLoadTimeEntry.Add(loadTimeEntry);
+                    }
+                }
+            }
+        }
+
         public void GetListLoadIssue(List<Project> listProject, int numberYear, LoadUser loadUser, List<LoadUser> listLoadUser)
         {
             listLoadIssue.Clear();
@@ -948,6 +991,43 @@ namespace WinRedminePlaning
                     if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
                         LoadHours.IsItemInPlanProject(issue, listProject) &
                        (issue.AssignedTo.Id == loadUser.user.Id))
+                    {
+                        LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
+                        listLoadIssue.Add(loadIssue);
+                    }
+                }
+            }
+        }
+
+        public void GetListLoadIssue(List<Project> listProject, LoadProject loadProject, 
+                                     int numberYear, LoadUser loadUser, List<LoadUser> listLoadUser)
+        {
+            listLoadIssue.Clear();
+
+            bool isGroup = false;
+            if (loadUser.user.LastName.Equals(loadUser.GroupName))
+                isGroup = true;
+
+            foreach (var issue in listIssue)
+            {
+                if (isGroup)
+                {
+                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
+                        LoadHours.IsItemInPlanProject(issue, listProject))
+                    {
+                        LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == issue.AssignedTo.Id);
+                        if (findLoadUser != null)
+                        {
+                            LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
+                            listLoadIssue.Add(loadIssue);
+                        }
+                    }
+                }
+                else
+                {
+                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
+                        LoadHours.IsItemInPlanProject(issue, listProject) &
+                       (issue.AssignedTo.Id == loadUser.user.Id) & (issue.Project.Id == loadProject.userProject.Id))
                     {
                         LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
                         listLoadIssue.Add(loadIssue);
@@ -1085,6 +1165,7 @@ namespace WinRedminePlaning
     {        
         public UserProject userProject { get; }
         public List<LoadYWH> listLoadYWH { get; }
+        public List<LoadUser> listLoadUser { get; }
         public List<LoadIssue> listLoadOpenIssue { get; }
         public DateTime StartProject { get; }
         public DateTime FinishProject { get; }
@@ -1243,14 +1324,33 @@ namespace WinRedminePlaning
             this.listOpenIssue = redmineData.listOpenIssue;
             this.listUserTimeEntry = redmineData.listUserTimeEntry;
             this.listLoadYWH = new List<LoadYWH>();
+            this.listLoadUser = new List<LoadUser>();
             this.listLoadOpenIssue = new List<LoadIssue>();
 
             GetStartFinishDateProject(ref startDate, ref finishDate);
             GetLoadOpenIssue();
+            CreateListLoadUser();
             this.StartProject = startDate;
             this.FinishProject = finishDate;
         }
-        
+
+        private void CreateListLoadUser()
+        {            
+            foreach (Issue issue in redmineData.listIssue)
+            {
+                if (issue.Project.Id == userProject.Id)
+                {
+                    User user = redmineData.listUser.Find(x => x.Id == issue.AssignedTo.Id);                    
+                    LoadUser loadUser = this.listLoadUser.Find(x => x.user.Id == issue.AssignedTo.Id);
+                    if ((user != null) & (loadUser == null))
+                    {
+                        loadUser = new LoadUser(redmineData, user);
+                        this.listLoadUser.Add(loadUser);
+                    }
+                }
+            }            
+        }
+
         private void GetLoadOpenIssue()
         {
             foreach (Issue issue in listOpenIssue)
@@ -1268,6 +1368,14 @@ namespace WinRedminePlaning
             LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year);
             loadYWH.MakeMonth(maxMYH, this.userProject);
             listLoadYWH.Add(loadYWH);
+
+            double maxYearHumansHours = 1 * 12;
+            double maxMonthHumansHours = 1;
+
+            foreach (LoadUser loadUser in listLoadUser)
+            {                
+                loadUser.AddYear(maxYearHumansHours, maxMonthHumansHours, year, redmineData.listProject, this, listLoadUser);                
+            }
         }        
     }
 
@@ -1351,7 +1459,15 @@ namespace WinRedminePlaning
             LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year);
             loadYWH.MakeMonth(maxMYH, listProject, this, listLoadUser);
             listLoadYWH.Add(loadYWH);                        
-        }                       
+        }
+
+        public void AddYear(double maxYHH, double maxMYH, int year, List<Project> listProject, 
+                            LoadProject loadProject, List<LoadUser> listLoadUser)
+        {
+            LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year);
+            loadYWH.MakeMonth(maxMYH, listProject, loadProject, this, listLoadUser);
+            listLoadYWH.Add(loadYWH);
+        }
 
         public int CompareTo(object obj)
         {
@@ -1486,7 +1602,7 @@ namespace WinRedminePlaning
                 listLoadMWH.Add(loadMWH);
                 loadMWH.MakeDWHSum();
             }
-        }
+        }        
 
         public void MakeMonth(double maxHumansHours, List<Project> listProject, LoadUser loadUser, List<LoadUser> listLoadUser)
         {
@@ -1501,6 +1617,27 @@ namespace WinRedminePlaning
                     LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth);
                     loadMWH.GetListLoadIssue(listProject, NumberYear, loadUser, listLoadUser);
                     loadMWH.GetListLoadTime(listProject, NumberYear, loadUser, listLoadUser);
+                    loadMWH.GetListLoadProject();
+                    listLoadMWH.Add(loadMWH);
+                    loadMWH.MakeDWHSum();
+                }
+            }
+        }
+
+        public void MakeMonth(double maxHumansHours, List<Project> listProject, LoadProject loadProject, 
+                              LoadUser loadUser, List<LoadUser> listLoadUser)
+        {
+            if (loadUser != null)
+            {
+                listLoadMWH.Clear();
+
+                for (int month = 1; month <= 12; month++)
+                {
+                    DateTime dateStartMonth = new DateTime(NumberYear, month, 1);
+                    DateTime dateFinishMonth = dateStartMonth.AddMonths(1).AddDays(-1);
+                    LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth);
+                    loadMWH.GetListLoadIssue(listProject, loadProject, NumberYear, loadUser, listLoadUser);
+                    loadMWH.GetListLoadTime(listProject, loadProject, NumberYear, loadUser, listLoadUser);
                     loadMWH.GetListLoadProject();
                     listLoadMWH.Add(loadMWH);
                     loadMWH.MakeDWHSum();

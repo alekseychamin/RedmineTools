@@ -13,7 +13,7 @@ using System.Windows.Forms;
 namespace WinRedminePlaning
 {
     public enum TypeView { LoadUser = 0, LoadExperiedUser, LoadYWH, LoadGroup,
-                           LoadProject, LoadExperiedProject, LoadIssueDWH, LoadShortIssueDWH,
+                           LoadProject, LoadProjectUser, LoadExperiedProject, LoadIssueDWH, LoadShortIssueDWH,
                            LoadTimeDWH, LoadShortTimeDWH, LoadShortExpProject, LoadShortExpUser };
     public enum Operation { Equal, More, Less };
 
@@ -161,7 +161,7 @@ namespace WinRedminePlaning
                 foreach (LoadYWH loadYWH in loadUser.listLoadYWH)
                 {
                     csvLoadUserYWH = new CSVLoadUserYWH();
-                    csvLoadUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                    csvLoadUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;                    
                     csvLoadUserYWH.GroupName = loadUser.GroupName;
                     csvLoadUserYWH.SetMWH(TypeSave.WorkHours, "план", loadYWH);
                     listCSVLoadUserYWH.Add(csvLoadUserYWH);
@@ -183,6 +183,53 @@ namespace WinRedminePlaning
                     csvLoadUserYWH.GroupName = loadUser.GroupName;
                     csvLoadUserYWH.SetMWH(TypeSave.HumansMonth, "факт", loadYWH);
                     listCSVLoadUserYWH.Add(csvLoadUserYWH);
+                }
+            }
+        }
+
+        public void MakeListLoadProjectUserSave(out List<CSVLoadProjectUserYWH> listCSVLoadProjectUserYWH)
+        {
+            listCSVLoadProjectUserYWH = new List<CSVLoadProjectUserYWH>();
+            CSVLoadProjectUserYWH csvLoadProjectUserYWH;
+
+            foreach (LoadProject loadProject in listLoadProject)
+            {
+                foreach (LoadUser loadUser in loadProject.listLoadUser)
+                {
+                    foreach (LoadYWH loadYWH in loadUser.listLoadYWH)
+                    {
+                        csvLoadProjectUserYWH = new CSVLoadProjectUserYWH();
+                        csvLoadProjectUserYWH.NameProject = loadProject.userProject.Name;
+                        csvLoadProjectUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                        csvLoadProjectUserYWH.StartDate = loadProject.StartProject.ToShortDateString();
+                        csvLoadProjectUserYWH.FinishDate = loadProject.FinishProject.ToShortDateString();
+                        csvLoadProjectUserYWH.SetMWH(TypeSave.WorkHours, "план", loadYWH);
+                        listCSVLoadProjectUserYWH.Add(csvLoadProjectUserYWH);
+
+                        csvLoadProjectUserYWH = new CSVLoadProjectUserYWH();
+                        csvLoadProjectUserYWH.NameProject = loadProject.userProject.Name;
+                        csvLoadProjectUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                        csvLoadProjectUserYWH.StartDate = loadProject.StartProject.ToShortDateString();
+                        csvLoadProjectUserYWH.FinishDate = loadProject.FinishProject.ToShortDateString();
+                        csvLoadProjectUserYWH.SetMWH(TypeSave.HumansMonth, "план", loadYWH);
+                        listCSVLoadProjectUserYWH.Add(csvLoadProjectUserYWH);
+
+                        csvLoadProjectUserYWH = new CSVLoadProjectUserYWH();
+                        csvLoadProjectUserYWH.NameProject = loadProject.userProject.Name;
+                        csvLoadProjectUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                        csvLoadProjectUserYWH.StartDate = loadProject.StartProject.ToShortDateString();
+                        csvLoadProjectUserYWH.FinishDate = loadProject.FinishProject.ToShortDateString();
+                        csvLoadProjectUserYWH.SetMWH(TypeSave.WorkHours, "факт", loadYWH);
+                        listCSVLoadProjectUserYWH.Add(csvLoadProjectUserYWH);
+
+                        csvLoadProjectUserYWH = new CSVLoadProjectUserYWH();
+                        csvLoadProjectUserYWH.NameProject = loadProject.userProject.Name;
+                        csvLoadProjectUserYWH.UserName = loadUser.user.LastName + " " + loadUser.user.FirstName;
+                        csvLoadProjectUserYWH.StartDate = loadProject.StartProject.ToShortDateString();
+                        csvLoadProjectUserYWH.FinishDate = loadProject.FinishProject.ToShortDateString();
+                        csvLoadProjectUserYWH.SetMWH(TypeSave.HumansMonth, "факт", loadYWH);
+                        listCSVLoadProjectUserYWH.Add(csvLoadProjectUserYWH);
+                    }
                 }
             }
         }

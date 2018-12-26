@@ -99,6 +99,7 @@ namespace WinRedminePlaning
             List<CSVLoadYWH> listCSVLoadYWH;
             List<CSVLoadGroupYWH> listCSVLoadGroupYWH;
             List<CSVLoadProjectYWH> listCSVLoadProjectYWH;
+            List<CSVLoadProjectUserYWH> listCSVLoadProjectUserYWH;
             List<CSVLoadUserYWH> listCSVLoadUserYWH;
 
             manager.MakeListLoadYWHSave(out listCSVLoadYWH);
@@ -109,6 +110,9 @@ namespace WinRedminePlaning
 
             manager.MakeListLoadProjectSave(out listCSVLoadProjectYWH);
             manager.SaveCSVFileListIssue<CSVLoadProjectYWH>("ФРВ проектов от " + DateTime.Now.ToString() + ".csv", listCSVLoadProjectYWH);
+
+            manager.MakeListLoadProjectUserSave(out listCSVLoadProjectUserYWH);
+            manager.SaveCSVFileListIssue<CSVLoadProjectUserYWH>("ФРВ проектов спец от " + DateTime.Now.ToString() + ".csv", listCSVLoadProjectUserYWH);
 
             manager.MakeListLoadUserSave(out listCSVLoadUserYWH);
             manager.SaveCSVFileListIssue<CSVLoadUserYWH>("ФРВ специалистов от " + DateTime.Now.ToString() + ".csv", listCSVLoadUserYWH);
@@ -131,6 +135,16 @@ namespace WinRedminePlaning
             manager.Update += mwhLoadForm.UpdateForm;
 
             mwhLoadForm.Text = "Просроченные проекты";
+            mwhLoadForm.Show();
+        }
+
+        private void but_LoadProjectUser(object sender, EventArgs e)
+        {
+            mwhLoadForm = new LoadMWHForm(manager, TypeView.LoadProjectUser, TypeView.LoadProjectUser);
+
+            manager.Update += mwhLoadForm.UpdateForm;
+
+            mwhLoadForm.Text = "Проекты по специалистам";
             mwhLoadForm.Show();
         }
     }

@@ -38,6 +38,10 @@ namespace WinRedminePlaning
                     tabIndex = 8;                    
                     break;
 
+                case TypeView.LoadProjectUser:
+                    tabIndex = 8;
+                    break;
+
                 case TypeView.LoadGroup:
                     tabIndex = 5;                    
                     break;
@@ -249,6 +253,17 @@ namespace WinRedminePlaning
                     listLine.Add(sl);
                     break;
 
+                case TypeView.LoadProjectUser:
+                    listLine.Add(num.ToString());
+                    listLine.Add(value);
+                    listLine.Add("");
+                    listLine.Add("");
+                    listLine.Add("");
+                    listLine.Add("");
+                    listLine.Add("");
+                    listLine.Add(sl);
+                    break;
+
                 case TypeView.LoadExperiedProject:
                     listLine.Add(num.ToString());
                     listLine.Add(value);
@@ -398,10 +413,32 @@ namespace WinRedminePlaning
                 listOut.Items.Add(lvi_name);
                 iLine++;
 
-                if (typeView != TypeView.LoadExperiedProject)
+                MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadProject: loadProject);
+                MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadProject: loadProject);
+
+                if (typeView == TypeView.LoadProject)
                 {
-                    MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadProject: loadProject);
-                    MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadProject: loadProject);
+                    
+                }
+
+                if (typeView == TypeView.LoadProjectUser)
+                {
+                    foreach (LoadUser lU in loadProject.listLoadUser)
+                    {
+                        string[] lineNameU = { ""/*numUser.ToString()*/, lU.user.LastName + " " + lU.user.FirstName,
+                                              lU.GroupName,
+                                              "", "",
+                                              "", "", "" };
+
+                        ListViewItem lvi_nameU = new ListViewItem(lineNameU);
+                        lvi_nameU.Font = new Font(lvi_nameU.Font, FontStyle.Bold);
+                        lvi_nameU.Tag = lU;
+                        listOut.Items.Add(lvi_nameU);
+                        iLine++;
+
+                        MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadUser: lU);
+                        MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadUser: lU);
+                    }
                 }
             }
 
@@ -586,6 +623,12 @@ namespace WinRedminePlaning
                         AddLineNameGroup(ref iLine, numberYear, listLoadMWH, null, null, null, loadProject);
                     }
                     break;
+                case TypeView.LoadProjectUser:
+                    foreach (LoadProject loadProject in manager.listLoadProject)
+                    {
+                        AddLineNameGroup(ref iLine, numberYear, listLoadMWH, null, null, null, loadProject);
+                    }
+                    break;
                 case TypeView.LoadExperiedProject:
                     foreach (LoadProject loadProject in manager.listLoadProject)
                     {
@@ -617,6 +660,18 @@ namespace WinRedminePlaning
             switch (typeView)
             {
                 case TypeView.LoadProject:
+                    tabIndex = 8;
+                    listLoadMWH.Columns.Add("№", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("Название проекта", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("ТРП", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("Старт", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("Финищ", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("% ФОТ", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("% работ", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("Итого", -2, HorizontalAlignment.Left);
+                    break;
+
+                case TypeView.LoadProjectUser:
                     tabIndex = 8;
                     listLoadMWH.Columns.Add("№", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Название проекта", -2, HorizontalAlignment.Left);

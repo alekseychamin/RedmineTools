@@ -29,17 +29,18 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.but_loadRedmine = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.button8 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -48,6 +49,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button8);
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
@@ -57,50 +59,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(471, 313);
             this.panel1.TabIndex = 1;
-            // 
-            // button7
-            // 
-            this.button7.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button7.Location = new System.Drawing.Point(74, 41);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(318, 23);
-            this.button7.TabIndex = 10;
-            this.button7.Text = "Просроченные проекты";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.but_LoadExperiedProject);
-            // 
-            // button6
-            // 
-            this.button6.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button6.Location = new System.Drawing.Point(74, 12);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(318, 23);
-            this.button6.TabIndex = 9;
-            this.button6.Text = "Просроченные задания специалистов";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.but_LoadExperiedUser);
-            // 
-            // button5
-            // 
-            this.button5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button5.Location = new System.Drawing.Point(74, 22);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(318, 23);
-            this.button5.TabIndex = 8;
-            this.button5.Text = "Сохранить Годовой ФРВ";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // button4
-            // 
-            this.button4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button4.Location = new System.Drawing.Point(74, 21);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(318, 23);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "Обновить данные";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.but_updateRedmineData);
             // 
             // button3
             // 
@@ -146,13 +104,57 @@
             this.but_loadRedmine.UseVisualStyleBackColor = true;
             this.but_loadRedmine.Click += new System.EventHandler(this.but_loadYWH_Click);
             // 
+            // button7
+            // 
+            this.button7.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button7.Location = new System.Drawing.Point(74, 41);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(318, 23);
+            this.button7.TabIndex = 10;
+            this.button7.Text = "Просроченные проекты";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.but_LoadExperiedProject);
+            // 
+            // button6
+            // 
+            this.button6.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button6.Location = new System.Drawing.Point(74, 12);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(318, 23);
+            this.button6.TabIndex = 9;
+            this.button6.Text = "Просроченные задания специалистов";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.but_LoadExperiedUser);
+            // 
+            // button5
+            // 
+            this.button5.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button5.Location = new System.Drawing.Point(74, 13);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(318, 23);
+            this.button5.TabIndex = 8;
+            this.button5.Text = "Сохранить Годовой ФРВ";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // button4
+            // 
+            this.button4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button4.Location = new System.Drawing.Point(74, 12);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(318, 23);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "Обновить данные";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.but_updateRedmineData);
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.button4);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 243);
+            this.panel2.Location = new System.Drawing.Point(0, 261);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(471, 70);
+            this.panel2.Size = new System.Drawing.Size(471, 52);
             this.panel2.TabIndex = 2;
             // 
             // panel3
@@ -160,7 +162,7 @@
             this.panel3.Controls.Add(this.button7);
             this.panel3.Controls.Add(this.button6);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 173);
+            this.panel3.Location = new System.Drawing.Point(0, 191);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(471, 70);
             this.panel3.TabIndex = 3;
@@ -169,10 +171,21 @@
             // 
             this.panel4.Controls.Add(this.button5);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(0, 103);
+            this.panel4.Location = new System.Drawing.Point(0, 139);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(471, 70);
+            this.panel4.Size = new System.Drawing.Size(471, 52);
             this.panel4.TabIndex = 4;
+            // 
+            // button8
+            // 
+            this.button8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button8.Location = new System.Drawing.Point(0, 92);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(471, 23);
+            this.button8.TabIndex = 7;
+            this.button8.Text = "Проекты спец";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.but_LoadProjectUser);
             // 
             // MainForm
             // 
@@ -206,6 +219,7 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Button button8;
     }
 }
 
