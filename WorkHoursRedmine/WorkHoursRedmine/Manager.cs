@@ -15,11 +15,20 @@ namespace WinRedminePlaning
         string host = "188.242.201.77";
         string apiKey = "70b1a875928636d8d3895248309344ea2bca6a5f";
         RedmineManager redmineManager;
+        private int maxMonthHours;
 
-        public List<UserRedmine> listUserRedmine = new List<UserRedmine>();
+        public List<UserRedmine> listUserRedmine = new List<UserRedmine>();        
+        public List<MonthHours> listMonthHours = new List<MonthHours>();
+        public MonthValueHours monthValueHours;
         public List<Issue> listIssue = new List<Issue>();
         public List<Project> listProject = new List<Project>();
-
+        public int MaxMonthHours
+        {
+            get
+            {
+                return maxMonthHours;
+            }
+        }
         public ExcelMethods excelMethods = new ExcelMethods();
 
         public Manager()
@@ -27,6 +36,7 @@ namespace WinRedminePlaning
             try
             {
                 redmineManager = new RedmineManager(host, apiKey);
+                monthValueHours = new MonthValueHours(listMonthHours);
             }
             catch (Exception ex)
             {
@@ -62,7 +72,7 @@ namespace WinRedminePlaning
             {
                 foreach (var user in redmineManager.GetObjects<User>(parametr))
                 {
-                    UserRedmine userRedmine = new UserRedmine();
+                    UserRedmine userRedmine = new UserRedmine(this.monthValueHours);
                     userRedmine.bossName = bossName;
                     userRedmine.Value = user;
 
@@ -115,7 +125,21 @@ namespace WinRedminePlaning
                 foreach (Issue issue in redmineManager.GetObjects<Issue>(parametr))
                 {
                     listIssue.Add(issue);
+                    if (issue.Id == 937)
+                    {
+                        Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(),
+                                                                              new NameValueCollection { { "include", "journals" } });
 
+                        foreach (var journal in issue_jornals.Journals)
+                        {
+                            string note = journal.Notes;
+                            if (!note.Equals(""))
+                            {
+                                MonthHours monthHours = new MonthHours(note);
+                                listMonthHours.Add(monthHours);
+                            }
+                        }
+                    }
                 }
 
                 parametr = new NameValueCollection { { "project_id", "*" } };
@@ -224,10 +248,12 @@ namespace WinRedminePlaning
             }                            
         }
 
-        public void GetMounthUserTimeEntry(int year, int mounth)
+        public void GetMounthUserTimeEntry(int year, int month)
         {
-            if (mounth > 0 & mounth <= 12)
+            if (month > 0 & month <= 12)
             {
+                this.monthValueHours.CurYear = year;
+                this.monthValueHours.CurMonth = month;
                 foreach (UserRedmine userRedmine in listUserRedmine)
                 {
                     if (userRedmine.BossName.Contains("Першин"))
@@ -238,7 +264,7 @@ namespace WinRedminePlaning
                     userRedmine.listMounthUserTimeEntry.Clear();
                     foreach (UserTimeEntry userTimeEntry in userRedmine.listUserTimeEntry)
                     {
-                        if ( (userTimeEntry.DateStart.Month == mounth) & (userTimeEntry.DateStart.Year == year))
+                        if ( (userTimeEntry.DateStart.Month == month) & (userTimeEntry.DateStart.Year == year))
                         {
                             userRedmine.listMounthUserTimeEntry.Add(userTimeEntry);
                         }

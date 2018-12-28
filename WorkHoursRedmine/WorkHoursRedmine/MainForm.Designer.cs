@@ -41,6 +41,7 @@
             this.butReportExcel = new System.Windows.Forms.Button();
             this.but_SaveExcel = new System.Windows.Forms.Button();
             this.but_loadRedmine = new System.Windows.Forms.Button();
+            this.lab_MonthHours = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -137,6 +138,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lab_MonthHours);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.comboMounth);
             this.panel1.Controls.Add(this.butReportExcel);
@@ -151,9 +153,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(320, 10);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(318, 10);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 13);
+            this.label3.Size = new System.Drawing.Size(45, 13);
             this.label3.TabIndex = 3;
             this.label3.Text = "Месяц";
             // 
@@ -168,7 +171,7 @@
             // 
             // butReportExcel
             // 
-            this.butReportExcel.Location = new System.Drawing.Point(479, 6);
+            this.butReportExcel.Location = new System.Drawing.Point(671, 5);
             this.butReportExcel.Name = "butReportExcel";
             this.butReportExcel.Size = new System.Drawing.Size(138, 23);
             this.butReportExcel.TabIndex = 1;
@@ -195,6 +198,16 @@
             this.but_loadRedmine.Text = "Загрузить из Redmine";
             this.but_loadRedmine.UseVisualStyleBackColor = true;
             this.but_loadRedmine.Click += new System.EventHandler(this.but_loadRedmine_Click);
+            // 
+            // lab_MonthHours
+            // 
+            this.lab_MonthHours.AutoSize = true;
+            this.lab_MonthHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lab_MonthHours.Location = new System.Drawing.Point(470, 11);
+            this.lab_MonthHours.Name = "lab_MonthHours";
+            this.lab_MonthHours.Size = new System.Drawing.Size(114, 13);
+            this.lab_MonthHours.TabIndex = 4;
+            this.lab_MonthHours.Text = "Кол-во раб. часов";
             // 
             // MainForm
             // 
@@ -234,6 +247,7 @@
         private System.Windows.Forms.ComboBox comboMounth;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button butReportExcel;
+        private System.Windows.Forms.Label lab_MonthHours;
     }
 }
 

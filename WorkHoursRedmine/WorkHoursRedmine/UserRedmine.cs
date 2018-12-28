@@ -5,17 +5,78 @@ using System.Text;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Types;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace WinRedminePlaning
 {
 
+    class MonthValueHours
+    {
+        public int CurYear { get; set; }
+        public int CurMonth { get; set; }
+        private List<MonthHours> listMonthHours;
+        public int Value
+        {
+            get
+            {
+                int value = 160;
+
+                if (listMonthHours != null)
+                {
+                    MonthHours monthHours = listMonthHours.Find(x => x.Year == CurYear);
+                    if (monthHours != null)
+                    {
+                        if ((CurMonth > 0) & (CurMonth <= 12))
+                        {
+                            value = monthHours.Value[CurMonth];
+                        }
+                    }
+                }
+                return value;
+            }
+        }
+        public MonthValueHours(List<MonthHours> listMonthHours)
+        {
+            this.listMonthHours = listMonthHours;
+        }
+    }
     class MonthHours
     {        
         public int Year { get; set; }                          
-        public Dictionary<int, int> Hours { get; }
-        public MonthHours(Issue issue)
+        public Dictionary<int, int> Value { get; }
+        public MonthHours(string data)
         {
+            Value = new Dictionary<int, int>();
+            
+            if (!data.Equals(""))
+            {
+                string[] array = data.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                try
+                {
+                    int year = Convert.ToInt16(array[0]);
+                    this.Year = year;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
 
+                for (int i = 1;  i < array.Length; i++)
+                {
+                    string[] pair = array[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+                    try
+                    {
+                        int key = Convert.ToInt16(pair[0]);
+                        int hours = Convert.ToInt16(pair[1]);
+                        Value.Add(key, hours);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
         }
     }
     class ExcelUserTimeEntry
@@ -333,6 +394,11 @@ namespace WinRedminePlaning
     }
     class UserRedmine : IComparable
     {
+        public UserRedmine(MonthValueHours monthValueHours)
+        {
+            this.monthValueHours = monthValueHours;
+        }
+
         public User Value;
         public string FullName
         {
@@ -525,8 +591,8 @@ namespace WinRedminePlaning
             return this.GroupName.CompareTo(userToCompare.GroupName);                
         }
 
-        private int maxMonthHour;
-        private int minMontHour = 0;
+
+        private MonthValueHours monthValueHours;        
 
         public List<UserTimeEntry> listUserTimeEntry = new List<UserTimeEntry>();
         public List<UserTimeEntry> listMounthUserTimeEntry = new List<UserTimeEntry>();        
@@ -541,7 +607,15 @@ namespace WinRedminePlaning
             {
                 Color color = Color.White;
 
+                if (this.TotalMonthHours == 0)
+                {
+                    color = Color.Red;
+                }
 
+                if (this.TotalMonthHours > 0 & this.TotalMonthHours < this.monthValueHours.Value)
+                {
+                    color = Color.Yellow;
+                }
 
                 return color;
             }

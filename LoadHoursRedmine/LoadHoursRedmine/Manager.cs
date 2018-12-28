@@ -446,7 +446,23 @@ namespace WinRedminePlaning
                 }
             }
         }
-        
+
+        private bool IsProjectActivePlaned(Project project)
+        {
+            bool isPlaned = false;
+
+            foreach (var customField in project.CustomFields)
+            {
+                if (customField.Name.Contains("Учет при планировании"))
+                {
+                    string res = customField.Values[0].Info;
+                    isPlaned = (res.Contains("1"));
+                }
+            }
+
+            return ((project.Status == ProjectStatus.Active) & (isPlaned));            
+        }
+
         public void CreateListLoadProject()
         {
             listLoadProject.Clear();
@@ -456,18 +472,8 @@ namespace WinRedminePlaning
             double maxMonthHumansHours = countWorkUser;            
 
             foreach (Project project in redmineData.listProject)
-            {
-                bool isPlaned = false;
-                foreach (var customField in project.CustomFields)
-                {
-                    if (customField.Name.Contains("Учет при планировании"))
-                    {
-                        string res = customField.Values[0].Info;
-                        isPlaned = (res.Contains("1"));
-                    }                    
-                }
-
-                if ((project.Status == ProjectStatus.Active) & (isPlaned))
+            {                
+                if (IsProjectActivePlaned(project))
                 {
                     UserProject userProject = new UserProject(redmineData, project.Name, project.Id);
                     LoadProject loadProject = new LoadProject(redmineData, userProject);

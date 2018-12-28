@@ -1422,7 +1422,7 @@ namespace WinRedminePlaning
                 return nameGroup;
             }
         }
-        public RedmineData redmineData;
+        public RedmineData redmineData;        
         private List<Issue> listIssue;
         private List<Issue> listOpenIssue;
         private List<UserTimeEntry> listUserTimeEntry;        
@@ -1432,7 +1432,7 @@ namespace WinRedminePlaning
             this.user = user;
             this.listLoadYWH = new List<LoadYWH>();
             this.listGroup = new List<UserGroupRedmine>();
-            this.listLoadOpenIssue = new List<LoadIssue>();
+            this.listLoadOpenIssue = new List<LoadIssue>();            
             this.redmineData = redmineData;
             this.listIssue = redmineData.listIssue;
             this.listOpenIssue = redmineData.listOpenIssue;

@@ -129,6 +129,7 @@ namespace WinRedminePlaning
         {
             listViewUser.Items.Clear();
             int num = 1;
+            int iLine = 0;
             foreach (UserRedmine user in manager.listUserRedmine)
             {
                 string[] line = { num.ToString(),
@@ -145,7 +146,10 @@ namespace WinRedminePlaning
                                   user.TotalFreeHours.ToString()};
                 ListViewItem lvi = new ListViewItem(line);
                 listViewUser.Items.Add(lvi);
+                listViewUser.Items[iLine].UseItemStyleForSubItems = false;
+                listViewUser.Items[iLine].SubItems[3].BackColor = user.CellColor;
                 num++;
+                iLine++;
             }
 
             foreach (ColumnHeader column in listViewUser.Columns)
@@ -160,6 +164,7 @@ namespace WinRedminePlaning
             but_loadRedmine.Enabled = false;
             manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
             manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
+            lab_MonthHours.Text = "Кол-во раб. часов: " + manager.monthValueHours.Value.ToString();
             ShowUserRedmine();
             labelUserName.Text = "Пользователь: -";
             but_loadRedmine.Enabled = true;
@@ -231,6 +236,7 @@ namespace WinRedminePlaning
             int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
              
             manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
+            lab_MonthHours.Text = "Кол-во раб. часов: " + manager.monthValueHours.Value.ToString();
             listViewTimeEntry.Items.Clear();           
             ShowUserRedmine();
 
