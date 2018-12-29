@@ -15,5 +15,8 @@ namespace WinRedminePlaning
         public List<Issue> listOpenIssue = new List<Issue>();
         public List<User> listUser = new List<User>();
 
+        public List<MonthHours> listMonthHours = new List<MonthHours>();
+        public MonthValueHours monthValueHours;
+
     }
 }

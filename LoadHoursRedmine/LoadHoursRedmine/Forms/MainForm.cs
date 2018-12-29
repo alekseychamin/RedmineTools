@@ -82,6 +82,8 @@ namespace WinRedminePlaning
 
         private void but_updateRedmineData(object sender, EventArgs e)
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             GetDateFromRedmine();            
 
             manager.CreateListLoadYWH();
@@ -90,8 +92,9 @@ namespace WinRedminePlaning
             manager.CreateListLoadProject();
 
             manager.UpdateForm();
-                        
-            MessageBox.Show("Data is updated!");
+
+            watch.Stop();
+            MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds / 1000).ToString() + " сек");            
         }
 
         private void button5_Click(object sender, EventArgs e)

@@ -612,10 +612,14 @@ namespace WinRedminePlaning
                     color = Color.Red;
                 }
 
-                if (this.TotalMonthHours > 0 & this.TotalMonthHours < this.monthValueHours.Value)
+                if (this.TotalMonthHours > 0 & (this.TotalMonthHours < this.monthValueHours.Value || 
+                                                this.TotalMonthHours > this.monthValueHours.Value))
                 {
                     color = Color.Yellow;
                 }
+
+                if (this.TotalMonthHours == this.monthValueHours.Value)
+                    color = Color.Green;
 
                 return color;
             }

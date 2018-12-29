@@ -160,6 +160,8 @@ namespace WinRedminePlaning
 
         private void but_loadRedmine_Click(object sender, EventArgs e)
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
             but_loadRedmine.Enabled = false;
             manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
@@ -167,6 +169,9 @@ namespace WinRedminePlaning
             lab_MonthHours.Text = "Кол-во раб. часов: " + manager.monthValueHours.Value.ToString();
             ShowUserRedmine();
             labelUserName.Text = "Пользователь: -";
+
+            watch.Stop();
+            MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds/1000).ToString() + " сек");
             but_loadRedmine.Enabled = true;
         }        
 

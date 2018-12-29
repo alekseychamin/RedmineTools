@@ -55,9 +55,28 @@ namespace WinRedminePlaning
             return result;
         }
 
-        public static bool IsItemInPlanProject(Object item, List<Project> listProject)
+        public static bool IsItemInPlanActiveProject(Object item, List<Project> listProject = null)
         {
             bool isItemInPlanProject = false;
+            bool isActiveProject = false;
+
+            if (item is Project)
+            {
+                Project project = (Project)item;
+                isActiveProject = (project.Status == ProjectStatus.Active);
+                foreach (var customField in project.CustomFields)
+                {
+                    if (customField.Name.Equals("Учет при планировании"))
+                    {
+                        string res = customField.Values[0].Info;
+                        if (res.Contains("1"))
+                        {
+                            isItemInPlanProject = true;                            
+                            break;
+                        }
+                    }
+                }
+            }
 
             if (item is Issue)
             {
@@ -65,13 +84,17 @@ namespace WinRedminePlaning
                 Project project = listProject.Find(x => x.Id == issue.Project.Id);
                 if (project != null)
                 {
+                    isActiveProject = (project.Status == ProjectStatus.Active);
                     foreach (var customField in project.CustomFields)
                     {
-                        string res = customField.Values[0].Info;
-                        if (res.Contains("1"))
+                        if (customField.Name.Equals("Учет при планировании"))
                         {
-                            isItemInPlanProject = true;
-                            break;
+                            string res = customField.Values[0].Info;
+                            if (res.Contains("1"))
+                            {
+                                isItemInPlanProject = true;
+                                break;
+                            }
                         }
                     }
                 }                
@@ -83,18 +106,22 @@ namespace WinRedminePlaning
                 Project project = listProject.Find(x => x.Id == timeEntry.time.Project.Id);
                 if (project != null)
                 {
+                    isActiveProject = (project.Status == ProjectStatus.Active);
                     foreach (var customField in project.CustomFields)
                     {
-                        string res = customField.Values[0].Info;
-                        if (res.Contains("1"))
+                        if (customField.Name.Equals("Учет при планировании"))
                         {
-                            isItemInPlanProject = true;
-                            break;
+                            string res = customField.Values[0].Info;
+                            if (res.Contains("1"))
+                            {
+                                isItemInPlanProject = true;
+                                break;
+                            }
                         }
                     }
                 }
             }
-            return isItemInPlanProject;
+            return (isItemInPlanProject & isActiveProject);
         }        
 
         public static bool IsItemInMonth(Object item, DateTime dateStartMonth, DateTime dateFinishMonth)
@@ -253,7 +280,77 @@ namespace WinRedminePlaning
             //hours = hoursItem;
         }
     }
-    
+
+    public class MonthValueHours
+    {
+        public int CurYear { get; set; }
+        public int CurMonth { get; set; }
+        private List<MonthHours> listMonthHours;
+        public int Value
+        {
+            get
+            {
+                int value = 160;
+
+                if (listMonthHours != null)
+                {
+                    MonthHours monthHours = listMonthHours.Find(x => x.Year == CurYear);
+                    if (monthHours != null)
+                    {
+                        if ((CurMonth > 0) & (CurMonth <= 12))
+                        {
+                            value = monthHours.Value[CurMonth];
+                        }
+                    }
+                }
+                return value;
+            }
+        }
+        public MonthValueHours(List<MonthHours> listMonthHours)
+        {
+            this.listMonthHours = listMonthHours;
+        }
+    }
+    public class MonthHours
+    {
+        public int Year { get; set; }
+        public Dictionary<int, int> Value { get; }
+        public MonthHours(string data)
+        {
+            Value = new Dictionary<int, int>();
+
+            if (!data.Equals(""))
+            {
+                string[] array = data.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                try
+                {
+                    int year = Convert.ToInt16(array[0]);
+                    this.Year = year;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                for (int i = 1; i < array.Length; i++)
+                {
+                    string[] pair = array[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+                    try
+                    {
+                        int key = Convert.ToInt16(pair[0]);
+                        int hours = Convert.ToInt16(pair[1]);
+                        Value.Add(key, hours);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }
+        }
+    }
+
     public class EmailMessage : IComparable
     {
         public List<string> ListToEmail { get; set; }
@@ -711,6 +808,7 @@ namespace WinRedminePlaning
         private double factHoursMonth;
         private double maxHumansHours;
         private double minHumansHours = 0;
+        public int monthHours { get; }
 
         public Color MonthEstimatedColor
         {
@@ -754,8 +852,8 @@ namespace WinRedminePlaning
                     estimatedMonthHumans += loadIssue.estimatedIssueHours;
                 }
 
-                if (countWD != 0)
-                    estimatedMonthHumans /= countWD * 8;
+                if (monthHours != 0)
+                    estimatedMonthHumans /= monthHours;
                 else estimatedMonthHumans = 0;
 
                 return estimatedMonthHumans;
@@ -774,8 +872,8 @@ namespace WinRedminePlaning
                     factMonthHumans += loadTimeEntry.factMonthHours;
                 }
 
-                if (countWD != 0)
-                    factMonthHumans /= countWD * 8;
+                if (monthHours != 0)
+                    factMonthHumans /= monthHours;
                 else factMonthHumans = 0;
 
                 return factMonthHumans;
@@ -822,6 +920,10 @@ namespace WinRedminePlaning
             this.dateStartMonth = dateStartMonth;
             this.dateFinishMonth = dateFinishMonth;
 
+            redmineData.monthValueHours.CurMonth = numberMonth;
+            redmineData.monthValueHours.CurYear = dateStartMonth.Year;
+            this.monthHours = redmineData.monthValueHours.Value;
+
             listLoadDWH = new List<LoadDWH>();
             listLoadIssue = new List<LoadIssue>();
             listLoadTimeEntry = new List<LoadTimeEntry>();
@@ -867,7 +969,7 @@ namespace WinRedminePlaning
             foreach (var issue in listIssue)
             {
                 if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) & 
-                    LoadHours.IsItemInPlanProject(issue, listProject))
+                    LoadHours.IsItemInPlanActiveProject(issue, listProject))
                 {                    
                     LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
                     listLoadIssue.Add(loadIssue);
@@ -882,7 +984,7 @@ namespace WinRedminePlaning
             foreach (UserTimeEntry userTimeEntry in listUserTimeEntry)
             {
                 if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                    LoadHours.IsItemInPlanProject(userTimeEntry, listProject))
+                    LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
                 {
                     LoadTimeEntry loadTimeEntry = new LoadTimeEntry(userTimeEntry, dateStartMonth, dateFinishMonth);
                     listLoadTimeEntry.Add(loadTimeEntry);
@@ -903,7 +1005,7 @@ namespace WinRedminePlaning
                 if (isGroup)
                 {
                     if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanProject(userTimeEntry, listProject))
+                        LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
                     {
                         LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == userTimeEntry.time.User.Id);
                         if (findLoadUser != null)
@@ -916,7 +1018,7 @@ namespace WinRedminePlaning
                 else
                 {
                     if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanProject(userTimeEntry, listProject) &
+                        LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject) &
                        (userTimeEntry.time.User.Id == loadUser.user.Id))
                     {
                         LoadTimeEntry loadTimeEntry = new LoadTimeEntry(userTimeEntry, dateStartMonth, dateFinishMonth);
@@ -940,7 +1042,7 @@ namespace WinRedminePlaning
                 if (isGroup)
                 {
                     if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanProject(userTimeEntry, listProject))
+                        LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
                     {
                         LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == userTimeEntry.time.User.Id);
                         if (findLoadUser != null)
@@ -953,7 +1055,7 @@ namespace WinRedminePlaning
                 else
                 {
                     if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanProject(userTimeEntry, listProject) &
+                        LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject) &
                        (userTimeEntry.time.User.Id == loadUser.user.Id) & (userTimeEntry.time.Project.Id == loadProject.userProject.Id))
                     {
                         LoadTimeEntry loadTimeEntry = new LoadTimeEntry(userTimeEntry, dateStartMonth, dateFinishMonth);
@@ -976,7 +1078,7 @@ namespace WinRedminePlaning
                 if (isGroup)
                 {
                     if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanProject(issue, listProject))
+                        LoadHours.IsItemInPlanActiveProject(issue, listProject))
                     {
                         LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == issue.AssignedTo.Id);
                         if (findLoadUser != null)
@@ -989,7 +1091,7 @@ namespace WinRedminePlaning
                 else
                 {
                     if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanProject(issue, listProject) &
+                        LoadHours.IsItemInPlanActiveProject(issue, listProject) &
                        (issue.AssignedTo.Id == loadUser.user.Id))
                     {
                         LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
@@ -1013,7 +1115,7 @@ namespace WinRedminePlaning
                 if (isGroup)
                 {
                     if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanProject(issue, listProject))
+                        LoadHours.IsItemInPlanActiveProject(issue, listProject))
                     {
                         LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == issue.AssignedTo.Id);
                         if (findLoadUser != null)
@@ -1026,7 +1128,7 @@ namespace WinRedminePlaning
                 else
                 {
                     if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanProject(issue, listProject) &
+                        LoadHours.IsItemInPlanActiveProject(issue, listProject) &
                        (issue.AssignedTo.Id == loadUser.user.Id) & (issue.Project.Id == loadProject.userProject.Id))
                     {
                         LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
@@ -1071,11 +1173,11 @@ namespace WinRedminePlaning
             foreach (LoadIssue loadIssue in listLoadIssue)
             {
                 string Name = loadIssue.issue.Project.Name;
-                int Id = loadIssue.issue.Project.Id;
-                UserProject userProject = new UserProject(redmineData, Name, Id);
+                int Id = loadIssue.issue.Project.Id;                
                 LoadProject findLoadProject = listLoadProject.Find(x => x.userProject.Id == Id);
                 if (findLoadProject == null)
                 {
+                    UserProject userProject = new UserProject(redmineData, Name, Id);
                     LoadProject loadProject = new LoadProject(redmineData, userProject, this.listLoadIssue, this.listLoadTimeEntry);
                     listLoadProject.Add(loadProject);
                 }
@@ -1084,11 +1186,11 @@ namespace WinRedminePlaning
             foreach (LoadTimeEntry loadTime in listLoadTimeEntry)
             {
                 string Name = loadTime.userTime.time.Project.Name;
-                int Id = loadTime.userTime.time.Project.Id;
-                UserProject userProject = new UserProject(redmineData, Name, Id);
+                int Id = loadTime.userTime.time.Project.Id;                
                 LoadProject findLoadProject = listLoadProject.Find(x => x.userProject.Id == Id);
                 if (findLoadProject == null)
                 {
+                    UserProject userProject = new UserProject(redmineData, Name, Id);
                     LoadProject loadProject = new LoadProject(redmineData, userProject, this.listLoadIssue, this.listLoadTimeEntry);
                     listLoadProject.Add(loadProject);
                 }
@@ -1142,19 +1244,26 @@ namespace WinRedminePlaning
             {
                 foreach (var customField in project.CustomFields)
                 {
-                    if (customField.Name.Contains("ТРП"))
+                    if (customField.Name.Equals("ТРП"))
                     {
                         string res = customField.Values[0].Info;
-                        string[] names = res.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries); 
-                        if (names.Length == 3)
+
+                        User user = redmineData.listUser.Find(x => x.Id.ToString().Equals(res));
+                        if (user != null)
                         {
-                            User user = redmineData.listUser.Find(x => x.LastName.Equals(names[0]) & 
-                                                                  x.FirstName.Equals(names[1] + " " + names[2]));
-                            if (user != null)
-                            {
-                                headUser = user;
-                            }
+                            headUser = user;
                         }
+
+                        //string[] names = res.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries); 
+                        //if (names.Length == 3)
+                        //{
+                        //    User user = redmineData.listUser.Find(x => x.LastName.Equals(names[2]) & 
+                        //                                          x.FirstName.Equals(names[0] + " " + names[1]));
+                        //    if (user != null)
+                        //    {
+                        //        headUser = user;
+                        //    }
+                        //}
                     }
                 }
             }

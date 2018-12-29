@@ -165,7 +165,8 @@ namespace WinRedminePlaning
                 {
                     //string sl = loadYWH.listLoadMWH[i].EstimatedMonthHours.ToString("0.0") + "/" +
                     //            loadYWH.listLoadMWH[i].EstimatedMontHumans.ToString("0.0");
-                    string sl = loadYWH.listLoadMWH[i].EstimatedMontHumans.ToString("0.0");
+                    string sl = loadYWH.listLoadMWH[i].EstimatedMontHumans.ToString("0.0") + "/" +
+                                loadYWH.listLoadMWH[i].EstimatedMonthHours.ToString("0.0");
                     list.Add(sl);
 
                 }
@@ -176,7 +177,9 @@ namespace WinRedminePlaning
                 {
                     //string sl = loadYWH.listLoadMWH[i].FactMonthHours.ToString("0.0") + "/" +
                     //            loadYWH.listLoadMWH[i].FactMontHumans.ToString("0.0");
-                    string sl = loadYWH.listLoadMWH[i].FactMontHumans.ToString("0.0");
+                    string sl = loadYWH.listLoadMWH[i].FactMontHumans.ToString("0.0") + "/" +
+                                loadYWH.listLoadMWH[i].FactMonthHours.ToString("0.0") + "/" +
+                                loadYWH.listLoadMWH[i].monthHours.ToString(); 
                     list.Add(sl);
                 }
             }            
@@ -223,11 +226,11 @@ namespace WinRedminePlaning
 
             if (value.Contains("план"))
             {                
-                sl = loadYWHcur.EstimatedYHumans.ToString("0.0");                
+                sl = loadYWHcur.EstimatedYHumans.ToString("0.0") + "/" + loadYWHcur.EstimatedYWH.ToString("0.0");                
             }
             else
             {                
-                sl = loadYWHcur.FactYHumans.ToString("0.0");                                
+                sl = loadYWHcur.FactYHumans.ToString("0.0") + "/" + loadYWHcur.FactYWH.ToString("0.0");                                
             }
 
            listLine = new List<string>();

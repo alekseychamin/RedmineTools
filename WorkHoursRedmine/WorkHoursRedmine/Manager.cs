@@ -183,7 +183,8 @@ namespace WinRedminePlaning
 
             ExcelUserTimeEntry excelUserTimeEntry = listExcelTimeEntry.Find(x => ((x.ProjectName == userTimeEntry.ProjectName) & 
                                                                                   (x.IssueName == userTimeEntry.IssueName) & 
-                                                                                  (x.Comment == userTimeEntry.Comment)));
+                                                                                  (x.Comment == userTimeEntry.Comment) &
+                                                                                  (x.ActivityName == userTimeEntry.ActivityName)));
 
             if (excelUserTimeEntry != null)
             {

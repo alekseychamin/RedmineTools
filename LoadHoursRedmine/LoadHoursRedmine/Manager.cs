@@ -30,7 +30,7 @@ namespace WinRedminePlaning
         RedmineManager redmineManager;
 
         public event UpdateFormInfo Update;        
-        public List<UserRedmine> listUserRedmine = new List<UserRedmine>();               
+        public List<UserRedmine> listUserRedmine = new List<UserRedmine>();        
 
         public List<EmailMessage> listEmailMessage = new List<EmailMessage>();
 
@@ -54,6 +54,7 @@ namespace WinRedminePlaning
                 redmineManager = new RedmineManager(host, apiKey);
                 this.redmineData = redmineData;
                 listYear = new List<int>();
+                redmineData.monthValueHours = new MonthValueHours(redmineData.listMonthHours);
             }
             catch (Exception ex)
             {
@@ -445,23 +446,7 @@ namespace WinRedminePlaning
                     }
                 }
             }
-        }
-
-        private bool IsProjectActivePlaned(Project project)
-        {
-            bool isPlaned = false;
-
-            foreach (var customField in project.CustomFields)
-            {
-                if (customField.Name.Contains("Учет при планировании"))
-                {
-                    string res = customField.Values[0].Info;
-                    isPlaned = (res.Contains("1"));
-                }
-            }
-
-            return ((project.Status == ProjectStatus.Active) & (isPlaned));            
-        }
+        }        
 
         public void CreateListLoadProject()
         {
@@ -473,7 +458,7 @@ namespace WinRedminePlaning
 
             foreach (Project project in redmineData.listProject)
             {                
-                if (IsProjectActivePlaned(project))
+                if (LoadHours.IsItemInPlanActiveProject(project))
                 {
                     UserProject userProject = new UserProject(redmineData, project.Name, project.Id);
                     LoadProject loadProject = new LoadProject(redmineData, userProject);
@@ -494,6 +479,7 @@ namespace WinRedminePlaning
             redmineData.listIssue.Clear();
             redmineData.listOpenIssue.Clear();
             redmineData.listProject.Clear();
+            redmineData.listMonthHours.Clear();
             try
             {
                 NameValueCollection parametr = new NameValueCollection { { "project_id", "*" } };
@@ -530,6 +516,22 @@ namespace WinRedminePlaning
                         Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(), 
                                                                               new NameValueCollection { { "include", "journals" } });
                         this.EmailSaveIssue = issue_jornals;
+                    }
+
+                    if (issue.Id == 937)
+                    {
+                        Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(),
+                                                                              new NameValueCollection { { "include", "journals" } });
+
+                        foreach (var journal in issue_jornals.Journals)
+                        {
+                            string note = journal.Notes;
+                            if (!note.Equals(""))
+                            {
+                                MonthHours monthHours = new MonthHours(note);
+                                redmineData.listMonthHours.Add(monthHours);
+                            }
+                        }
                     }
 
                     if (project != null)
