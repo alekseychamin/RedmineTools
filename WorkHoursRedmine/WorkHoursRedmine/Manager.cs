@@ -22,6 +22,7 @@ namespace WinRedminePlaning
         public MonthValueHours monthValueHours;
         public List<Issue> listIssue = new List<Issue>();
         public List<Project> listProject = new List<Project>();
+        public List<User> listUser = new List<User>();
         public int MaxMonthHours
         {
             get
@@ -66,6 +67,7 @@ namespace WinRedminePlaning
             listIssue.Clear();
             listProject.Clear();
             listUserRedmine.Clear();
+            listUser.Clear();
 
             NameValueCollection parametr = new NameValueCollection { { "user_id", "*" } };
             try
@@ -75,6 +77,7 @@ namespace WinRedminePlaning
                     UserRedmine userRedmine = new UserRedmine(this.monthValueHours);
                     userRedmine.bossName = bossName;
                     userRedmine.Value = user;
+                    listUser.Add(user);
 
                     bool isNameWorkHour = false;
                     string res = "";
@@ -161,7 +164,7 @@ namespace WinRedminePlaning
                             if (project.IsPublic)
                             {
                                 UserTimeEntry userTimeEntry = new UserTimeEntry(userRedmine.listIssue, userRedmine.listProject, 
-                                                                                userRedmine);
+                                                                                userRedmine, listUser);
                                 userTimeEntry.Value = time;
                                 userRedmine.listUserTimeEntry.Add(userTimeEntry);
                             }

@@ -141,6 +141,7 @@ namespace WinRedminePlaning
         public UserRedmine AssignedTo;
         private List<Issue> listIssue;
         private List<Project> listProject;
+        private List<User> listUser;
         public string IssueName
         {
             get
@@ -205,6 +206,11 @@ namespace WinRedminePlaning
                                 if (customField.Name.Contains("ТРП"))
                                 {
                                     res = customField.Values[0].Info;
+                                    User user = listUser.Find(x => x.Id.ToString().Equals(res));
+                                    if (user != null)
+                                    {
+                                        res = user.LastName + " " + user.FirstName;
+                                    }
                                 }
                             }
 
@@ -366,11 +372,12 @@ namespace WinRedminePlaning
             }
         }
 
-        public UserTimeEntry(List<Issue> listIssue, List<Project> listProject, UserRedmine AssignedTo)
+        public UserTimeEntry(List<Issue> listIssue, List<Project> listProject, UserRedmine AssignedTo, List<User> listUser)
         {
             this.listIssue = listIssue;
             this.listProject = listProject;
             this.AssignedTo = AssignedTo;
+            this.listUser = listUser;
         }
 
         public DateTime GetLastWorkDay(int year, int month)
