@@ -14,7 +14,7 @@ namespace WinRedminePlaning
 {
     public enum TypeView { LoadUser = 0, LoadExperiedUser, LoadYWH, LoadGroup,
                            LoadProject, LoadProjectUser, LoadExperiedProject, LoadIssueDWH, LoadShortIssueDWH,
-                           LoadTimeDWH, LoadShortTimeDWH, LoadShortExpProject, LoadShortExpUser };
+                           LoadTimeDWH, LoadShortTimeDWH, LoadShortExpProject, LoadShortExpUser, ReportIssue, ReportEmail };
     public enum Operation { Equal, More, Less };
 
     public enum TypeSave { WorkHours, HumansMonth };
@@ -41,6 +41,8 @@ namespace WinRedminePlaning
         public List<LoadUser> listLoadUser = new List<LoadUser>();
         
         public List<LoadProject> listLoadProject = new List<LoadProject>();
+
+        public List<ProjectInfo> listProjectInfo = new List<ProjectInfo>();
 
         //public ExcelMethods excelMethods = new ExcelMethods();
         public RedmineData redmineData;
@@ -359,6 +361,41 @@ namespace WinRedminePlaning
         {
             if (Update != null)
                 Update();
+        }
+        
+        public void MakeReportIssue()
+        {
+            listProjectInfo.Clear();
+
+            foreach (LoadProject loadProject in listLoadProject)
+            {
+                ProjectInfo projectInfo = new ProjectInfo();
+                projectInfo.ProjectName = loadProject.userProject.Name;
+
+                foreach (LoadIssue loadIssue in loadProject.listLoadOpenIssue)
+                {                    
+                    UserTimeEntry userTimeEntry = redmineData.listUserTimeEntry.Find(x => (x.time.Issue != null) && 
+                                                                                    (x.time.Issue.Id == loadIssue.issue.Id));
+                    if (userTimeEntry != null)
+                    {
+                        double factHours = (double)userTimeEntry.time.Hours;
+
+                        double estimatedHours = 0;
+                        if (loadIssue.issue.EstimatedHours != null)
+                            estimatedHours = (float)loadIssue.issue.EstimatedHours;
+
+                        double delta = factHours - estimatedHours * (float)loadIssue.issue.DoneRatio;
+                        if (delta >= estimatedHours * 0.1)
+                        {
+                            projectInfo.Info += "На задачу http://188.242.201.77/issues/" + loadIssue.issue.Id.ToString() +
+                                " по оценке % выполненных работ % составляет " + estimatedHours.ToString("0") + "\n" +
+                                "по оценке фактических затрат составляет " + factHours.ToString("0") + "\n" +
+                                "задержка составляет " + delta.ToString("0") + "\n";
+                        }
+                    }
+                }
+                listProjectInfo.Add(projectInfo);
+            }            
         }
 
         private int GetCountWorkUsers()

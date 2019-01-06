@@ -281,6 +281,12 @@ namespace WinRedminePlaning
         }
     }
 
+    public class ProjectInfo
+    {
+        public string ProjectName;
+        public string Info;
+    }
+
     public class MonthValueHours
     {
         public int CurYear { get; set; }

@@ -150,5 +150,13 @@ namespace WinRedminePlaning
             mwhLoadForm.Text = "Проекты по специалистам";
             mwhLoadForm.Show();
         }
+
+        private void but_ReportIssue(object sender, EventArgs e)
+        {
+            manager.MakeReportIssue();
+            ReportForm report = new ReportForm(manager, "", TypeView.ReportIssue);
+            report.Text = "Отчет о задачах с задержкой";
+            report.Show();
+        }
     }
 }

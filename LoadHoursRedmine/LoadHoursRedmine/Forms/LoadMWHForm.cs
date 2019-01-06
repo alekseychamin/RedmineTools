@@ -82,7 +82,7 @@ namespace WinRedminePlaning
                             string title = "Redmine просроченные задания по проекту " + loadProject.userProject.Name;
                             manager.MakeEmailMessages(loadProject.listLoadOpenIssue, title);
 
-                            ReportForm report = new ReportForm(manager, title);
+                            ReportForm report = new ReportForm(manager, title, TypeView.ReportEmail);
                             report.Text = title;
 
                             //foreach (var note in manager.EmailSaveIssue.Journals)
@@ -100,7 +100,7 @@ namespace WinRedminePlaning
                                            loadUser.user.FirstName;
                             manager.MakeEmailMessages(loadUser.listLoadOpenIssue, title);
 
-                            ReportForm report = new ReportForm(manager, title);
+                            ReportForm report = new ReportForm(manager, title, TypeView.ReportEmail);
                             report.Text = title;
                             report.Show();
                         }
@@ -687,7 +687,7 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadExperiedProject:
-                    tabIndex = 0;
+                    tabIndex = 5;
                     listLoadMWH.Columns.Add("№", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Название проекта", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("ТРП", -2, HorizontalAlignment.Left);

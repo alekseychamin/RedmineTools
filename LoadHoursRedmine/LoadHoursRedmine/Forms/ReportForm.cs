@@ -14,15 +14,24 @@ namespace WinRedminePlaning
     {
         Manager manager;
         string title;
-        public ReportForm(Manager manager, string title)
+        public ReportForm(Manager manager, string title, TypeView typeView)
         {
             InitializeComponent();
             this.manager = manager;
             this.title = title;
-            ShowEmailMessage();
+
+            switch (typeView)
+            {
+                case TypeView.ReportIssue:
+                    ShowReportIssue();
+                    break;
+                case TypeView.ReportEmail:
+                    ShowReportEmailMessage();
+                    break;
+            }            
         }
 
-        private void ShowEmailMessage()
+        private void ShowReportEmailMessage()
         {
             foreach (EmailMessage emailMessage in manager.listEmailMessage)
             {
@@ -46,6 +55,17 @@ namespace WinRedminePlaning
                     richTextBox1.Text += emailMessage.Message;
                     richTextBox1.Text += "\n";
                 }
+            }
+        }
+
+        private void ShowReportIssue()
+        {
+            foreach (ProjectInfo projectInfo in manager.listProjectInfo)
+            {
+                richTextBox1.Text += projectInfo.ProjectName;
+                richTextBox1.Text += "\n";
+                richTextBox1.Text += projectInfo.Info;
+                richTextBox1.Text += "\n";
             }
         }
 
