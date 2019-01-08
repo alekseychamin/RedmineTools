@@ -1687,6 +1687,36 @@ namespace WinRedminePlaning
                 return factYWH;
             }
         }
+        
+        public double EstimatedPercentYHumans
+        {
+            get
+            {
+                double res = 0;
+
+                double estYH = EstimatedYHumans;
+
+                if ((estYH != 0) & (maxHumansHours != 0))
+                    res = (estYH / maxHumansHours) * 100; 
+
+                return res;
+            }
+        }
+
+        public double FactPercentYHumans
+        {
+            get
+            {
+                double res = 0;
+
+                double factYH = FactYHumans;
+
+                if ((factYH != 0) & (maxHumansHours != 0))
+                    res = (factYH / maxHumansHours) * 100;
+
+                return res;
+            }
+        }
 
         private List<Issue> listIssue;
         private List<UserTimeEntry> listUserTimeEntry;

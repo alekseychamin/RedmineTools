@@ -223,14 +223,17 @@ namespace WinRedminePlaning
             }
 
             string sl = "";
+            string perc = "";
 
             if (value.Contains("план"))
             {                
-                sl = loadYWHcur.EstimatedYHumans.ToString("0.0") + "/" + loadYWHcur.EstimatedYWH.ToString("0.0");                
+                sl = loadYWHcur.EstimatedYHumans.ToString("0.0") + "/" + loadYWHcur.EstimatedYWH.ToString("0.0");
+                perc = loadYWHcur.EstimatedPercentYHumans.ToString("0") + " %";
             }
             else
             {                
-                sl = loadYWHcur.FactYHumans.ToString("0.0") + "/" + loadYWHcur.FactYWH.ToString("0.0");                                
+                sl = loadYWHcur.FactYHumans.ToString("0.0") + "/" + loadYWHcur.FactYWH.ToString("0.0");
+                perc = loadYWHcur.FactPercentYHumans.ToString("0") + " %";
             }
 
            listLine = new List<string>();
@@ -238,15 +241,15 @@ namespace WinRedminePlaning
             switch (typeView)
             {
                 case TypeView.LoadGroup:
-                    listLine.Add(num.ToString());
+                    listLine.Add("");
                     listLine.Add(value);
-                    listLine.Add("%");
+                    listLine.Add(perc);
                     listLine.Add("");
                     listLine.Add(sl);
                     break;
 
                 case TypeView.LoadProject:
-                    listLine.Add(num.ToString());
+                    listLine.Add("");
                     listLine.Add(value);
                     listLine.Add("");
                     listLine.Add("");
@@ -257,7 +260,7 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadProjectUser:
-                    listLine.Add(num.ToString());
+                    listLine.Add("");
                     listLine.Add(value);
                     listLine.Add("");
                     listLine.Add("");
@@ -268,7 +271,7 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadExperiedProject:
-                    listLine.Add(num.ToString());
+                    listLine.Add("");
                     listLine.Add(value);
                     listLine.Add("");
                     listLine.Add("");
@@ -277,7 +280,7 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadUser:
-                    listLine.Add(num.ToString());
+                    listLine.Add("");
                     listLine.Add(value);
                     listLine.Add("");
                     listLine.Add("");
@@ -285,7 +288,7 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadExperiedUser:
-                    listLine.Add(num.ToString());
+                    listLine.Add("");
                     listLine.Add(value);
                     listLine.Add("");
                     listLine.Add("");
@@ -293,7 +296,7 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadYWH:
-                    listLine.Add(num.ToString());
+                    listLine.Add("");
                     listLine.Add(value);
                     listLine.Add(sl);
                     break;
@@ -334,6 +337,7 @@ namespace WinRedminePlaning
 
         private void AddLineNameGroup(ref int iLine, 
                                       int numberYear,
+                                      int numItem,
                                       ListView listOut,                                       
                                       LoadYWH loadYWH = null, 
                                       LoadUser loadUser = null, LoadGroup loadGroup = null, LoadProject loadProject = null)
@@ -345,12 +349,12 @@ namespace WinRedminePlaning
             {
                 if (loadUser.user.LastName.Equals(loadGroup.name))
                 {
-                    isGroup = true;
-                    string[] lineGroup = { ""/*numGroup.ToString()*/, loadUser.user.LastName, "", loadGroup.CountUser.ToString(), "" };
+                    isGroup = true;                    
+                    string[] lineGroup = { numItem.ToString()/*numGroup.ToString()*/, loadUser.user.LastName, "", loadGroup.CountUser.ToString(), "" };
                     ListViewItem lvi_group = new ListViewItem(lineGroup);
                     lvi_group.Font = new Font(lvi_group.Font, FontStyle.Bold);
                     lvi_group.Tag = loadUser;
-                    listOut.Items.Add(lvi_group);
+                    listOut.Items.Add(lvi_group);                    
                     iLine++;
 
                     MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadUser: loadUser);
@@ -372,13 +376,13 @@ namespace WinRedminePlaning
                             groupName += ";" + group.name;
                     }
                 }
-
-                string[] lineName = { ""/*numUser.ToString()*/, loadUser.user.LastName + " " + loadUser.user.FirstName,
+                
+                string[] lineName = { numItem.ToString()/*numUser.ToString()*/, loadUser.user.LastName + " " + loadUser.user.FirstName,
                                       groupName, "", "" };
                 ListViewItem lvi_name = new ListViewItem(lineName);
                 lvi_name.Font = new Font(lvi_name.Font, FontStyle.Bold);
                 lvi_name.Tag = loadUser;
-                listOut.Items.Add(lvi_name);
+                listOut.Items.Add(lvi_name);                
                 iLine++;
 
                 if (typeView != TypeView.LoadExperiedUser)
@@ -393,7 +397,7 @@ namespace WinRedminePlaning
             {
                 DateTime startProject = loadProject.StartProject;
                 DateTime finishProject = loadProject.FinishProject;
-                string start, finish;
+                string start, finish;                
 
                 if (startProject.CompareTo(DateTime.MaxValue) == 0)
                     start = "-";
@@ -405,7 +409,7 @@ namespace WinRedminePlaning
                 else
                     finish = finishProject.ToShortDateString();
 
-                string[] lineName = { ""/*numUser.ToString()*/, loadProject.userProject.Name, loadProject.userProject.NameHeadUser,
+                string[] lineName = { numItem.ToString()/*numUser.ToString()*/, loadProject.userProject.Name, loadProject.userProject.NameHeadUser,
                                       start, finish,
                                       loadProject.PercentFinance.ToString("0") + " %",
                                       loadProject.PercentWork.ToString("0") + " %", "" };
@@ -419,16 +423,16 @@ namespace WinRedminePlaning
                 MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadProject: loadProject);
                 MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadProject: loadProject);
 
-                if (typeView == TypeView.LoadProject)
-                {
+                //if (typeView == TypeView.LoadProject)
+                //{
                     
-                }
+                //}
 
-                if (typeView == TypeView.LoadProjectUser)
-                {
+                if (typeView == TypeView.LoadProjectUser)                {
+                    
                     foreach (LoadUser lU in loadProject.listLoadUser)
                     {
-                        string[] lineNameU = { ""/*numUser.ToString()*/, lU.user.LastName + " " + lU.user.FirstName,
+                        string[] lineNameU = { numItem.ToString()/*numUser.ToString()*/, lU.user.LastName + " " + lU.user.FirstName,
                                               lU.GroupName,
                                               "", "",
                                               "", "", "" };
@@ -437,7 +441,7 @@ namespace WinRedminePlaning
                         lvi_nameU.Font = new Font(lvi_nameU.Font, FontStyle.Bold);
                         lvi_nameU.Tag = lU;
                         listOut.Items.Add(lvi_nameU);
-                        iLine++;
+                        iLine++;                        
 
                         MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadUser: lU);
                         MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadUser: lU);
@@ -446,8 +450,8 @@ namespace WinRedminePlaning
             }
 
             if (loadYWH != null)
-            {
-                string[] lineName = { "", "Планирование план/факт на " + numberYear.ToString(), "" };
+            {                
+                string[] lineName = { numItem.ToString(), "Планирование план/факт на " + numberYear.ToString(), "" };
                 ListViewItem lvi_name = new ListViewItem(lineName);
                 lvi_name.Font = new Font(lvi_name.Font, FontStyle.Bold);                
                 listOut.Items.Add(lvi_name);
@@ -574,6 +578,7 @@ namespace WinRedminePlaning
             listLoadMWH.Items.Clear();            
 
             LoadYWH loadYWH;
+            int numItem = 1;
 
             switch (typeView)
             {
@@ -581,7 +586,7 @@ namespace WinRedminePlaning
                     loadYWH = manager.FindLoadYWH(numberYear, manager.listLoadYWH);
                     //if (loadYWH != null)
                     //    AddLine(loadYWH);                   
-                    AddLineNameGroup(ref iLine, numberYear, listLoadMWH, loadYWH, null, null, null);
+                    AddLineNameGroup(ref iLine, numberYear, numItem, listLoadMWH, loadYWH, null, null, null);
                     break;
                 case TypeView.LoadUser:
                     //ShowNameUser();
@@ -591,7 +596,8 @@ namespace WinRedminePlaning
                         //loadYWH = manager.FindLoadYWH(numberYear, loadUser.listLoadYWH);
                         //if (loadYWH != null)
                         //    AddLine(loadYWH);                        
-                        AddLineNameGroup(ref iLine, numberYear, listLoadMWH, null, loadUser, null, null);
+                        AddLineNameGroup(ref iLine, numberYear, numItem, listLoadMWH, null, loadUser, null, null);
+                        numItem++;
                     }
                     break;
 
@@ -603,7 +609,11 @@ namespace WinRedminePlaning
                         //if (loadYWH != null)
                         //    AddLine(loadYWH);                        
                         if (loadUser.isExperied)
-                            AddLineNameGroup(ref iLine, numberYear, listLoadMWH, null, loadUser, null, null);
+                        {
+                            AddLineNameGroup(ref iLine, numberYear, numItem, listLoadMWH, null, loadUser, null, null);
+                            numItem++;
+                        }
+
                     }
                     break;
 
@@ -616,27 +626,34 @@ namespace WinRedminePlaning
                             //loadYWH = manager.FindLoadYWH(numberYear, loadUser.listLoadYWH);
                             //if (loadYWH != null)
                             //    AddLine(loadYWH);
-                            AddLineNameGroup(ref iLine, numberYear, listLoadMWH, null, loadUser, loadGroup, null);
+                            AddLineNameGroup(ref iLine, numberYear, numItem, listLoadMWH, null, loadUser, loadGroup, null);
+                            
                         }
+                        numItem++;
                     }
                     break;
                 case TypeView.LoadProject:
                     foreach (LoadProject loadProject in manager.listLoadProject)
                     {                        
-                        AddLineNameGroup(ref iLine, numberYear, listLoadMWH, null, null, null, loadProject);
+                        AddLineNameGroup(ref iLine, numberYear, numItem, listLoadMWH, null, null, null, loadProject);
+                        numItem++;
                     }
                     break;
                 case TypeView.LoadProjectUser:
                     foreach (LoadProject loadProject in manager.listLoadProject)
                     {
-                        AddLineNameGroup(ref iLine, numberYear, listLoadMWH, null, null, null, loadProject);
+                        AddLineNameGroup(ref iLine, numberYear, numItem, listLoadMWH, null, null, null, loadProject);
+                        numItem++;
                     }
                     break;
                 case TypeView.LoadExperiedProject:
                     foreach (LoadProject loadProject in manager.listLoadProject)
                     {
                         if (loadProject.isExperied)
-                            AddLineNameGroup(ref iLine, numberYear, listLoadMWH, null, null, null, loadProject);
+                        {
+                            AddLineNameGroup(ref iLine, numberYear, numItem, listLoadMWH, null, null, null, loadProject);
+                            numItem++;
+                        }
                     }
                     break;
             }
