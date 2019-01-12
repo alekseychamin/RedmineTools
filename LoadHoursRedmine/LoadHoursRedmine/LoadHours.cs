@@ -1284,53 +1284,54 @@ namespace WinRedminePlaning
         public List<LoadIssue> listLoadOpenIssue { get; }
         public DateTime StartProject { get; }
         public DateTime FinishProject { get; }
-        public double PercentFinance
+        public double PercentFinance(int year)
         {
-            get
+        
+            double percent = 0;
+            double fact = 0;
+            double estim = 0;
+
+            LoadYWH loadYWH = listLoadYWH.Find(x => x.NumberYear == year);
+            
+            if (loadYWH != null)
             {
-                double percent = 0;
-                double fact = 0;
-                double estim = 0;
-
-                foreach (LoadYWH loadYWH in listLoadYWH)
-                {
-                    fact += loadYWH.FactYWH;
-                    estim += loadYWH.EstimatedYWH;
-                }
-
-                if (estim != 0)                
-                    percent = (fact / estim) * 100;                
-
-                return percent;
+                fact += loadYWH.FactYWH;
+                estim += loadYWH.EstimatedYWH;
             }
+
+            if (estim != 0)                
+                percent = (fact / estim) * 100;                
+
+            return percent;
+        
         }
-        public double PercentWork
-        {
-            get
+        public double PercentWork(int year)
+        {                        
+            double percent = 0;
+            double fact = 0;
+            double estim = 0;
+
+            LoadYWH loadYWH = listLoadYWH.Find(x => x.NumberYear == year);
+
+            if (loadYWH != null)
             {
-                double percent = 0;
-                double fact = 0;
-                double estim = 0;
-
-                foreach (LoadYWH loadYWH in listLoadYWH)
-                {
-                    estim += loadYWH.EstimatedYWH;                    
-                }
-
-                foreach (Issue issue in listIssue)
-                {
-                    if (issue.Project.Id == this.userProject.Id)
-                    {
-                        if (issue.EstimatedHours != null)
-                            fact += (double)(issue.EstimatedHours.Value * issue.DoneRatio / 100);
-                    }
-                }
-
-                if (estim != 0)
-                    percent = (fact / estim) * 100;
-
-                return percent;
+                estim += loadYWH.EstimatedYWH;                    
             }
+
+            foreach (Issue issue in listIssue)
+            {
+                if (issue.Project.Id == this.userProject.Id)
+                {
+                    if (issue.EstimatedHours != null)
+                        fact += (double)(issue.EstimatedHours.Value * issue.DoneRatio / 100);
+                }
+            }
+
+            if (estim != 0)
+                percent = (fact / estim) * 100;
+
+            return percent;
+            
         }
 
         public RedmineData redmineData;

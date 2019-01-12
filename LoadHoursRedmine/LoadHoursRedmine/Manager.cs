@@ -25,7 +25,7 @@ namespace WinRedminePlaning
     {
         public Issue EmailSaveIssue { get; set; }
 
-        string host = "188.242.201.77";
+        string host = "https://realproject.host";
         string apiKey = "70b1a875928636d8d3895248309344ea2bca6a5f";
         RedmineManager redmineManager;
 

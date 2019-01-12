@@ -411,8 +411,8 @@ namespace WinRedminePlaning
 
                 string[] lineName = { numItem.ToString()/*numUser.ToString()*/, loadProject.userProject.Name, loadProject.userProject.NameHeadUser,
                                       start, finish,
-                                      loadProject.PercentFinance.ToString("0") + " %",
-                                      loadProject.PercentWork.ToString("0") + " %", "" };
+                                      loadProject.PercentFinance(numberYear).ToString("0") + " %",
+                                      loadProject.PercentWork(numberYear).ToString("0") + " %", "" };
 
                 ListViewItem lvi_name = new ListViewItem(lineName);
                 lvi_name.Font = new Font(lvi_name.Font, FontStyle.Bold);
@@ -686,8 +686,8 @@ namespace WinRedminePlaning
                     listLoadMWH.Columns.Add("ТРП", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Старт", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Финищ", -2, HorizontalAlignment.Left);
-                    listLoadMWH.Columns.Add("% ФОТ", -2, HorizontalAlignment.Left);
-                    listLoadMWH.Columns.Add("% работ", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("% факт отн. план", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("% план ос-ние", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Итого", -2, HorizontalAlignment.Left);
                     break;
 
@@ -698,8 +698,8 @@ namespace WinRedminePlaning
                     listLoadMWH.Columns.Add("ТРП", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Старт", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Финищ", -2, HorizontalAlignment.Left);
-                    listLoadMWH.Columns.Add("% ФОТ", -2, HorizontalAlignment.Left);
-                    listLoadMWH.Columns.Add("% работ", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("% факт отн. план", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("% план ос-ние", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Итого", -2, HorizontalAlignment.Left);
                     break;
 
