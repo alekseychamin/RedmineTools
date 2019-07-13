@@ -26,6 +26,10 @@ namespace WinRedminePlaning
 
             manager = new Manager();
 
+            ToolStripMenuItem emailSendMenuItem = new ToolStripMenuItem("Отправить сообщение специалистам");
+            contextMenuStrip1.Items.Add(emailSendMenuItem);
+            emailSendMenuItem.Click += emailSend_Click;
+
             mounth.Add(1, "январь");
             mounth.Add(2, "февраль");
             mounth.Add(3, "март");
@@ -81,6 +85,20 @@ namespace WinRedminePlaning
             listViewTimeEntry.Columns.Add("Финиш", -2, HorizontalAlignment.Left);
             listViewTimeEntry.Columns.Add("Кол-во ч.", -2, HorizontalAlignment.Left);
             listViewTimeEntry.Columns.Add("Ком-рий", -2, HorizontalAlignment.Left);
+        }
+
+        private void emailSend_Click(object sender, EventArgs e)
+        {
+            if (listViewTimeEntry.Items.Count > 0)
+            {
+                if (listViewTimeEntry.SelectedIndices.Count > 0)
+                {
+                    for (int i = 0; i < listViewTimeEntry.SelectedIndices.Count; i++)
+                    {
+
+                    }
+                }
+            }
         }
 
         private void ShowUserTimeEntry(int Id)

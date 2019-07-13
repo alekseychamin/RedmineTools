@@ -15,11 +15,11 @@ namespace WinRedminePlaning
     {
         Manager manager;
         //Dictionary<int, string> mounth = new Dictionary<int, string>();
-        Dictionary<string, string> bossName = new Dictionary<string, string>();
-        PrintForm printForm;        
+        //Dictionary<string, string> bossName = new Dictionary<string, string>();
+        PrintForm printForm;
         LoadMWHForm mwhLoadForm;
 
-        string[] activityNotWorkHours = new string[3] { "Отпуск", "Больничный", "Отгул" };
+        //string[] activityNotWorkHours = new string[3] { "Отпуск", "Больничный", "Отгул" };
 
         public MainForm()
         {
@@ -27,23 +27,23 @@ namespace WinRedminePlaning
             RedmineData redmineData = new RedmineData();
             manager = new Manager(redmineData);
         }
-        
-        private void GetDateFromRedmine()
+
+        private void GetDateFromRedmine(bool redmineProject, bool selectedProject, bool bothProject, string textProject)
         {
-            manager.GetIssue_ProjectFromRedmine();            
+            manager.GetIssue_ProjectFromRedmine(redmineProject, selectedProject, bothProject, textProject);
             manager.GetUser_GroupFromRedmine();
             manager.GetTimeEntryFromRedmine();
         }
         private void but_loadYWH_Click(object sender, EventArgs e)
-        {            
+        {
             mwhLoadForm = new LoadMWHForm(manager, TypeView.LoadYWH, TypeView.LoadYWH);
-            
+
             manager.Update += mwhLoadForm.UpdateForm;
 
             mwhLoadForm.Text = "Годовой ФРВ";
             mwhLoadForm.Show();
         }
-        
+
 
         private void butReportExcel_Click(object sender, EventArgs e)
         {
@@ -51,7 +51,7 @@ namespace WinRedminePlaning
         }
 
         private void but_loadUser_Click(object sender, EventArgs e)
-        {            
+        {
             mwhLoadForm = new LoadMWHForm(manager, TypeView.LoadUser, TypeView.LoadUser);
 
             manager.Update += mwhLoadForm.UpdateForm;
@@ -61,7 +61,7 @@ namespace WinRedminePlaning
         }
 
         private void but_loadGroup_Click(object sender, EventArgs e)
-        {            
+        {
             mwhLoadForm = new LoadMWHForm(manager, TypeView.LoadGroup, TypeView.LoadGroup);
 
             manager.Update += mwhLoadForm.UpdateForm;
@@ -71,7 +71,7 @@ namespace WinRedminePlaning
         }
 
         private void but_loadProject(object sender, EventArgs e)
-        {            
+        {
             mwhLoadForm = new LoadMWHForm(manager, TypeView.LoadProject, TypeView.LoadProject);
 
             manager.Update += mwhLoadForm.UpdateForm;
@@ -84,7 +84,12 @@ namespace WinRedminePlaning
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            GetDateFromRedmine();            
+            string textProject = rTProject.Text;
+            bool redmineProject = rBRedmineProject.Checked;
+            bool selProject = rBSelectedProject.Checked;
+            bool bothProject = rBBothProject.Checked;
+
+            GetDateFromRedmine(redmineProject, selProject, bothProject, textProject);
 
             manager.CreateListLoadYWH();
             manager.CreateListLoadUser();
@@ -94,7 +99,7 @@ namespace WinRedminePlaning
             manager.UpdateForm();
 
             watch.Stop();
-            MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds / 1000).ToString() + " сек");            
+            MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds / 1000).ToString() + " сек");
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -156,6 +161,14 @@ namespace WinRedminePlaning
             manager.MakeReportIssue();
             ReportForm report = new ReportForm(manager, "", TypeView.ReportIssue);
             report.Text = "Отчет о задачах с задержкой";
+            report.Show();
+        }
+
+        private void but_ReportProject(object sender, EventArgs e)
+        {
+            manager.MakeReportProject();
+            ReportForm report = new ReportForm(manager, "", TypeView.ReportProject);
+            report.Text = "Отчет о проектах";
             report.Show();
         }
     }

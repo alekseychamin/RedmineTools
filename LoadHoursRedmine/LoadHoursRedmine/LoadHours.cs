@@ -281,9 +281,30 @@ namespace WinRedminePlaning
         }
     }
 
+    public class Item
+    {
+        public string Name { get; set; }
+        public int Id { get; set; }
+
+        public Item(string Name, int Id)
+        {
+            this.Name = Name;
+            this.Id = Id;
+        }
+    }
+
+    public class LoadInfoYWH
+    {
+        public int NumberYear;
+        public double PlanTotalHours;
+        public double FactTotalHours;
+        public double LeftHours;
+    }
+
     public class ProjectInfo
     {
         public string ProjectName;
+        public List<LoadInfoYWH> listLoadInfoYWH = new List<LoadInfoYWH>();
         public string Info;
     }
 
@@ -436,37 +457,37 @@ namespace WinRedminePlaning
                 switch (typeSave)
                 {
                     case TypeSave.WorkHours:
-                        this.totalYWH_HWM = loadYWH.EstimatedYWH;
+                        this.totalYWH_HWM = loadYWH.EstimatedYWH("план");
                         this.measure = "час";
-                        this.m_1 = loadYWH.listLoadMWH[0].EstimatedMonthHours;
-                        this.m_2 = loadYWH.listLoadMWH[1].EstimatedMonthHours;
-                        this.m_3 = loadYWH.listLoadMWH[2].EstimatedMonthHours;
-                        this.m_4 = loadYWH.listLoadMWH[3].EstimatedMonthHours;
-                        this.m_5 = loadYWH.listLoadMWH[4].EstimatedMonthHours;
-                        this.m_6 = loadYWH.listLoadMWH[5].EstimatedMonthHours;
-                        this.m_7 = loadYWH.listLoadMWH[6].EstimatedMonthHours;
-                        this.m_8 = loadYWH.listLoadMWH[7].EstimatedMonthHours;
-                        this.m_9 = loadYWH.listLoadMWH[8].EstimatedMonthHours;
-                        this.m_10 = loadYWH.listLoadMWH[9].EstimatedMonthHours;
-                        this.m_11 = loadYWH.listLoadMWH[10].EstimatedMonthHours;
-                        this.m_12 = loadYWH.listLoadMWH[11].EstimatedMonthHours;
+                        this.m_1 = loadYWH.listLoadMWH[0].EstimatedMonthHours("план");
+                        this.m_2 = loadYWH.listLoadMWH[1].EstimatedMonthHours("план");
+                        this.m_3 = loadYWH.listLoadMWH[2].EstimatedMonthHours("план");
+                        this.m_4 = loadYWH.listLoadMWH[3].EstimatedMonthHours("план");
+                        this.m_5 = loadYWH.listLoadMWH[4].EstimatedMonthHours("план");
+                        this.m_6 = loadYWH.listLoadMWH[5].EstimatedMonthHours("план");
+                        this.m_7 = loadYWH.listLoadMWH[6].EstimatedMonthHours("план");
+                        this.m_8 = loadYWH.listLoadMWH[7].EstimatedMonthHours("план");
+                        this.m_9 = loadYWH.listLoadMWH[8].EstimatedMonthHours("план");
+                        this.m_10 = loadYWH.listLoadMWH[9].EstimatedMonthHours("план");
+                        this.m_11 = loadYWH.listLoadMWH[10].EstimatedMonthHours("план");
+                        this.m_12 = loadYWH.listLoadMWH[11].EstimatedMonthHours("план");
                         break;
 
                     case TypeSave.HumansMonth:
-                        this.totalYWH_HWM = loadYWH.EstimatedYHumans;
+                        this.totalYWH_HWM = loadYWH.EstimatedYHumans("план");
                         this.measure = "чел.мес";
-                        this.m_1 = loadYWH.listLoadMWH[0].EstimatedMontHumans;
-                        this.m_2 = loadYWH.listLoadMWH[1].EstimatedMontHumans;
-                        this.m_3 = loadYWH.listLoadMWH[2].EstimatedMontHumans;
-                        this.m_4 = loadYWH.listLoadMWH[3].EstimatedMontHumans;
-                        this.m_5 = loadYWH.listLoadMWH[4].EstimatedMontHumans;
-                        this.m_6 = loadYWH.listLoadMWH[5].EstimatedMontHumans;
-                        this.m_7 = loadYWH.listLoadMWH[6].EstimatedMontHumans;
-                        this.m_8 = loadYWH.listLoadMWH[7].EstimatedMontHumans;
-                        this.m_9 = loadYWH.listLoadMWH[8].EstimatedMontHumans;
-                        this.m_10 = loadYWH.listLoadMWH[9].EstimatedMontHumans;
-                        this.m_11 = loadYWH.listLoadMWH[10].EstimatedMontHumans;
-                        this.m_12 = loadYWH.listLoadMWH[11].EstimatedMontHumans;
+                        this.m_1 = loadYWH.listLoadMWH[0].EstimatedMontHumans("план");
+                        this.m_2 = loadYWH.listLoadMWH[1].EstimatedMontHumans("план");
+                        this.m_3 = loadYWH.listLoadMWH[2].EstimatedMontHumans("план");
+                        this.m_4 = loadYWH.listLoadMWH[3].EstimatedMontHumans("план");
+                        this.m_5 = loadYWH.listLoadMWH[4].EstimatedMontHumans("план");
+                        this.m_6 = loadYWH.listLoadMWH[5].EstimatedMontHumans("план");
+                        this.m_7 = loadYWH.listLoadMWH[6].EstimatedMontHumans("план");
+                        this.m_8 = loadYWH.listLoadMWH[7].EstimatedMontHumans("план");
+                        this.m_9 = loadYWH.listLoadMWH[8].EstimatedMontHumans("план");
+                        this.m_10 = loadYWH.listLoadMWH[9].EstimatedMontHumans("план");
+                        this.m_11 = loadYWH.listLoadMWH[10].EstimatedMontHumans("план");
+                        this.m_12 = loadYWH.listLoadMWH[11].EstimatedMontHumans("план");
                         break;
                 }                
             }
@@ -476,36 +497,36 @@ namespace WinRedminePlaning
                 switch (typeSave)
                 {
                     case TypeSave.WorkHours:
-                        this.totalYWH_HWM = loadYWH.FactYWH;
+                        this.totalYWH_HWM = loadYWH.FactYWH("факт");
                         this.measure = "час";
-                        this.m_1 = loadYWH.listLoadMWH[0].FactMonthHours;
-                        this.m_2 = loadYWH.listLoadMWH[1].FactMonthHours;
-                        this.m_3 = loadYWH.listLoadMWH[2].FactMonthHours;
-                        this.m_4 = loadYWH.listLoadMWH[3].FactMonthHours;
-                        this.m_5 = loadYWH.listLoadMWH[4].FactMonthHours;
-                        this.m_6 = loadYWH.listLoadMWH[5].FactMonthHours;
-                        this.m_7 = loadYWH.listLoadMWH[6].FactMonthHours;
-                        this.m_8 = loadYWH.listLoadMWH[7].FactMonthHours;
-                        this.m_9 = loadYWH.listLoadMWH[8].FactMonthHours;
-                        this.m_10 = loadYWH.listLoadMWH[9].FactMonthHours;
-                        this.m_11 = loadYWH.listLoadMWH[10].FactMonthHours;
-                        this.m_12 = loadYWH.listLoadMWH[11].FactMonthHours;
+                        this.m_1 = loadYWH.listLoadMWH[0].FactMonthHours("факт");
+                        this.m_2 = loadYWH.listLoadMWH[1].FactMonthHours("факт");
+                        this.m_3 = loadYWH.listLoadMWH[2].FactMonthHours("факт");
+                        this.m_4 = loadYWH.listLoadMWH[3].FactMonthHours("факт");
+                        this.m_5 = loadYWH.listLoadMWH[4].FactMonthHours("факт");
+                        this.m_6 = loadYWH.listLoadMWH[5].FactMonthHours("факт");
+                        this.m_7 = loadYWH.listLoadMWH[6].FactMonthHours("факт");
+                        this.m_8 = loadYWH.listLoadMWH[7].FactMonthHours("факт");
+                        this.m_9 = loadYWH.listLoadMWH[8].FactMonthHours("факт");
+                        this.m_10 = loadYWH.listLoadMWH[9].FactMonthHours("факт");
+                        this.m_11 = loadYWH.listLoadMWH[10].FactMonthHours("факт");
+                        this.m_12 = loadYWH.listLoadMWH[11].FactMonthHours("факт");
                         break;
                     case TypeSave.HumansMonth:
-                        this.totalYWH_HWM = loadYWH.FactYHumans;
+                        this.totalYWH_HWM = loadYWH.FactYHumans("факт");
                         this.measure = "чел.мес";
-                        this.m_1 = loadYWH.listLoadMWH[0].FactMontHumans;
-                        this.m_2 = loadYWH.listLoadMWH[1].FactMontHumans;
-                        this.m_3 = loadYWH.listLoadMWH[2].FactMontHumans;
-                        this.m_4 = loadYWH.listLoadMWH[3].FactMontHumans;
-                        this.m_5 = loadYWH.listLoadMWH[4].FactMontHumans;
-                        this.m_6 = loadYWH.listLoadMWH[5].FactMontHumans;
-                        this.m_7 = loadYWH.listLoadMWH[6].FactMontHumans;
-                        this.m_8 = loadYWH.listLoadMWH[7].FactMontHumans;
-                        this.m_9 = loadYWH.listLoadMWH[8].FactMontHumans;
-                        this.m_10 = loadYWH.listLoadMWH[9].FactMontHumans;
-                        this.m_11 = loadYWH.listLoadMWH[10].FactMontHumans;
-                        this.m_12 = loadYWH.listLoadMWH[11].FactMontHumans;
+                        this.m_1 = loadYWH.listLoadMWH[0].FactMontHumans("факт");
+                        this.m_2 = loadYWH.listLoadMWH[1].FactMontHumans("факт");
+                        this.m_3 = loadYWH.listLoadMWH[2].FactMontHumans("факт");
+                        this.m_4 = loadYWH.listLoadMWH[3].FactMontHumans("факт");
+                        this.m_5 = loadYWH.listLoadMWH[4].FactMontHumans("факт");
+                        this.m_6 = loadYWH.listLoadMWH[5].FactMontHumans("факт");
+                        this.m_7 = loadYWH.listLoadMWH[6].FactMontHumans("факт");
+                        this.m_8 = loadYWH.listLoadMWH[7].FactMontHumans("факт");
+                        this.m_9 = loadYWH.listLoadMWH[8].FactMontHumans("факт");
+                        this.m_10 = loadYWH.listLoadMWH[9].FactMontHumans("факт");
+                        this.m_11 = loadYWH.listLoadMWH[10].FactMontHumans("факт");
+                        this.m_12 = loadYWH.listLoadMWH[11].FactMontHumans("факт");
                         break;
                 }                
             }
@@ -532,7 +553,7 @@ namespace WinRedminePlaning
 
     }  
 
-    public class LoadGroup
+    public class LoadGroup : Item
     {
         private List<Issue> listIssue;
         public string name { get; }
@@ -546,20 +567,40 @@ namespace WinRedminePlaning
                 foreach (LoadUser loadUser in listLoadUser)
                 {
                     if ((!loadUser.user.LastName.ToLower().Contains("оценка")) & 
-                        (!loadUser.user.LastName.Equals(name)))
+                        (!loadUser.user.LastName.Equals(name)) && CheckIsNeedUser(loadUser))
                         count++;
                 }
                 return count;
             }
         }
 
-        public LoadGroup(string name, int id, List<Issue> listIssue)
+        public LoadGroup(string name, int id, List<Issue> listIssue) : base(name, id)
         {
             this.name = name;
             this.id = id;
             this.listIssue = listIssue;
 
             listLoadUser = new List<LoadUser>();            
+        }
+
+        private bool CheckIsNeedUser(LoadUser loadUser)
+        {
+            bool result = false;
+
+
+            foreach (var customField in loadUser.user.CustomFields)
+            {
+                if (customField.Name.Equals("Учет трудозатратах/месяц"))
+                {
+                    string res = customField.Values[0].Info;
+                    if (res.Contains("1"))
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
         }
 
     }
@@ -785,10 +826,27 @@ namespace WinRedminePlaning
         }
     }
 
+    class IssueComparerStartDate : IComparer<LoadIssue>
+    {
+        public int Compare(LoadIssue issue1, LoadIssue issue2)
+        {
+            return issue1.issue.StartDate.Value.CompareTo(issue2.issue.StartDate.Value);
+        }
+    }
+
+    class TimeComparerStartDate : IComparer<LoadTimeEntry>
+    {
+        public int Compare(LoadTimeEntry time1, LoadTimeEntry time2)
+        {
+            return time1.userTime.dateFinishTimeEntry.CompareTo(time2.userTime.dateStartTimeEntry);
+        }
+    }
+
     public class LoadMWH : IListLoadIssue
     {
         public int numberMonth { get; }
-
+        public List<string> listTracker;
+        public Item item { get; set; } = null;
         //private List<LoadUser> listLoadUser;
 
         public List<LoadDWH> listLoadDWH { get; } /// <summary>
@@ -816,106 +874,119 @@ namespace WinRedminePlaning
         private double minHumansHours = 0;
         public int monthHours { get; }
 
-        public Color MonthEstimatedColor
-        {
-            get
-            {
-                Color color = Color.White;
+        public Color MonthEstimatedColor(string tracker)
+        {            
+            Color color = Color.White;
 
-                if (EstimatedMontHumans > maxHumansHours)
-                    color = Color.Red;
-                if (EstimatedMonthHours == minHumansHours)
-                    color = Color.Yellow;
+            if (EstimatedMontHumans(tracker) > maxHumansHours)
+                color = Color.Red;
+            if (EstimatedMonthHours(tracker) == minHumansHours)
+                color = Color.Yellow;
 
-                return color;
-            }
+            return color;            
         }
 
-        public Color MonthFactColor
-        {
-            get
-            {
-                Color color = Color.White;
+        public Color MonthFactColor(string tracker)
+        {            
+            Color color = Color.White;
 
-                if (FactMontHumans > maxHumansHours)
-                    color = Color.Red;
-                if (FactMonthHours == minHumansHours)
-                    color = Color.Yellow;
+            if (FactMontHumans(tracker) > maxHumansHours)
+                color = Color.Red;
+            if (FactMonthHours(tracker) == minHumansHours)
+                color = Color.Yellow;
 
-                return color;
-            }
+            return color;            
         }
 
-        public double EstimatedMontHumans
+        public double EstimatedMontHumans(string tracker)
         {
-            get
-            {
-                double estimatedMonthHumans = 0;
-                int countWD = LoadHours.GetAmountWD(null, this.dateStartMonth, this.dateFinishMonth);
+            
+            double estimatedMonthHumans = 0;
+            //int countWD = LoadHours.GetAmountWD(null, this.dateStartMonth, this.dateFinishMonth);
 
-                foreach (LoadIssue loadIssue in listLoadIssue)
+            estimatedMonthHumans = this.EstimatedMonthHours(tracker);            
+
+            if (monthHours != 0)
+                estimatedMonthHumans /= monthHours;
+            else estimatedMonthHumans = 0;
+
+            return estimatedMonthHumans;
+            
+        }
+
+        public double FactMontHumans(string tracker)
+        {            
+            double factMonthHumans = 0;
+            //int countWD = LoadHours.GetAmountWD(null, this.dateStartMonth, this.dateFinishMonth);
+            factMonthHumans = this.FactMonthHours(tracker);                      
+
+            if (monthHours != 0)
+                factMonthHumans /= monthHours;
+            else factMonthHumans = 0;
+
+            return factMonthHumans;            
+        }
+
+        public double EstimatedMonthHours(string tracker)
+        {            
+            estimatedMonthHours = 0;
+            foreach (LoadIssue loadIssue in listLoadIssue)
+            {               
+                if (tracker.Equals("план"))
+                    estimatedMonthHours += loadIssue.estimatedIssueHours;
+                else
                 {
-                    estimatedMonthHumans += loadIssue.estimatedIssueHours;
+                    string result = tracker.Remove(0, tracker.IndexOf(' ') + 1);
+                    if (result.Equals(loadIssue.issue.Tracker.Name))
+                    {
+                        estimatedMonthHours += loadIssue.estimatedIssueHours;
+                    }
                 }
-
-                if (monthHours != 0)
-                    estimatedMonthHumans /= monthHours;
-                else estimatedMonthHumans = 0;
-
-                return estimatedMonthHumans;
             }
+            return estimatedMonthHours;            
         }
 
-        public double FactMontHumans
-        {
-            get
+        public double FactMonthHours(string tracker)
+        {            
+            factHoursMonth = 0;
+
+            foreach (LoadTimeEntry loadTimeEntry in listLoadTimeEntry)
             {
-                double factMonthHumans = 0;
-                int countWD = LoadHours.GetAmountWD(null, this.dateStartMonth, this.dateFinishMonth);
-
-                foreach (LoadTimeEntry loadTimeEntry in listLoadTimeEntry)
-                {
-                    factMonthHumans += loadTimeEntry.factMonthHours;
-                }
-
-                if (monthHours != 0)
-                    factMonthHumans /= monthHours;
-                else factMonthHumans = 0;
-
-                return factMonthHumans;
-            }
-        }
-
-        public double EstimatedMonthHours
-        {
-            get
-            {
-                estimatedMonthHours = 0;
-                foreach (LoadIssue loadIssue in listLoadIssue)
-                {
-                    estimatedMonthHours = estimatedMonthHours + loadIssue.estimatedIssueHours;
-                }
-                return estimatedMonthHours;
-            }
-        }
-
-        public double FactMonthHours
-        {
-            get
-            {
-                factHoursMonth = 0;
-
-                foreach (LoadTimeEntry loadTimeEntry in listLoadTimeEntry)
-                {
+                if (tracker.Equals("факт"))
                     factHoursMonth += loadTimeEntry.factMonthHours;
+                else
+                {
+                    string result = tracker.Remove(0, tracker.IndexOf(' ') + 1);
+                    if (result.Equals(loadTimeEntry.userTime.time.Activity.Name))
+                    {
+                        factHoursMonth += loadTimeEntry.factMonthHours; 
+                    }
+                    //if (loadTimeEntry.userTime.time.Issue != null)
+                    //{
+                    //    Issue issue = redmineData.listIssue.Find(x => x.Id == loadTimeEntry.userTime.time.Issue.Id);
+                    //    if (issue != null)
+                    //    {
+                    //        if (tracker.Contains(issue.Tracker.Name))
+                    //        {
+                    //            factHoursMonth += loadTimeEntry.factMonthHours;
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (tracker.Contains(loadTimeEntry.userTime.time.Activity.Name))
+                    //    {
+                    //        factHoursMonth += loadTimeEntry.factMonthHours; f
+                    //    }
+                    //}
                 }
-
-                return factHoursMonth;
             }
+
+            return factHoursMonth;            
         }
 
         public LoadMWH(RedmineData redmineData, double maxHumansHours, int numberMonth, DateTime dateStartMonth,
-                       DateTime dateFinishMonth)
+                       DateTime dateFinishMonth, Item item)
         {
             this.maxHumansHours = maxHumansHours;
             this.numberMonth = numberMonth;
@@ -925,6 +996,8 @@ namespace WinRedminePlaning
             this.listUserTimeEntry = redmineData.listUserTimeEntry;           
             this.dateStartMonth = dateStartMonth;
             this.dateFinishMonth = dateFinishMonth;
+
+            this.item = item;
 
             redmineData.monthValueHours.CurMonth = numberMonth;
             redmineData.monthValueHours.CurYear = dateStartMonth.Year;
@@ -974,8 +1047,8 @@ namespace WinRedminePlaning
 
             foreach (var issue in listIssue)
             {
-                if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) & 
-                    LoadHours.IsItemInPlanActiveProject(issue, listProject))
+                if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth)) 
+                    //& LoadHours.IsItemInPlanActiveProject(issue, listProject))
                 {                    
                     LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
                     listLoadIssue.Add(loadIssue);
@@ -989,8 +1062,8 @@ namespace WinRedminePlaning
 
             foreach (UserTimeEntry userTimeEntry in listUserTimeEntry)
             {
-                if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                    LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
+                if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth)) 
+                    //& LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
                 {
                     LoadTimeEntry loadTimeEntry = new LoadTimeEntry(userTimeEntry, dateStartMonth, dateFinishMonth);
                     listLoadTimeEntry.Add(loadTimeEntry);
@@ -1010,8 +1083,8 @@ namespace WinRedminePlaning
             {
                 if (isGroup)
                 {
-                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
+                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth))
+                        //& LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
                     {
                         LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == userTimeEntry.time.User.Id);
                         if (findLoadUser != null)
@@ -1023,8 +1096,9 @@ namespace WinRedminePlaning
                 }
                 else
                 {
-                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject) &
+                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) 
+                        // & LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject) 
+                        &
                        (userTimeEntry.time.User.Id == loadUser.user.Id))
                     {
                         LoadTimeEntry loadTimeEntry = new LoadTimeEntry(userTimeEntry, dateStartMonth, dateFinishMonth);
@@ -1047,8 +1121,8 @@ namespace WinRedminePlaning
             {
                 if (isGroup)
                 {
-                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
+                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth)) 
+                        // & LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject))
                     {
                         LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == userTimeEntry.time.User.Id);
                         if (findLoadUser != null)
@@ -1060,8 +1134,9 @@ namespace WinRedminePlaning
                 }
                 else
                 {
-                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject) &
+                    if (LoadHours.IsItemInMonth(userTimeEntry, dateStartMonth, dateFinishMonth)
+                        // & LoadHours.IsItemInPlanActiveProject(userTimeEntry, listProject) 
+                        &
                        (userTimeEntry.time.User.Id == loadUser.user.Id) & (userTimeEntry.time.Project.Id == loadProject.userProject.Id))
                     {
                         LoadTimeEntry loadTimeEntry = new LoadTimeEntry(userTimeEntry, dateStartMonth, dateFinishMonth);
@@ -1083,8 +1158,8 @@ namespace WinRedminePlaning
             {
                 if (isGroup)
                 {
-                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanActiveProject(issue, listProject))
+                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth)) 
+                        //& LoadHours.IsItemInPlanActiveProject(issue, listProject))
                     {
                         LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == issue.AssignedTo.Id);
                         if (findLoadUser != null)
@@ -1096,8 +1171,9 @@ namespace WinRedminePlaning
                 }
                 else
                 {
-                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanActiveProject(issue, listProject) &
+                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth)
+                        //& LoadHours.IsItemInPlanActiveProject(issue, listProject) 
+                        &
                        (issue.AssignedTo.Id == loadUser.user.Id))
                     {
                         LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
@@ -1120,8 +1196,8 @@ namespace WinRedminePlaning
             {
                 if (isGroup)
                 {
-                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanActiveProject(issue, listProject))
+                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth)) 
+                        //& LoadHours.IsItemInPlanActiveProject(issue, listProject))
                     {
                         LoadUser findLoadUser = listLoadUser.Find(x => x.user.Id == issue.AssignedTo.Id);
                         if (findLoadUser != null)
@@ -1133,8 +1209,9 @@ namespace WinRedminePlaning
                 }
                 else
                 {
-                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth) &
-                        LoadHours.IsItemInPlanActiveProject(issue, listProject) &
+                    if (LoadHours.IsItemInMonth(issue, dateStartMonth, dateFinishMonth)
+                        //& LoadHours.IsItemInPlanActiveProject(issue, listProject) 
+                        &
                        (issue.AssignedTo.Id == loadUser.user.Id) & (issue.Project.Id == loadProject.userProject.Id))
                     {
                         LoadIssue loadIssue = new LoadIssue(issue, dateStartMonth, dateFinishMonth);
@@ -1172,7 +1249,7 @@ namespace WinRedminePlaning
             }
         }
 
-        public void GetListLoadProject()
+        public void GetListLoadProject(string tracker)
         {
             listLoadProject.Clear();
 
@@ -1181,7 +1258,7 @@ namespace WinRedminePlaning
                 string Name = loadIssue.issue.Project.Name;
                 int Id = loadIssue.issue.Project.Id;                
                 LoadProject findLoadProject = listLoadProject.Find(x => x.userProject.Id == Id);
-                if (findLoadProject == null)
+                if ((findLoadProject == null) & ((tracker.Contains(loadIssue.issue.Tracker.Name) || (tracker.Equals("план")))))
                 {
                     UserProject userProject = new UserProject(redmineData, Name, Id);
                     LoadProject loadProject = new LoadProject(redmineData, userProject, this.listLoadIssue, this.listLoadTimeEntry);
@@ -1194,7 +1271,7 @@ namespace WinRedminePlaning
                 string Name = loadTime.userTime.time.Project.Name;
                 int Id = loadTime.userTime.time.Project.Id;                
                 LoadProject findLoadProject = listLoadProject.Find(x => x.userProject.Id == Id);
-                if (findLoadProject == null)
+                if ((findLoadProject == null) & ((tracker.Contains(loadTime.userTime.time.Activity.Name)) || (tracker.Equals("факт"))))
                 {
                     UserProject userProject = new UserProject(redmineData, Name, Id);
                     LoadProject loadProject = new LoadProject(redmineData, userProject, this.listLoadIssue, this.listLoadTimeEntry);
@@ -1276,7 +1353,7 @@ namespace WinRedminePlaning
         }        
     }
 
-    public class LoadProject
+    public class LoadProject : Item
     {        
         public UserProject userProject { get; }
         public List<LoadYWH> listLoadYWH { get; }
@@ -1295,8 +1372,8 @@ namespace WinRedminePlaning
             
             if (loadYWH != null)
             {
-                fact += loadYWH.FactYWH;
-                estim += loadYWH.EstimatedYWH;
+                fact += loadYWH.FactYWH("факт");
+                estim += loadYWH.EstimatedYWH("план");
             }
 
             if (estim != 0)                
@@ -1315,7 +1392,7 @@ namespace WinRedminePlaning
 
             if (loadYWH != null)
             {
-                estim += loadYWH.EstimatedYWH;                    
+                estim += loadYWH.EstimatedYWH("план");                    
             }
 
             foreach (Issue issue in listIssue)
@@ -1364,40 +1441,36 @@ namespace WinRedminePlaning
             }
         }        
 
-        public double EstimatedMWH
-        {
-            get
+        public double EstimatedMWH(string tracker)
+        {            
+            double estimatedMWH = 0;
+
+            foreach (LoadIssue loadIssue in listLoadIssue)
             {
-                double estimatedMWH = 0;
-
-                foreach (LoadIssue loadIssue in listLoadIssue)
+                if ((loadIssue.issue.Project.Id == userProject.Id) &
+                    (tracker.Contains(loadIssue.issue.Tracker.Name) || tracker.Equals("план")))
                 {
-                    if (loadIssue.issue.Project.Id == userProject.Id)
-                    {
-                        estimatedMWH += loadIssue.estimatedIssueHours;
-                    }
+                    estimatedMWH += loadIssue.estimatedIssueHours;
                 }
-
-                return estimatedMWH;
             }
+
+            return estimatedMWH;            
         }
 
-        public double FactMWH
-        {
-            get
+        public double FactMWH(string tracker)
+        {            
+            double factMWH = 0;
+
+            foreach (LoadTimeEntry loadTime in listLoadTimeEntry)
             {
-                double factMWH = 0;
-
-                foreach (LoadTimeEntry loadTime in listLoadTimeEntry)
+                if ((loadTime.userTime.time.Project.Id == userProject.Id) & 
+                    ((tracker.Contains(loadTime.userTime.time.Activity.Name)) || (tracker.Equals("факт"))))
                 {
-                    if (loadTime.userTime.time.Project.Id == userProject.Id)
-                    {
-                        factMWH += loadTime.factMonthHours;
-                    }
+                    factMWH += loadTime.factMonthHours;
                 }
-
-                return factMWH;
             }
+
+            return factMWH;            
         }
 
         private void GetStartFinishDateProject(ref DateTime startDate, ref DateTime finishDate)
@@ -1424,7 +1497,8 @@ namespace WinRedminePlaning
             }            
         }
 
-        public LoadProject(RedmineData redmineData, UserProject project, List<LoadIssue> listLoadIssue, List<LoadTimeEntry> listLoadTimeEntry)
+        public LoadProject(RedmineData redmineData, UserProject project, List<LoadIssue> listLoadIssue, 
+                           List<LoadTimeEntry> listLoadTimeEntry) : base(project.Name, project.Id)
         {
             this.userProject = project;
             this.redmineData = redmineData;
@@ -1432,7 +1506,7 @@ namespace WinRedminePlaning
             this.listLoadTimeEntry = listLoadTimeEntry;
         }
 
-        public LoadProject(RedmineData redmineData, UserProject project)
+        public LoadProject(RedmineData redmineData, UserProject project) : base(project.Name, project.Id)
         {
             this.userProject = project;
             this.redmineData = redmineData;
@@ -1452,7 +1526,7 @@ namespace WinRedminePlaning
 
         private void CreateListLoadUser()
         {            
-            foreach (Issue issue in redmineData.listIssue)
+            foreach (Issue issue in redmineData.listOpenIssue)
             {
                 if (issue.Project.Id == userProject.Id)
                 {
@@ -1481,7 +1555,7 @@ namespace WinRedminePlaning
 
         public void AddYear(double maxYHH, double maxMYH, int year)
         {
-            LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year);
+            LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year, this);
             loadYWH.MakeMonth(maxMYH, this.userProject);
             listLoadYWH.Add(loadYWH);
 
@@ -1495,7 +1569,7 @@ namespace WinRedminePlaning
         }        
     }
 
-    public class LoadUser : IComparable
+    public class LoadUser : Item, IComparable
     {
         public User user { get; }
 
@@ -1543,9 +1617,9 @@ namespace WinRedminePlaning
         private List<Issue> listOpenIssue;
         private List<UserTimeEntry> listUserTimeEntry;        
 
-        public LoadUser(RedmineData redmineData, User user)
+        public LoadUser(RedmineData redmineData, User user) : base(user.FirstName + " " + user.LastName, user.Id)
         {
-            this.user = user;
+            this.user = user;            
             this.listLoadYWH = new List<LoadYWH>();
             this.listGroup = new List<UserGroupRedmine>();
             this.listLoadOpenIssue = new List<LoadIssue>();            
@@ -1572,7 +1646,7 @@ namespace WinRedminePlaning
 
         public void AddYear(double maxYHH, double maxMYH, int year, List<Project> listProject, List<LoadUser> listLoadUser)
         {
-            LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year);
+            LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year, this);            
             loadYWH.MakeMonth(maxMYH, listProject, this, listLoadUser);
             listLoadYWH.Add(loadYWH);                        
         }
@@ -1580,7 +1654,7 @@ namespace WinRedminePlaning
         public void AddYear(double maxYHH, double maxMYH, int year, List<Project> listProject, 
                             LoadProject loadProject, List<LoadUser> listLoadUser)
         {
-            LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year);
+            LoadYWH loadYWH = new LoadYWH(redmineData, maxYHH, year, this);
             loadYWH.MakeMonth(maxMYH, listProject, loadProject, this, listLoadUser);
             listLoadYWH.Add(loadYWH);
         }
@@ -1592,144 +1666,127 @@ namespace WinRedminePlaning
         }
     }
 
-    public class LoadYWH
+    public class LoadYWH : Item
     {
         private double maxHumansHours;
         private double minHumansHours = 0;
         public int NumberYear { get; }
         public List<LoadMWH> listLoadMWH { get; }
         public RedmineData redmineData;
+        public List<string> listEstimTracker;
+        public List<string> listTimeTracker;
 
-        public Color YearEstimatedColor
-        {
-            get
-            {
-                Color color = Color.White;
+        public Item item { get; set; } = null;
 
-                if (EstimatedYHumans > maxHumansHours)
-                    color = Color.Red;
-                if (EstimatedYHumans == minHumansHours)
-                    color = Color.Yellow;
+        public Color YearEstimatedColor(string tracker)
+        {            
+            Color color = Color.White;
 
-                return color;
-            }
+            if (EstimatedYHumans(tracker) > maxHumansHours)
+                color = Color.Red;
+            if (EstimatedYHumans(tracker) == minHumansHours)
+                color = Color.Yellow;
+
+            return color;            
         }
-        public Color YearFactColor
-        {
-            get
-            {
-                Color color = Color.White;
+        public Color YearFactColor(string tracker)
+        {            
+            Color color = Color.White;
 
-                if (FactYHumans > maxHumansHours)
-                    color = Color.Red;
-                if (FactYHumans == minHumansHours)
-                    color = Color.Yellow;
+            if (FactYHumans(tracker) > maxHumansHours)
+                color = Color.Red;
+            if (FactYHumans(tracker) == minHumansHours)
+                color = Color.Yellow;
 
-                return color;
-            }
+            return color;            
         }
 
-        public double EstimatedYWH
-        {
-            get
+        public double EstimatedYWH(string tracker)
+        {            
+            double planYWH = 0;
+
+            foreach (LoadMWH loadMWH in listLoadMWH)
             {
-                double planYWH = 0;
-
-                foreach (LoadMWH loadMWH in listLoadMWH)
-                {
-                    planYWH += loadMWH.EstimatedMonthHours;
-                }
-
-                return planYWH;
+                planYWH += loadMWH.EstimatedMonthHours(tracker);
             }
+
+            return planYWH;            
         }
 
-        public double EstimatedYHumans
-        {
-            get
-            {
-                double planYHumans = 0;
+        public double EstimatedYHumans(string tracker)
+        {            
+            double planYHumans = 0;
 
-                foreach (LoadMWH loadMWH in listLoadMWH)
-                {
-                    planYHumans += loadMWH.EstimatedMontHumans;
-                }
-
-                return planYHumans;
+            foreach (LoadMWH loadMWH in listLoadMWH)
+            {                                
+                planYHumans += loadMWH.EstimatedMontHumans(tracker);                
             }
+
+            return planYHumans;            
         }
 
-        public double FactYHumans
-        {
-            get
+        public double FactYHumans(string tracker)
+        {            
+            double factYHumans = 0;
+
+            foreach (LoadMWH loadMWH in listLoadMWH)
             {
-                double factYHumans = 0;
-
-                foreach (LoadMWH loadMWH in listLoadMWH)
-                {
-                    factYHumans += loadMWH.FactMontHumans;
-                }
-
-                return factYHumans;
+                factYHumans += loadMWH.FactMontHumans(tracker);
             }
+
+            return factYHumans;            
         }
 
-        public double FactYWH
-        {
-            get
-            {
-                double factYWH = 0;
+        public double FactYWH(string tracker)
+        {            
+            double factYWH = 0;
                 
-                foreach (LoadMWH loadMWH in listLoadMWH)
-                {
-                    factYWH += loadMWH.FactMonthHours;
-                }
-
-                return factYWH;
+            foreach (LoadMWH loadMWH in listLoadMWH)
+            {
+                factYWH += loadMWH.FactMonthHours(tracker);
             }
+
+            return factYWH;            
         }
         
-        public double EstimatedPercentYHumans
-        {
-            get
-            {
-                double res = 0;
+        public double EstimatedPercentYHumans(string value)
+        {            
+            double res = 0;
 
-                double estYH = EstimatedYHumans;
+            double estYH = EstimatedYHumans(value);
 
-                if ((estYH != 0) & (maxHumansHours != 0))
-                    res = (estYH / maxHumansHours) * 100; 
+            if ((estYH != 0) & (maxHumansHours != 0))
+                res = (estYH / maxHumansHours) * 100; 
 
-                return res;
-            }
+            return res;            
         }
 
-        public double FactPercentYHumans
-        {
-            get
-            {
-                double res = 0;
+        public double FactPercentYHumans(string value)
+        {            
+            double res = 0;
 
-                double factYH = FactYHumans;
+            double factYH = FactYHumans(value);
 
-                if ((factYH != 0) & (maxHumansHours != 0))
-                    res = (factYH / maxHumansHours) * 100;
+            if ((factYH != 0) & (maxHumansHours != 0))
+                res = (factYH / maxHumansHours) * 100;
 
-                return res;
-            }
+            return res;            
         }
 
         private List<Issue> listIssue;
         private List<UserTimeEntry> listUserTimeEntry;
         
-        public LoadYWH(RedmineData redmineData, double maxHumansHours, int numberYear)
+        public LoadYWH(RedmineData redmineData, double maxHumansHours, int numberYear, Item item) : base ("", numberYear)
         {
+            this.item = item;
             this.maxHumansHours = maxHumansHours;
             this.NumberYear = numberYear;
             this.redmineData = redmineData;
             this.listIssue = redmineData.listIssue;
             this.listUserTimeEntry = redmineData.listUserTimeEntry;            
             listLoadMWH = new List<LoadMWH>();
+            listEstimTracker = new List<string>();
+            listTimeTracker = new List<string>();
         }        
                 
         // добавить метод который будет из загруженных listLoadIssue по месяцам определять список загрузки специалистов
@@ -1741,13 +1798,14 @@ namespace WinRedminePlaning
             {
                 DateTime dateStartMonth = new DateTime(NumberYear, month, 1);
                 DateTime dateFinishMonth = dateStartMonth.AddMonths(1).AddDays(-1);
-                LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth);
+                LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth, this.item);
                 loadMWH.GetListLoadIssue(listProject, NumberYear);
                 loadMWH.GetListLoadTime(listProject, NumberYear);
-                loadMWH.GetListLoadProject();
+                //loadMWH.GetListLoadProject();
                 listLoadMWH.Add(loadMWH);
                 loadMWH.MakeDWHSum();
             }
+            CreateTrackerList();
         }        
 
         public void MakeMonth(double maxHumansHours, List<Project> listProject, LoadUser loadUser, List<LoadUser> listLoadUser)
@@ -1760,13 +1818,14 @@ namespace WinRedminePlaning
                 {
                     DateTime dateStartMonth = new DateTime(NumberYear, month, 1);
                     DateTime dateFinishMonth = dateStartMonth.AddMonths(1).AddDays(-1);
-                    LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth);
+                    LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth, this.item);                    
                     loadMWH.GetListLoadIssue(listProject, NumberYear, loadUser, listLoadUser);
                     loadMWH.GetListLoadTime(listProject, NumberYear, loadUser, listLoadUser);
-                    loadMWH.GetListLoadProject();
+                    //loadMWH.GetListLoadProject();
                     listLoadMWH.Add(loadMWH);
                     loadMWH.MakeDWHSum();
                 }
+                CreateTrackerList();
             }
         }
 
@@ -1781,13 +1840,14 @@ namespace WinRedminePlaning
                 {
                     DateTime dateStartMonth = new DateTime(NumberYear, month, 1);
                     DateTime dateFinishMonth = dateStartMonth.AddMonths(1).AddDays(-1);
-                    LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth);
+                    LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth, this.item);
                     loadMWH.GetListLoadIssue(listProject, loadProject, NumberYear, loadUser, listLoadUser);
                     loadMWH.GetListLoadTime(listProject, loadProject, NumberYear, loadUser, listLoadUser);
-                    loadMWH.GetListLoadProject();
+                    //loadMWH.GetListLoadProject();
                     listLoadMWH.Add(loadMWH);
                     loadMWH.MakeDWHSum();
                 }
+                CreateTrackerList();
             }
         }
 
@@ -1799,13 +1859,15 @@ namespace WinRedminePlaning
             {
                 DateTime dateStartMonth = new DateTime(NumberYear, month, 1);
                 DateTime dateFinishMonth = dateStartMonth.AddMonths(1).AddDays(-1);
-                LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth);
+                LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth, this.item);
+                loadMWH.listTracker = this.listEstimTracker;
                 loadMWH.GetListLoadIssue(NumberYear, userProject);
                 loadMWH.GetListLoadTime(NumberYear, userProject);
-                loadMWH.GetListLoadProject();
+                //loadMWH.GetListLoadProject();
                 listLoadMWH.Add(loadMWH);
                 loadMWH.MakeDWHSum();
             }
+            CreateTrackerList();            
         }
 
         public void MakeMonth(double maxHumansHours, UserProject userProject, int month)
@@ -1814,13 +1876,59 @@ namespace WinRedminePlaning
             
             DateTime dateStartMonth = new DateTime(NumberYear, month, 1);
             DateTime dateFinishMonth = dateStartMonth.AddMonths(1).AddDays(-1);
-            LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth);
+            LoadMWH loadMWH = new LoadMWH(redmineData, maxHumansHours, month, dateStartMonth, dateFinishMonth, this.item);
             loadMWH.GetListLoadIssue(NumberYear, userProject);
             loadMWH.GetListLoadTime(NumberYear, userProject);
-            loadMWH.GetListLoadProject();
+            //loadMWH.GetListLoadProject();
             listLoadMWH.Add(loadMWH);
             loadMWH.MakeDWHSum();
-            
+
+            CreateTrackerList();
+        }
+
+        private void CreateTrackerList()
+        {
+            listEstimTracker.Clear();
+            listTimeTracker.Clear();
+
+            foreach (LoadMWH loadMWH in listLoadMWH)
+            {
+                loadMWH.listLoadIssue.Sort(new IssueComparerStartDate());
+                foreach (LoadIssue loadIssue in loadMWH.listLoadIssue)
+                {
+                    string tracker = loadIssue.issue.Tracker.Name;
+                    string findTracker = listEstimTracker.Find(x => x.Equals(tracker));
+                    if (findTracker == null)
+                    {
+                        listEstimTracker.Add(tracker);
+                        //Console.WriteLine(userProject.Name + " tracker = " + tracker);
+                    }
+                }
+
+                loadMWH.listLoadTimeEntry.Sort(new TimeComparerStartDate());
+                foreach (LoadTimeEntry loadTimeEntry in loadMWH.listLoadTimeEntry)
+                {
+                    string tracker = loadTimeEntry.userTime.time.Activity.Name;
+
+                    //if (loadTimeEntry.userTime.time.Issue != null)
+                    //{
+                    //    LoadIssue loadIssue = loadMWH.listLoadIssue.Find(x => x.issue.Id == loadTimeEntry.userTime.time.Issue.Id);
+
+                    //    if (loadIssue != null)
+                    //    {
+                    //        tracker = loadIssue.issue.Tracker.Name;
+                    //    }
+                    //}
+
+                    string findTracker = listTimeTracker.Find(x => x.Equals(tracker));
+                    if (findTracker == null)
+                    {
+                        listTimeTracker.Add(tracker);
+                        //Console.WriteLine(userProject.Name + " tracker = " + tracker);
+                    }
+
+                }
+            }
         }
 
         public LoadMWH FindLoadMWH(int month)

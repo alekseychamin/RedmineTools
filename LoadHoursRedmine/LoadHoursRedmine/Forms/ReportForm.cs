@@ -22,6 +22,9 @@ namespace WinRedminePlaning
 
             switch (typeView)
             {
+                case TypeView.ReportProject:
+                    ShowReportProject();
+                    break;
                 case TypeView.ReportIssue:
                     ShowReportIssue();
                     break;
@@ -39,21 +42,21 @@ namespace WinRedminePlaning
                 {
                     foreach (string email in emailMessage.ListToEmail)
                     {
-                        richTextBox1.Text += "Сообщение пользователю с адресом: " + email;
+                        richReportText.Text += "Сообщение пользователю с адресом: " + email;
                     }
 
-                    richTextBox1.Text += "\n";
+                    richReportText.Text += "\n";
 
                     foreach (string email in emailMessage.ListCCEmail)
                     {
-                        richTextBox1.Text += "Копия сообщения пользователю с адресом: " + email;
+                        richReportText.Text += "Копия сообщения пользователю с адресом: " + email;
                     }
 
-                    richTextBox1.Text += "\n";
-                    richTextBox1.Text += "Тема сообщения " + emailMessage.Title;
-                    richTextBox1.Text += "\n";
-                    richTextBox1.Text += emailMessage.Message;
-                    richTextBox1.Text += "\n";
+                    richReportText.Text += "\n";
+                    richReportText.Text += "Тема сообщения " + emailMessage.Title;
+                    richReportText.Text += "\n";
+                    richReportText.Text += emailMessage.Message;
+                    richReportText.Text += "\n";
                 }
             }
         }
@@ -62,10 +65,45 @@ namespace WinRedminePlaning
         {
             foreach (ProjectInfo projectInfo in manager.listProjectInfo)
             {
-                richTextBox1.Text += projectInfo.ProjectName;
-                richTextBox1.Text += "\n";
-                richTextBox1.Text += projectInfo.Info;
-                richTextBox1.Text += "\n";
+                richReportText.Text += projectInfo.ProjectName;
+                richReportText.Text += "\n";
+                richReportText.Text += projectInfo.Info;
+                richReportText.Text += "\n";
+            }
+        }
+
+        private void ShowReportProject()
+        {
+            foreach (ProjectInfo projectInfo in manager.listProjectInfo)
+            {
+                richReportText.SelectionFont = new Font(richReportText.Font, FontStyle.Bold);
+                richReportText.AppendText(projectInfo.ProjectName + "\n");
+                richReportText.SelectionFont = new Font(richReportText.Font, FontStyle.Regular);
+
+                foreach (LoadInfoYWH loadInfoYWH in projectInfo.listLoadInfoYWH)
+                {
+                    richReportText.SelectionFont = new Font(richReportText.Font, FontStyle.Regular);
+                    richReportText.SelectionColor = Color.Black;
+                    richReportText.AppendText("Год: " + loadInfoYWH.NumberYear + "\n");
+                    richReportText.AppendText("Запланировано, ч: " + loadInfoYWH.PlanTotalHours.ToString("0.0") +"\n");
+                    richReportText.AppendText("Потрачено, ч: " + loadInfoYWH.FactTotalHours.ToString("0.0") + "\n");
+                    
+                    if (loadInfoYWH.LeftHours < 0)
+                    {
+                        richReportText.SelectionFont = new Font(richReportText.Font, FontStyle.Regular);
+                        richReportText.SelectionColor = Color.Red;
+                        richReportText.AppendText("Остаток, ч: " + loadInfoYWH.LeftHours.ToString("0.0") + "\n");
+                        
+                    } else
+                    {
+                        richReportText.SelectionFont = new Font(richReportText.Font, FontStyle.Regular);
+                        richReportText.SelectionColor = Color.Green;
+                        richReportText.AppendText("Остаток, ч: " + loadInfoYWH.LeftHours.ToString("0.0") + "\n");
+                    }
+
+                }
+
+                richReportText.AppendText("\n");
             }
         }
 

@@ -1,341 +1,9 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>redmine-net40-api</name>
+        <name>redmine-net452-api</name>
     </assembly>
     <members>
-        <member name="T:Redmine.Net.Api.Extensions.XmlExtensions">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteIdIfNotNull(System.Xml.XmlWriter,Redmine.Net.Api.Types.IdentifiableName,System.String)">
-            <summary>
-            Writes the id if not null.
-            </summary>
-            <param name="writer">The writer.</param>
-            <param name="ident">The ident.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteArray(System.Xml.XmlWriter,System.Collections.IEnumerable,System.String)">
-            <summary>
-            Writes the array.
-            </summary>
-            <param name="writer">The writer.</param>
-            <param name="collection">The collection.</param>
-            <param name="elementName">Name of the element.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteArrayIds(System.Xml.XmlWriter,System.Collections.IEnumerable,System.String,System.Type,System.Func{System.Object,System.Int32})">
-            <summary>
-            Writes the array ids.
-            </summary>
-            <param name="writer">The writer.</param>
-            <param name="collection">The collection.</param>
-            <param name="elementName">Name of the element.</param>
-            <param name="type">The type.</param>
-            <param name="f">The f.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteArray(System.Xml.XmlWriter,System.Collections.IEnumerable,System.String,System.Type,System.String,System.String)">
-            <summary>
-            Writes the array.
-            </summary>
-            <param name="writer">The writer.</param>
-            <param name="collection">The collection.</param>
-            <param name="elementName">Name of the element.</param>
-            <param name="type">The type.</param>
-            <param name="root">The root.</param>
-            <param name="defaultNamespace">The default namespace.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteArrayStringElement(System.Xml.XmlWriter,System.Collections.IEnumerable,System.String,System.Func{System.Object,System.String})">
-            <summary>
-            Writes the array string element.
-            </summary>
-            <param name="writer">The writer.</param>
-            <param name="collection">The collection.</param>
-            <param name="elementName">Name of the element.</param>
-            <param name="f">The func to invoke.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteListElements(System.Xml.XmlWriter,System.Collections.Generic.IEnumerable{Redmine.Net.Api.Types.IValue},System.String)">
-            <summary>
-            Writes the list elements.
-            </summary>
-            <param name="xmlWriter">The XML writer.</param>
-            <param name="collection">The collection.</param>
-            <param name="elementName">Name of the element.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteIdOrEmpty(System.Xml.XmlWriter,Redmine.Net.Api.Types.IdentifiableName,System.String)">
-            <summary>
-            Writes the identifier or empty.
-            </summary>
-            <param name="writer">The writer.</param>
-            <param name="ident">The ident.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteIfNotDefaultOrNull``1(System.Xml.XmlWriter,System.Nullable{``0},System.String)">
-            <summary>
-            Writes if not default or null.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="writer">The writer.</param>
-            <param name="val">The value.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteValueOrEmpty``1(System.Xml.XmlWriter,System.Nullable{``0},System.String)">
-            <summary>
-            Writes string empty if T has default value or null.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="writer">The writer.</param>
-            <param name="val">The value.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteDateOrEmpty(System.Xml.XmlWriter,System.Nullable{System.DateTime},System.String)">
-            <summary>
-            Writes the date or empty.
-            </summary>
-            <param name="writer">The writer.</param>
-            <param name="val">The value.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="T:Redmine.Net.Api.Extensions.NameValueCollectionExtensions">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.NameValueCollectionExtensions.GetParameterValue(System.Collections.Specialized.NameValueCollection,System.String)">
-            <summary>
-            Gets the parameter value.
-            </summary>
-            <param name="parameters">The parameters.</param>
-            <param name="parameterName">Name of the parameter.</param>
-            <returns></returns>
-        </member>
-        <member name="T:Redmine.Net.Api.Extensions.CollectionExtensions">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.CollectionExtensions.Clone``1(System.Collections.Generic.IList{``0})">
-            <summary>
-                Clones the specified list to clone.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="listToClone">The list to clone.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.CollectionExtensions.Equals``1(System.Collections.Generic.IList{``0},System.Collections.Generic.IList{``0})">
-            <summary>
-                Equalses the specified list to compare.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="list">The list.</param>
-            <param name="listToCompare">The list to compare.</param>
-            <returns></returns>
-        </member>
-        <member name="T:Redmine.Net.Api.Extensions.XmlReaderExtensions">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadAttributeAsInt(System.Xml.XmlReader,System.String)">
-            <summary>
-                Reads the attribute as int.
-            </summary>
-            <param name="reader">The reader.</param>
-            <param name="attributeName">Name of the attribute.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadAttributeAsNullableInt(System.Xml.XmlReader,System.String)">
-            <summary>
-                Reads the attribute as nullable int.
-            </summary>
-            <param name="reader">The reader.</param>
-            <param name="attributeName">Name of the attribute.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadAttributeAsBoolean(System.Xml.XmlReader,System.String)">
-            <summary>
-                Reads the attribute as boolean.
-            </summary>
-            <param name="reader">The reader.</param>
-            <param name="attributeName">Name of the attribute.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsNullableDateTime(System.Xml.XmlReader)">
-            <summary>
-                Reads the element content as nullable date time.
-            </summary>
-            <param name="reader">The reader.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsNullableFloat(System.Xml.XmlReader)">
-            <summary>
-                Reads the element content as nullable float.
-            </summary>
-            <param name="reader">The reader.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsNullableInt(System.Xml.XmlReader)">
-            <summary>
-                Reads the element content as nullable int.
-            </summary>
-            <param name="reader">The reader.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsNullableDecimal(System.Xml.XmlReader)">
-            <summary>
-                Reads the element content as nullable decimal.
-            </summary>
-            <param name="reader">The reader.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsCollection``1(System.Xml.XmlReader)">
-            <summary>
-                Reads the element content as collection.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="reader">The reader.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsCollection(System.Xml.XmlReader,System.Type)">
-            <summary>
-                Reads the element content as collection.
-            </summary>
-            <param name="reader">The reader.</param>
-            <param name="type">The type.</param>
-            <returns></returns>
-        </member>
-        <member name="T:Redmine.Net.Api.Extensions.JsonExtensions">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteIdIfNotNull(System.Collections.Generic.Dictionary{System.String,System.Object},Redmine.Net.Api.Types.IdentifiableName,System.String)">
-            <summary>
-            Writes the identifier if not null.
-            </summary>
-            <param name="dictionary">The dictionary.</param>
-            <param name="ident">The ident.</param>
-            <param name="key">The key.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteIdOrEmpty(System.Collections.Generic.Dictionary{System.String,System.Object},Redmine.Net.Api.Types.IdentifiableName,System.String,System.String)">
-            <summary>
-            Writes the identifier or empty.
-            </summary>
-            <param name="dictionary">The dictionary.</param>
-            <param name="ident">The ident.</param>
-            <param name="key">The key.</param>
-            <param name="emptyValue">The empty value.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteArray``1(System.Collections.Generic.Dictionary{System.String,System.Object},System.String,System.Collections.Generic.IEnumerable{``0},System.Web.Script.Serialization.JavaScriptConverter,System.Web.Script.Serialization.JavaScriptSerializer)">
-            <summary>
-            Writes the array.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="dictionary">The dictionary.</param>
-            <param name="key">The key.</param>
-            <param name="col">The col.</param>
-            <param name="converter">The converter.</param>
-            <param name="serializer">The serializer.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteIdsArray(System.Collections.Generic.Dictionary{System.String,System.Object},System.String,System.Collections.Generic.IEnumerable{Redmine.Net.Api.Types.IdentifiableName})">
-            <summary>
-            Writes the ids array.
-            </summary>
-            <param name="dictionary">The dictionary.</param>
-            <param name="key">The key.</param>
-            <param name="coll">The coll.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteNamesArray(System.Collections.Generic.Dictionary{System.String,System.Object},System.String,System.Collections.Generic.IEnumerable{Redmine.Net.Api.Types.IdentifiableName})">
-            <summary>
-            Writes the names array.
-            </summary>
-            <param name="dictionary">The dictionary.</param>
-            <param name="key">The key.</param>
-            <param name="coll">The coll.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteDateOrEmpty(System.Collections.Generic.Dictionary{System.String,System.Object},System.Nullable{System.DateTime},System.String)">
-            <summary>
-            Writes the date or empty.
-            </summary>
-            <param name="dictionary">The dictionary.</param>
-            <param name="val">The value.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteValueOrEmpty``1(System.Collections.Generic.Dictionary{System.String,System.Object},System.Nullable{``0},System.String)">
-            <summary>
-            Writes the value or empty.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="dictionary">The dictionary.</param>
-            <param name="val">The value.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteValueOrDefault``1(System.Collections.Generic.Dictionary{System.String,System.Object},System.Nullable{``0},System.String)">
-            <summary>
-            Writes the value or default.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="dictionary">The dictionary.</param>
-            <param name="val">The value.</param>
-            <param name="tag">The tag.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.GetValue``1(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
-            <summary>
-            Gets the value.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="dictionary">The dictionary.</param>
-            <param name="key">The key.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.GetValueAsIdentifiableName(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
-            <summary>
-            Gets the name of the value as identifiable.
-            </summary>
-            <param name="dictionary">The dictionary.</param>
-            <param name="key">The key.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.GetValueAsCollection``1(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
-            <summary>
-            For Json
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="dictionary">The dictionary.</param>
-            <param name="key">The key.</param>
-            <returns></returns>
-        </member>
-        <member name="T:Redmine.Net.Api.Extensions.WebExtensions">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.WebExtensions.HandleWebException(System.Net.WebException,System.String,Redmine.Net.Api.MimeFormat)">
-            <summary>
-            Handles the web exception.
-            </summary>
-            <param name="exception">The exception.</param>
-            <param name="method">The method.</param>
-            <param name="mimeFormat">The MIME format.</param>
-            <exception cref="T:Redmine.Net.Api.Exceptions.RedmineTimeoutException">Timeout!</exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.NameResolutionFailureException">Bad domain name!</exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.NotFoundException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.InternalServerErrorException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.UnauthorizedException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.ForbiddenException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.ConflictException">The page that you are trying to update is staled!</exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.RedmineException">
-            </exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
-        </member>
-        <member name="M:Redmine.Net.Api.Extensions.WebExtensions.GetRedmineExceptions(System.Net.WebResponse,Redmine.Net.Api.MimeFormat)">
-            <summary>
-            Gets the redmine exceptions.
-            </summary>
-            <param name="webResponse">The web response.</param>
-            <param name="mimeFormat">The MIME format.</param>
-            <returns></returns>
-        </member>
         <member name="T:Redmine.Net.Api.Internals.HashCodeHelper">
             <summary>
             
@@ -362,6 +30,19 @@
             <returns>
             A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
             </returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Internals.DataHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.DataHelper.UserData(System.Int32,Redmine.Net.Api.MimeFormat)">
+            <summary>
+            Users the data.
+            </summary>
+            <param name="userId">The user identifier.</param>
+            <param name="mimeFormat">The MIME format.</param>
+            <returns></returns>
         </member>
         <member name="T:Redmine.Net.Api.Internals.UrlHelper">
             <summary>
@@ -561,19 +242,6 @@
             <param name="issueId">The issue identifier.</param>
             <returns></returns>
         </member>
-        <member name="T:Redmine.Net.Api.Internals.DataHelper">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Redmine.Net.Api.Internals.DataHelper.UserData(System.Int32,Redmine.Net.Api.MimeFormat)">
-            <summary>
-            Users the data.
-            </summary>
-            <param name="userId">The user identifier.</param>
-            <param name="mimeFormat">The MIME format.</param>
-            <returns></returns>
-        </member>
         <member name="T:Redmine.Net.Api.Internals.WebApiHelper">
             <summary>
             
@@ -647,82 +315,6 @@
             <summary>
             
             </summary>
-        </member>
-        <member name="P:Redmine.Net.Api.Internals.RedmineSerializer.JsonConverters">
-            <summary>
-            Available json converters.
-            </summary>
-        </member>
-        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonSerializer``1(``0)">
-            <summary>
-            Jsons the serializer.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="type">The type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserializeToList``1(System.String,System.String)">
-            <summary>
-            JSON Deserialization
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="jsonString">The json string.</param>
-            <param name="root">The root.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserializeToList``1(System.String,System.String,System.Int32@,System.Int32@)">
-            <summary>
-            JSON Deserialization
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="jsonString">The json string.</param>
-            <param name="root">The root.</param>
-            <param name="totalCount">The total count.</param>
-            <param name="offset">The offset.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserialize``1(System.String,System.String)">
-            <summary>
-            Jsons the deserialize.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="jsonString">The json string.</param>
-            <param name="root">The root.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserialize(System.String,System.Type,System.String)">
-            <summary>
-            Jsons the deserialize.
-            </summary>
-            <param name="jsonString">The json string.</param>
-            <param name="type">The type.</param>
-            <param name="root">The root.</param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException">jsonString</exception>
-            <exception cref="T:System.ArgumentNullException"></exception>
-            <exception cref="T:System.ArgumentException"></exception>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.AddToList(System.Web.Script.Serialization.JavaScriptSerializer,System.Collections.IList,System.Type,System.Object)">
-            <summary>
-            Adds to list.
-            </summary>
-            <param name="serializer">The serializer.</param>
-            <param name="list">The list.</param>
-            <param name="type">The type.</param>
-            <param name="arrayList">The array list.</param>
-        </member>
-        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserializeToList(System.String,System.String,System.Type,System.Int32@,System.Int32@)">
-            <summary>
-            Jsons the deserialize to list.
-            </summary>
-            <param name="jsonString">The json string.</param>
-            <param name="root">The root.</param>
-            <param name="type">The type.</param>
-            <param name="totalCount">The total count.</param>
-            <param name="offset">The offset.</param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException">jsonString</exception>
         </member>
         <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.ToXML``1(``0)">
             <summary>
@@ -802,6 +394,633 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="response">The response.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Redmine.Net.Api.Internals.RedmineSerializer.JsonConverters">
+            <summary>
+            Available json converters.
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonSerializer``1(``0)">
+            <summary>
+            Jsons the serializer.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserializeToList``1(System.String,System.String)">
+            <summary>
+            JSON Deserialization
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="jsonString">The json string.</param>
+            <param name="root">The root.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserializeToList``1(System.String,System.String,System.Int32@,System.Int32@)">
+            <summary>
+            JSON Deserialization
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="jsonString">The json string.</param>
+            <param name="root">The root.</param>
+            <param name="totalCount">The total count.</param>
+            <param name="offset">The offset.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserialize``1(System.String,System.String)">
+            <summary>
+            Jsons the deserialize.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="jsonString">The json string.</param>
+            <param name="root">The root.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserialize(System.String,System.Type,System.String)">
+            <summary>
+            Jsons the deserialize.
+            </summary>
+            <param name="jsonString">The json string.</param>
+            <param name="type">The type.</param>
+            <param name="root">The root.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">jsonString</exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.AddToList(System.Web.Script.Serialization.JavaScriptSerializer,System.Collections.IList,System.Type,System.Object)">
+            <summary>
+            Adds to list.
+            </summary>
+            <param name="serializer">The serializer.</param>
+            <param name="list">The list.</param>
+            <param name="type">The type.</param>
+            <param name="arrayList">The array list.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.RedmineSerializer.JsonDeserializeToList(System.String,System.String,System.Type,System.Int32@,System.Int32@)">
+            <summary>
+            Jsons the deserialize to list.
+            </summary>
+            <param name="jsonString">The json string.</param>
+            <param name="root">The root.</param>
+            <param name="type">The type.</param>
+            <param name="totalCount">The total count.</param>
+            <param name="offset">The offset.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">jsonString</exception>
+        </member>
+        <member name="T:Redmine.Net.Api.Internals.WebApiAsyncHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.WebApiAsyncHelper.ExecuteUpload(Redmine.Net.Api.RedmineManager,System.String,System.String,System.String,System.String)">
+            <summary>
+            Executes the upload.
+            </summary>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="address">The address.</param>
+            <param name="actionType">Type of the action.</param>
+            <param name="data">The data.</param>
+            <param name="methodName">Name of the method.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.WebApiAsyncHelper.ExecuteDownload``1(Redmine.Net.Api.RedmineManager,System.String,System.String,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Executes the download.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="address">The address.</param>
+            <param name="methodName">Name of the method.</param>
+            <param name="parameters">The parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.WebApiAsyncHelper.ExecuteDownloadList``1(Redmine.Net.Api.RedmineManager,System.String,System.String,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Executes the download list.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="address">The address.</param>
+            <param name="methodName">Name of the method.</param>
+            <param name="parameters">The parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.WebApiAsyncHelper.ExecuteDownloadPaginatedList``1(Redmine.Net.Api.RedmineManager,System.String,System.String,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Executes the download paginated list.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="address">The address.</param>
+            <param name="methodName">Name of the method.</param>
+            <param name="parameters">The parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.WebApiAsyncHelper.ExecuteDownloadFile(Redmine.Net.Api.RedmineManager,System.String,System.String)">
+            <summary>
+            Executes the download file.
+            </summary>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="address">The address.</param>
+            <param name="methodName">Name of the method.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Internals.WebApiAsyncHelper.ExecuteUploadFile(Redmine.Net.Api.RedmineManager,System.String,System.Byte[],System.String)">
+            <summary>
+            Executes the upload file.
+            </summary>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="address">The address.</param>
+            <param name="data">The data.</param>
+            <param name="methodName">Name of the method.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.NameValueCollectionExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.NameValueCollectionExtensions.GetParameterValue(System.Collections.Specialized.NameValueCollection,System.String)">
+            <summary>
+            Gets the parameter value.
+            </summary>
+            <param name="parameters">The parameters.</param>
+            <param name="parameterName">Name of the parameter.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.XmlExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteIdIfNotNull(System.Xml.XmlWriter,Redmine.Net.Api.Types.IdentifiableName,System.String)">
+            <summary>
+            Writes the id if not null.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="ident">The ident.</param>
+            <param name="tag">The tag.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteArray(System.Xml.XmlWriter,System.Collections.IEnumerable,System.String)">
+            <summary>
+            Writes the array.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="collection">The collection.</param>
+            <param name="elementName">Name of the element.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteArrayIds(System.Xml.XmlWriter,System.Collections.IEnumerable,System.String,System.Type,System.Func{System.Object,System.Int32})">
+            <summary>
+            Writes the array ids.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="collection">The collection.</param>
+            <param name="elementName">Name of the element.</param>
+            <param name="type">The type.</param>
+            <param name="f">The f.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteArray(System.Xml.XmlWriter,System.Collections.IEnumerable,System.String,System.Type,System.String,System.String)">
+            <summary>
+            Writes the array.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="collection">The collection.</param>
+            <param name="elementName">Name of the element.</param>
+            <param name="type">The type.</param>
+            <param name="root">The root.</param>
+            <param name="defaultNamespace">The default namespace.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteArrayStringElement(System.Xml.XmlWriter,System.Collections.IEnumerable,System.String,System.Func{System.Object,System.String})">
+            <summary>
+            Writes the array string element.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="collection">The collection.</param>
+            <param name="elementName">Name of the element.</param>
+            <param name="f">The func to invoke.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteListElements(System.Xml.XmlWriter,System.Collections.Generic.IEnumerable{Redmine.Net.Api.Types.IValue},System.String)">
+            <summary>
+            Writes the list elements.
+            </summary>
+            <param name="xmlWriter">The XML writer.</param>
+            <param name="collection">The collection.</param>
+            <param name="elementName">Name of the element.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteIdOrEmpty(System.Xml.XmlWriter,Redmine.Net.Api.Types.IdentifiableName,System.String)">
+            <summary>
+            Writes the identifier or empty.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="ident">The ident.</param>
+            <param name="tag">The tag.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteIfNotDefaultOrNull``1(System.Xml.XmlWriter,System.Nullable{``0},System.String)">
+            <summary>
+            Writes if not default or null.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="writer">The writer.</param>
+            <param name="val">The value.</param>
+            <param name="tag">The tag.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteValueOrEmpty``1(System.Xml.XmlWriter,System.Nullable{``0},System.String)">
+            <summary>
+            Writes string empty if T has default value or null.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="writer">The writer.</param>
+            <param name="val">The value.</param>
+            <param name="tag">The tag.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlExtensions.WriteDateOrEmpty(System.Xml.XmlWriter,System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Writes the date or empty.
+            </summary>
+            <param name="writer">The writer.</param>
+            <param name="val">The value.</param>
+            <param name="tag">The tag.</param>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.CollectionExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.CollectionExtensions.Clone``1(System.Collections.Generic.IList{``0})">
+            <summary>
+                Clones the specified list to clone.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="listToClone">The list to clone.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.CollectionExtensions.Equals``1(System.Collections.Generic.IList{``0},System.Collections.Generic.IList{``0})">
+            <summary>
+                Equalses the specified list to compare.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list">The list.</param>
+            <param name="listToCompare">The list to compare.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.JsonExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteIdIfNotNull(System.Collections.Generic.Dictionary{System.String,System.Object},Redmine.Net.Api.Types.IdentifiableName,System.String)">
+            <summary>
+            Writes the identifier if not null.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="ident">The ident.</param>
+            <param name="key">The key.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteIdOrEmpty(System.Collections.Generic.Dictionary{System.String,System.Object},Redmine.Net.Api.Types.IdentifiableName,System.String,System.String)">
+            <summary>
+            Writes the identifier or empty.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="ident">The ident.</param>
+            <param name="key">The key.</param>
+            <param name="emptyValue">The empty value.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteArray``1(System.Collections.Generic.Dictionary{System.String,System.Object},System.String,System.Collections.Generic.IEnumerable{``0},System.Web.Script.Serialization.JavaScriptConverter,System.Web.Script.Serialization.JavaScriptSerializer)">
+            <summary>
+            Writes the array.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="col">The col.</param>
+            <param name="converter">The converter.</param>
+            <param name="serializer">The serializer.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteIdsArray(System.Collections.Generic.Dictionary{System.String,System.Object},System.String,System.Collections.Generic.IEnumerable{Redmine.Net.Api.Types.IdentifiableName})">
+            <summary>
+            Writes the ids array.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="coll">The coll.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteNamesArray(System.Collections.Generic.Dictionary{System.String,System.Object},System.String,System.Collections.Generic.IEnumerable{Redmine.Net.Api.Types.IdentifiableName})">
+            <summary>
+            Writes the names array.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <param name="coll">The coll.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteDateOrEmpty(System.Collections.Generic.Dictionary{System.String,System.Object},System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Writes the date or empty.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="val">The value.</param>
+            <param name="tag">The tag.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteValueOrEmpty``1(System.Collections.Generic.Dictionary{System.String,System.Object},System.Nullable{``0},System.String)">
+            <summary>
+            Writes the value or empty.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dictionary">The dictionary.</param>
+            <param name="val">The value.</param>
+            <param name="tag">The tag.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.WriteValueOrDefault``1(System.Collections.Generic.Dictionary{System.String,System.Object},System.Nullable{``0},System.String)">
+            <summary>
+            Writes the value or default.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dictionary">The dictionary.</param>
+            <param name="val">The value.</param>
+            <param name="tag">The tag.</param>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.GetValue``1(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
+            <summary>
+            Gets the value.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.GetValueAsIdentifiableName(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
+            <summary>
+            Gets the name of the value as identifiable.
+            </summary>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.JsonExtensions.GetValueAsCollection``1(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
+            <summary>
+            For Json
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dictionary">The dictionary.</param>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.WebExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.WebExtensions.HandleWebException(System.Net.WebException,System.String,Redmine.Net.Api.MimeFormat)">
+            <summary>
+            Handles the web exception.
+            </summary>
+            <param name="exception">The exception.</param>
+            <param name="method">The method.</param>
+            <param name="mimeFormat">The MIME format.</param>
+            <exception cref="T:Redmine.Net.Api.Exceptions.RedmineTimeoutException">Timeout!</exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.NameResolutionFailureException">Bad domain name!</exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.NotFoundException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.InternalServerErrorException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.UnauthorizedException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.ForbiddenException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.ConflictException">The page that you are trying to update is staled!</exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.RedmineException">
+            </exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.WebExtensions.GetRedmineExceptions(System.Net.WebResponse,Redmine.Net.Api.MimeFormat)">
+            <summary>
+            Gets the redmine exceptions.
+            </summary>
+            <param name="webResponse">The web response.</param>
+            <param name="mimeFormat">The MIME format.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.XmlReaderExtensions">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadAttributeAsInt(System.Xml.XmlReader,System.String)">
+            <summary>
+                Reads the attribute as int.
+            </summary>
+            <param name="reader">The reader.</param>
+            <param name="attributeName">Name of the attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadAttributeAsNullableInt(System.Xml.XmlReader,System.String)">
+            <summary>
+                Reads the attribute as nullable int.
+            </summary>
+            <param name="reader">The reader.</param>
+            <param name="attributeName">Name of the attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadAttributeAsBoolean(System.Xml.XmlReader,System.String)">
+            <summary>
+                Reads the attribute as boolean.
+            </summary>
+            <param name="reader">The reader.</param>
+            <param name="attributeName">Name of the attribute.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsNullableDateTime(System.Xml.XmlReader)">
+            <summary>
+                Reads the element content as nullable date time.
+            </summary>
+            <param name="reader">The reader.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsNullableFloat(System.Xml.XmlReader)">
+            <summary>
+                Reads the element content as nullable float.
+            </summary>
+            <param name="reader">The reader.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsNullableInt(System.Xml.XmlReader)">
+            <summary>
+                Reads the element content as nullable int.
+            </summary>
+            <param name="reader">The reader.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsNullableDecimal(System.Xml.XmlReader)">
+            <summary>
+                Reads the element content as nullable decimal.
+            </summary>
+            <param name="reader">The reader.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsCollection``1(System.Xml.XmlReader)">
+            <summary>
+                Reads the element content as collection.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="reader">The reader.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.XmlReaderExtensions.ReadElementContentAsCollection(System.Xml.XmlReader,System.Type)">
+            <summary>
+                Reads the element content as collection.
+            </summary>
+            <param name="reader">The reader.</param>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.DisposableExtension">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.DisposableExtension.Using``2(System.Func{``0},System.Func{``0,``1})">
+            <summary>
+            Usings the specified resource factory.
+            </summary>
+            <typeparam name="TResource">The type of the resource.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="resourceFactory">The resource factory.</param>
+            <param name="fn">The function.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.FunctionalExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.FunctionalExtensions.Tee``1(``0,System.Action{``0})">
+            <summary>
+            The Tee extension method takes it’s name from the corresponding UNIX command which is used in command pipelines to cause a side-effect with a given input and return the original value. 
+            </summary>
+            <param name="this">This.</param>
+            <param name="action">Action.</param>
+            <typeparam name="T">The 1st type parameter.</typeparam>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.FunctionalExtensions.Map``2(``0,System.Func{``0,``1})">
+            <summary>
+            Maps the specified function.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="this">The this.</param>
+            <param name="fn">The function.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.FunctionalExtensions.Curry``3(System.Func{``0,``1,``2})">
+            <summary>
+            Curries the specified function.
+            </summary>
+            <typeparam name="A"></typeparam>
+            <typeparam name="B"></typeparam>
+            <typeparam name="C"></typeparam>
+            <param name="func">The function.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.FunctionalExtensions.Curry``4(System.Func{``0,``1,``2,``3})">
+            <summary>
+            Curries the specified function.
+            </summary>
+            <typeparam name="A"></typeparam>
+            <typeparam name="B"></typeparam>
+            <typeparam name="C"></typeparam>
+            <typeparam name="D"></typeparam>
+            <param name="func">The function.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.FunctionalExtensions.Cache``1(System.Func{``0},System.Int32)">
+            <summary>
+            Caches the specified function.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="func">The function.</param>
+            <param name="interval">The interval.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Redmine.Net.Api.Extensions.TaskExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.TaskExtensions.MapAsync``2(System.Threading.Tasks.Task{``0},System.Func{``0,System.Threading.Tasks.Task{``1}})">
+            <summary>
+            Maps the asynchronous.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="this">The this.</param>
+            <param name="fn">The function.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.TaskExtensions.MapAsync``2(``0,System.Func{``0,System.Threading.Tasks.Task{``1}})">
+            <summary>
+            Maps the asynchronous.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="this">The this.</param>
+            <param name="fn">The function.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.TaskExtensions.MapAsync``2(System.Threading.Tasks.Task{``0},System.Func{``0,``1})">
+            <summary>
+            Maps the asynchronous.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="this">The this.</param>
+            <param name="fn">The function.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.TaskExtensions.TeeAsync``2(``0,System.Func{``0,System.Threading.Tasks.Task{``1}})">
+            <summary>
+            Tees the asynchronous.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="this">The this.</param>
+            <param name="act">The act.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.TaskExtensions.TeeAsync``1(System.Threading.Tasks.Task{``0},System.Action{``0})">
+            <summary>
+            Tees the asynchronous.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="this">The this.</param>
+            <param name="act">The act.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.TaskExtensions.TeeAsync``2(System.Threading.Tasks.Task{``0},System.Func{``0,System.Threading.Tasks.Task{``1}})">
+            <summary>
+            Tees the asynchronous.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="this">The this.</param>
+            <param name="act">The act.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.TaskExtensions.TeeAsync``1(``0,System.Func{``0,System.Threading.Tasks.Task{``0}})">
+            <summary>
+            Tees the asynchronous.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <param name="this">The this.</param>
+            <param name="act">The act.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Extensions.TaskExtensions.Tee``2(System.Threading.Tasks.Task{``0},System.Func{``0,``1})">
+            <summary>
+            Tees the specified act.
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="this">The this.</param>
+            <param name="act">The act.</param>
             <returns></returns>
         </member>
         <member name="T:Redmine.Net.Api.HttpVerbs">
@@ -2261,6 +2480,25 @@
                 Returns a complete list of objects.
             </returns>
         </member>
+        <member name="M:Redmine.Net.Api.RedmineManager.CreateObject``1(``0)">
+            <summary>
+                Creates a new Redmine object.
+            </summary>
+            <typeparam name="T">The type of object to create.</typeparam>
+            <param name="obj">The object to create.</param>
+            <returns></returns>
+            <exception cref="T:Redmine.Net.Api.Exceptions.RedmineException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.NotFoundException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.InternalServerErrorException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.UnauthorizedException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.ForbiddenException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.ConflictException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
+            <remarks>
+                When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
+                Entity response. That means that the object could not be created.
+            </remarks>
+        </member>
         <member name="M:Redmine.Net.Api.RedmineManager.CreateObject``1(``0,System.String)">
             <summary>
                 Creates a new Redmine object.
@@ -2338,6 +2576,7 @@
                 Upload a file to server.
             </summary>
             <param name="data">The content of the file that will be uploaded on server.</param>
+            <param name="fileName"></param>
             <returns>
                 Returns the token for uploaded file.
             </returns>
@@ -2370,25 +2609,6 @@
             <exception cref="T:Redmine.Net.Api.Exceptions.ConflictException"></exception>
             <exception cref="T:Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
             <exception cref="T:System.NotSupportedException"></exception>
-        </member>
-        <member name="M:Redmine.Net.Api.RedmineManager.CreateObject``1(``0)">
-            <summary>
-                Creates a new Redmine object.
-            </summary>
-            <typeparam name="T">The type of object to create.</typeparam>
-            <param name="obj">The object to create.</param>
-            <returns></returns>
-            <exception cref="T:Redmine.Net.Api.Exceptions.RedmineException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.NotFoundException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.InternalServerErrorException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.UnauthorizedException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.ForbiddenException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.ConflictException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
-            <remarks>
-                When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
-                Entity response. That means that the object could not be created.
-            </remarks>
         </member>
         <member name="M:Redmine.Net.Api.RedmineManager.CreateWebClient(System.Collections.Specialized.NameValueCollection,System.Boolean)">
             <summary>
@@ -3824,6 +4044,16 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Redmine.Net.Api.Types.IValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Redmine.Net.Api.Types.IValue.Value">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Redmine.Net.Api.Types.Journal">
             <summary>
             
@@ -4235,6 +4465,11 @@
             <value>
             The enabled modules.
             </value>
+        </member>
+        <member name="P:Redmine.Net.Api.Types.Project.TimeEntryActivities">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:Redmine.Net.Api.Types.Project.ReadXml(System.Xml.XmlReader)">
             <summary>
@@ -5209,16 +5444,6 @@
             
             </summary>
             <returns></returns>
-        </member>
-        <member name="T:Redmine.Net.Api.Types.IValue">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:Redmine.Net.Api.Types.IValue.Value">
-            <summary>
-            
-            </summary>
         </member>
         <member name="T:Redmine.Net.Api.JSonConverters.AttachmentConverter">
             <summary>
@@ -6383,12 +6608,11 @@
         </member>
         <member name="T:Redmine.Net.Api.Async.RedmineManagerAsync">
             <summary>
-            
             </summary>
         </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.GetCurrentUserAsync(Redmine.Net.Api.RedmineManager,System.Collections.Specialized.NameValueCollection)">
             <summary>
-            Gets the current user asynchronous.
+                Gets the current user asynchronous.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
             <param name="parameters">The parameters.</param>
@@ -6396,7 +6620,7 @@
         </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.CreateOrUpdateWikiPageAsync(Redmine.Net.Api.RedmineManager,System.String,System.String,Redmine.Net.Api.Types.WikiPage)">
             <summary>
-            Creates the or update wiki page asynchronous.
+                Creates the or update wiki page asynchronous.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
             <param name="projectId">The project identifier.</param>
@@ -6406,16 +6630,35 @@
         </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.DeleteWikiPageAsync(Redmine.Net.Api.RedmineManager,System.String,System.String)">
             <summary>
-            Deletes the wiki page asynchronous.
+                Deletes the wiki page asynchronous.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
             <param name="projectId">The project identifier.</param>
             <param name="pageName">Name of the page.</param>
             <returns></returns>
         </member>
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.UploadFileAsync(Redmine.Net.Api.RedmineManager,System.Byte[])">
+            <summary>
+                Support for adding attachments through the REST API is added in Redmine 1.4.0.
+                Upload a file to server. This method does not block the calling thread.
+            </summary>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="data">The content of the file that will be uploaded on server.</param>
+            <returns>
+                .
+            </returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.DownloadFileAsync(Redmine.Net.Api.RedmineManager,System.String)">
+            <summary>
+                Downloads the file asynchronous.
+            </summary>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="address">The address.</param>
+            <returns></returns>
+        </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.GetWikiPageAsync(Redmine.Net.Api.RedmineManager,System.String,System.Collections.Specialized.NameValueCollection,System.String,System.UInt32)">
             <summary>
-            Gets the wiki page asynchronous.
+                Gets the wiki page asynchronous.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
             <param name="projectId">The project identifier.</param>
@@ -6424,82 +6667,56 @@
             <param name="version">The version.</param>
             <returns></returns>
         </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.GetAllWikiPagesAsync(Redmine.Net.Api.RedmineManager,System.String)">
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.GetAllWikiPagesAsync(Redmine.Net.Api.RedmineManager,System.Collections.Specialized.NameValueCollection,System.String)">
             <summary>
-            Gets all wiki pages asynchronous.
+                Gets all wiki pages asynchronous.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
+            <param name="parameters">The parameters.</param>
             <param name="projectId">The project identifier.</param>
             <returns></returns>
         </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.AddUserToGroupAsync(Redmine.Net.Api.RedmineManager,System.Int32,System.Int32)">
             <summary>
-            Adds the user to group asynchronous.
+                Adds an existing user to a group. This method does not block the calling thread.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
-            <param name="groupId">The group identifier.</param>
-            <param name="userId">The user identifier.</param>
-            <returns></returns>
+            <param name="groupId">The group id.</param>
+            <param name="userId">The user id.</param>
+            <returns>
+                Returns the Guid associated with the async request.
+            </returns>
         </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.RemoveUserFromGroupAsync(Redmine.Net.Api.RedmineManager,System.Int32,System.Int32)">
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.DeleteUserFromGroupAsync(Redmine.Net.Api.RedmineManager,System.Int32,System.Int32)">
             <summary>
-            Removes the user from group asynchronous.
+                Removes an user from a group. This method does not block the calling thread.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
-            <param name="groupId">The group identifier.</param>
-            <param name="userId">The user identifier.</param>
+            <param name="groupId">The group id.</param>
+            <param name="userId">The user id.</param>
             <returns></returns>
         </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.AddWatcherToIssueAsync(Redmine.Net.Api.RedmineManager,System.Int32,System.Int32)">
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.AddWatcherAsync(Redmine.Net.Api.RedmineManager,System.Int32,System.Int32)">
             <summary>
-            Adds the watcher to issue asynchronous.
+                Adds the watcher asynchronous.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
             <param name="issueId">The issue identifier.</param>
             <param name="userId">The user identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.RemoveWatcherFromIssueAsync(Redmine.Net.Api.RedmineManager,System.Int32,System.Int32)">
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.RemoveWatcherAsync(Redmine.Net.Api.RedmineManager,System.Int32,System.Int32)">
             <summary>
-            Removes the watcher from issue asynchronous.
+                Removes the watcher asynchronous.
             </summary>
             <param name="redmineManager">The redmine manager.</param>
             <param name="issueId">The issue identifier.</param>
             <param name="userId">The user identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.GetObjectAsync``1(Redmine.Net.Api.RedmineManager,System.String,System.Collections.Specialized.NameValueCollection)">
-            <summary>
-            Gets the object asynchronous.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="redmineManager">The redmine manager.</param>
-            <param name="id">The identifier.</param>
-            <param name="parameters">The parameters.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.CreateObjectAsync``1(Redmine.Net.Api.RedmineManager,``0)">
-            <summary>
-            Creates the object asynchronous.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="redmineManager">The redmine manager.</param>
-            <param name="obj">The object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.CreateObjectAsync``1(Redmine.Net.Api.RedmineManager,``0,System.String)">
-            <summary>
-            Creates the object asynchronous.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="redmineManager">The redmine manager.</param>
-            <param name="obj">The object.</param>
-            <param name="ownerId">The owner identifier.</param>
             <returns></returns>
         </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.GetPaginatedObjectsAsync``1(Redmine.Net.Api.RedmineManager,System.Collections.Specialized.NameValueCollection)">
             <summary>
-            Gets the paginated objects asynchronous.
+                Gets the paginated objects asynchronous.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="redmineManager">The redmine manager.</param>
@@ -6508,16 +6725,45 @@
         </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.GetObjectsAsync``1(Redmine.Net.Api.RedmineManager,System.Collections.Specialized.NameValueCollection)">
             <summary>
-            Gets the objects asynchronous.
+                Gets the objects asynchronous.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="redmineManager">The redmine manager.</param>
             <param name="parameters">The parameters.</param>
             <returns></returns>
         </member>
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.GetObjectAsync``1(Redmine.Net.Api.RedmineManager,System.String,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+                Gets a Redmine object. This method does not block the calling thread.
+            </summary>
+            <typeparam name="T">The type of objects to retrieve.</typeparam>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="id">The id of the object.</param>
+            <param name="parameters">Optional filters and/or optional fetched data.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.CreateObjectAsync``1(Redmine.Net.Api.RedmineManager,``0)">
+            <summary>
+                Creates a new Redmine object. This method does not block the calling thread.
+            </summary>
+            <typeparam name="T">The type of object to create.</typeparam>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="obj">The object to create.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.CreateObjectAsync``1(Redmine.Net.Api.RedmineManager,``0,System.String)">
+            <summary>
+                Creates a new Redmine object. This method does not block the calling thread.
+            </summary>
+            <typeparam name="T">The type of object to create.</typeparam>
+            <param name="redmineManager">The redmine manager.</param>
+            <param name="obj">The object to create.</param>
+            <param name="ownerId">The owner identifier.</param>
+            <returns></returns>
+        </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.UpdateObjectAsync``1(Redmine.Net.Api.RedmineManager,System.String,``0,System.String)">
             <summary>
-            Updates the object asynchronous.
+                Updates the object asynchronous.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="redmineManager">The redmine manager.</param>
@@ -6528,28 +6774,12 @@
         </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.DeleteObjectAsync``1(Redmine.Net.Api.RedmineManager,System.String,System.Collections.Specialized.NameValueCollection)">
             <summary>
-            Deletes the object asynchronous.
+                Deletes the Redmine object. This method does not block the calling thread.
             </summary>
-            <typeparam name="T"></typeparam>
+            <typeparam name="T">The type of objects to delete.</typeparam>
             <param name="redmineManager">The redmine manager.</param>
-            <param name="id">The identifier.</param>
-            <param name="parameters">The parameters.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.UploadFileAsync(Redmine.Net.Api.RedmineManager,System.Byte[])">
-            <summary>
-            Uploads the file asynchronous.
-            </summary>
-            <param name="redmineManager">The redmine manager.</param>
-            <param name="data">The data.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.DownloadFileAsync(Redmine.Net.Api.RedmineManager,System.String)">
-            <summary>
-            Downloads the file asynchronous.
-            </summary>
-            <param name="redmineManager">The redmine manager.</param>
-            <param name="address">The address.</param>
+            <param name="id">The id of the object to delete</param>
+            <param name="parameters">Optional filters and/or optional fetched data.</param>
             <returns></returns>
         </member>
         <member name="T:Redmine.Net.Api.Exceptions.NotFoundException">

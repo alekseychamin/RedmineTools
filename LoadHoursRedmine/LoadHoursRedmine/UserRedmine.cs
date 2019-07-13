@@ -7,11 +7,11 @@ using Redmine.Net.Api.Types;
 
 namespace WinRedminePlaning
 {
-    public class UserGroupRedmine
+    public class UserGroupRedmine : Item
     {
         public string name { get; }
         public int id { get; }
-        public UserGroupRedmine(string name, int id)
+        public UserGroupRedmine(string name, int id) : base(name, id)
         {
             this.name = name;
             this.id = id;

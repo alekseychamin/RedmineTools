@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewUser = new System.Windows.Forms.ListView();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -36,12 +37,13 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lab_MonthHours = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.comboMounth = new System.Windows.Forms.ComboBox();
             this.butReportExcel = new System.Windows.Forms.Button();
             this.but_SaveExcel = new System.Windows.Forms.Button();
             this.but_loadRedmine = new System.Windows.Forms.Button();
-            this.lab_MonthHours = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -150,6 +152,16 @@
             this.panel1.Size = new System.Drawing.Size(821, 32);
             this.panel1.TabIndex = 1;
             // 
+            // lab_MonthHours
+            // 
+            this.lab_MonthHours.AutoSize = true;
+            this.lab_MonthHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lab_MonthHours.Location = new System.Drawing.Point(470, 11);
+            this.lab_MonthHours.Name = "lab_MonthHours";
+            this.lab_MonthHours.Size = new System.Drawing.Size(114, 13);
+            this.lab_MonthHours.TabIndex = 4;
+            this.lab_MonthHours.Text = "Кол-во раб. часов";
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -199,15 +211,10 @@
             this.but_loadRedmine.UseVisualStyleBackColor = true;
             this.but_loadRedmine.Click += new System.EventHandler(this.but_loadRedmine_Click);
             // 
-            // lab_MonthHours
+            // contextMenuStrip1
             // 
-            this.lab_MonthHours.AutoSize = true;
-            this.lab_MonthHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lab_MonthHours.Location = new System.Drawing.Point(470, 11);
-            this.lab_MonthHours.Name = "lab_MonthHours";
-            this.lab_MonthHours.Size = new System.Drawing.Size(114, 13);
-            this.lab_MonthHours.TabIndex = 4;
-            this.lab_MonthHours.Text = "Кол-во раб. часов";
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 26);
             // 
             // MainForm
             // 
@@ -248,6 +255,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button butReportExcel;
         private System.Windows.Forms.Label lab_MonthHours;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 

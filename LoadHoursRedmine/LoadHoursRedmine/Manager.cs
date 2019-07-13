@@ -14,7 +14,7 @@ namespace WinRedminePlaning
 {
     public enum TypeView { LoadUser = 0, LoadExperiedUser, LoadYWH, LoadGroup,
                            LoadProject, LoadProjectUser, LoadExperiedProject, LoadIssueDWH, LoadShortIssueDWH,
-                           LoadTimeDWH, LoadShortTimeDWH, LoadShortExpProject, LoadShortExpUser, ReportIssue, ReportEmail };
+                           LoadTimeDWH, LoadShortTimeDWH, LoadShortExpProject, LoadShortExpUser, ReportIssue, ReportEmail, ReportProject };
     public enum Operation { Equal, More, Less };
 
     public enum TypeSave { WorkHours, HumansMonth };
@@ -363,6 +363,34 @@ namespace WinRedminePlaning
                 Update();
         }
         
+        public void MakeReportProject()
+        {            
+            listProjectInfo.Clear();
+
+            foreach (LoadProject loadProject in listLoadProject)
+            {
+                ProjectInfo projectInfo = new ProjectInfo();                
+
+                foreach (LoadYWH loadYWH in loadProject.listLoadYWH)
+                {
+                    LoadInfoYWH loadInfoYWH = new LoadInfoYWH();
+
+                    loadInfoYWH.NumberYear = loadYWH.NumberYear;
+
+                    loadInfoYWH.PlanTotalHours = loadYWH.EstimatedYWH("план");
+                    loadInfoYWH.FactTotalHours = loadYWH.FactYWH("факт");
+                    loadInfoYWH.LeftHours = loadInfoYWH.PlanTotalHours - loadInfoYWH.FactTotalHours;
+
+                    projectInfo.listLoadInfoYWH.Add(loadInfoYWH);
+                }
+                
+                projectInfo.ProjectName = loadProject.Name;                                
+
+                listProjectInfo.Add(projectInfo);
+            }
+
+        }
+
         public void MakeReportIssue()
         {
             listProjectInfo.Clear();
@@ -426,7 +454,8 @@ namespace WinRedminePlaning
             {
                 if (year > 0)
                 {                    
-                    LoadYWH loadYMH = new LoadYWH(redmineData, maxYearHumansHours, year);
+                    LoadYWH loadYMH = new LoadYWH(redmineData, maxYearHumansHours, year, null);
+                    loadYMH.item = loadYMH;                    
                     loadYMH.MakeMonth(maxMonthHumansHours, redmineData.listProject);
                     listLoadYWH.Add(loadYMH);
                 }
@@ -494,36 +523,91 @@ namespace WinRedminePlaning
             double maxMonthHumansHours = countWorkUser;            
 
             foreach (Project project in redmineData.listProject)
-            {                
+            {
+                UserProject userProject = new UserProject(redmineData, project.Name, project.Id);
+                LoadProject loadProject = new LoadProject(redmineData, userProject);
+
+                foreach (int year in listYear)
+                {
+                    loadProject.AddYear(maxYearHumansHours, maxMonthHumansHours, year);
+                }
+
+                listLoadProject.Add(loadProject);
+                SetHeadUser(loadProject.listLoadOpenIssue);
+            }
+        }
+
+        private bool isAddProject(bool redmineProject, bool selectedProject, bool bothProject, 
+                                  List<string> listProject, Project project)
+        {
+            bool res = false;
+
+            if (redmineProject)
+            {
                 if (LoadHours.IsItemInPlanActiveProject(project))
                 {
-                    UserProject userProject = new UserProject(redmineData, project.Name, project.Id);
-                    LoadProject loadProject = new LoadProject(redmineData, userProject);
-
-                    foreach (int year in listYear)
-                    {
-                        loadProject.AddYear(maxYearHumansHours, maxMonthHumansHours, year);
-                    }
-
-                    listLoadProject.Add(loadProject);
-                    SetHeadUser(loadProject.listLoadOpenIssue);
+                    res = true;
+                    return res;
                 }
             }
-        }                        
 
-        public void GetIssue_ProjectFromRedmine()
+            if (selectedProject)
+            {
+                string findProjectName = listProject.Find(x => x.Equals(project.Name));
+                if (findProjectName != null)
+                {
+                    res = true;
+                    return res;
+                }
+            }
+
+            if (bothProject)
+            {
+                string findProjectName = listProject.Find(x => x.Equals(project.Name));
+
+                if (LoadHours.IsItemInPlanActiveProject(project) || findProjectName != null)
+                {
+                    res = true;
+                    return res;
+                }
+            }
+
+            return res;
+        }
+
+        private List<string> getListProject(string textProject)
+        {
+            List<string> listProject = new List<string>();
+
+            string[] array = textProject.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                listProject.Add(array[i]);
+            }
+
+            return listProject;
+        }
+
+        public void GetIssue_ProjectFromRedmine(bool redmineProject, bool selectedProject, bool bothProject, string textProject)
         {
             redmineData.listIssue.Clear();
             redmineData.listOpenIssue.Clear();
             redmineData.listProject.Clear();
             redmineData.listMonthHours.Clear();
+
+            List<string> listProject = getListProject(textProject);
+
             try
             {
                 NameValueCollection parametr = new NameValueCollection { { "project_id", "*" } };
                 foreach (Project project in redmineManager.GetObjects<Project>(parametr))
                 {
                     //MessageBox.Show(project.Status.ToString());
-                    redmineData.listProject.Add(project);                    
+                    //redmineData.listProject.Add(project);
+
+                    if (isAddProject(redmineProject, selectedProject, bothProject, listProject, project))
+                        redmineData.listProject.Add(project);                    
                 }
                 
                 parametr = new NameValueCollection { { "status_id", "open" } };
@@ -670,9 +754,13 @@ namespace WinRedminePlaning
             
             NameValueCollection parametr = new NameValueCollection { { "user_id", "*" } };
             foreach (var time in redmineManager.GetObjects<TimeEntry>(parametr))
-            {                           
-                UserTimeEntry userTimeEntry = new UserTimeEntry(time, redmineData.listIssue, redmineData.listUser);
-                redmineData.listUserTimeEntry.Add(userTimeEntry);             
+            {
+                Project project = redmineData.listProject.Find(x => (x.Id == time.Project.Id));
+                if (project != null)
+                {
+                    UserTimeEntry userTimeEntry = new UserTimeEntry(time, redmineData.listIssue, redmineData.listUser);
+                    redmineData.listUserTimeEntry.Add(userTimeEntry);
+                }
             }          
         }
               

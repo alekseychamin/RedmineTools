@@ -30,7 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.richReportText = new System.Windows.Forms.RichTextBox();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,22 +44,22 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.richTextBox1);
+            this.panel2.Controls.Add(this.richReportText);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(284, 232);
             this.panel2.TabIndex = 1;
             // 
-            // richTextBox1
+            // richReportText
             // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(284, 232);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox1_LinkClicked);
+            this.richReportText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richReportText.Location = new System.Drawing.Point(0, 0);
+            this.richReportText.Name = "richReportText";
+            this.richReportText.Size = new System.Drawing.Size(284, 232);
+            this.richReportText.TabIndex = 0;
+            this.richReportText.Text = "";
+            this.richReportText.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox1_LinkClicked);
             // 
             // ReportForm
             // 
@@ -79,6 +79,6 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox richReportText;
     }
 }

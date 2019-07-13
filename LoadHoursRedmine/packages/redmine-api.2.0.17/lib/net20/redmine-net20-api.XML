@@ -2815,6 +2815,11 @@
             The enabled modules.
             </value>
         </member>
+        <member name="P:Redmine.Net.Api.Types.Project.TimeEntryActivities">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Redmine.Net.Api.Types.Project.ReadXml(System.Xml.XmlReader)">
             <summary>
             Generates an object from its XML representation.
@@ -4877,6 +4882,25 @@
                 Returns a complete list of objects.
             </returns>
         </member>
+        <member name="M:Redmine.Net.Api.RedmineManager.CreateObject``1(``0)">
+            <summary>
+                Creates a new Redmine object.
+            </summary>
+            <typeparam name="T">The type of object to create.</typeparam>
+            <param name="obj">The object to create.</param>
+            <returns></returns>
+            <exception cref="T:Redmine.Net.Api.Exceptions.RedmineException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.NotFoundException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.InternalServerErrorException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.UnauthorizedException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.ForbiddenException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.ConflictException"></exception>
+            <exception cref="T:Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
+            <remarks>
+                When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
+                Entity response. That means that the object could not be created.
+            </remarks>
+        </member>
         <member name="M:Redmine.Net.Api.RedmineManager.CreateObject``1(``0,System.String)">
             <summary>
                 Creates a new Redmine object.
@@ -4954,6 +4978,7 @@
                 Upload a file to server.
             </summary>
             <param name="data">The content of the file that will be uploaded on server.</param>
+            <param name="fileName"></param>
             <returns>
                 Returns the token for uploaded file.
             </returns>
@@ -4986,25 +5011,6 @@
             <exception cref="T:Redmine.Net.Api.Exceptions.ConflictException"></exception>
             <exception cref="T:Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
             <exception cref="T:System.NotSupportedException"></exception>
-        </member>
-        <member name="M:Redmine.Net.Api.RedmineManager.CreateObject``1(``0)">
-            <summary>
-                Creates a new Redmine object.
-            </summary>
-            <typeparam name="T">The type of object to create.</typeparam>
-            <param name="obj">The object to create.</param>
-            <returns></returns>
-            <exception cref="T:Redmine.Net.Api.Exceptions.RedmineException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.NotFoundException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.InternalServerErrorException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.UnauthorizedException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.ForbiddenException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.ConflictException"></exception>
-            <exception cref="T:Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
-            <remarks>
-                When trying to create an object with invalid or missing attribute parameters, you will get a 422 Unprocessable
-                Entity response. That means that the object could not be created.
-            </remarks>
         </member>
         <member name="M:Redmine.Net.Api.RedmineManager.CreateWebClient(System.Collections.Specialized.NameValueCollection,System.Boolean)">
             <summary>
@@ -5200,6 +5206,7 @@
             </summary>
             <param name="redmineManager">The redmine manager.</param>
             <param name="data">The data.</param>
+            <param name="fileName"></param>
             <returns></returns>
         </member>
         <member name="M:Redmine.Net.Api.Async.RedmineManagerAsync.DownloadFileAsync(Redmine.Net.Api.RedmineManager,System.String)">

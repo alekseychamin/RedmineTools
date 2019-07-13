@@ -15,17 +15,23 @@ namespace WinRedminePlaning
     {
         LoadMWH loadMWH;
         Manager manager;
+        string tracker;
 
         int IDLoadProject;
-        int IDLoadUser;        
+        int IDLoadUser;
+
+        int IDitem;
+        int month, year;
+        Item item;     
 
         private TypeView typeView;
         private TypeView typeViewSelect;
 
-        public IssueDayForm(LoadProject loadProject, Manager manager, TypeView typeView, TypeView typeViewSelect)
+        public IssueDayForm(LoadProject loadProject, Manager manager, TypeView typeView, TypeView typeViewSelect, string tracker)
         {
             InitializeComponent();            
-            this.IDLoadProject = loadProject.userProject.Id;                      
+            this.IDLoadProject = loadProject.userProject.Id;
+            this.tracker = tracker;
             this.manager = manager;
             this.typeView = typeView;
             this.typeViewSelect = typeViewSelect;
@@ -34,10 +40,11 @@ namespace WinRedminePlaning
             ShowLoad_TimeDWH();
         }
 
-        public IssueDayForm(LoadUser loadUser, Manager manager, TypeView typeView, TypeView typeViewSelect)
+        public IssueDayForm(LoadUser loadUser, Manager manager, TypeView typeView, TypeView typeViewSelect, string tracker)
         {
             InitializeComponent();            
             this.IDLoadUser = loadUser.user.Id;
+            this.tracker = tracker;
             this.manager = manager;
             this.typeView = typeView;
             this.typeViewSelect = typeViewSelect;
@@ -46,10 +53,16 @@ namespace WinRedminePlaning
             ShowLoad_TimeDWH();
         }
 
-        public IssueDayForm(LoadMWH loadMWH, Manager manager, TypeView typeView, TypeView typeViewSelect)
+        public IssueDayForm(LoadMWH loadMWH, Manager manager, int year, int month, TypeView typeView, TypeView typeViewSelect, 
+                            string tracker)
         {
             InitializeComponent();
             this.loadMWH = loadMWH;
+            this.IDitem = loadMWH.item.Id;
+            this.tracker = tracker;
+            this.month = month;
+            this.year = year;
+            this.item = loadMWH.item;
             this.manager = manager;
             this.typeView = typeView;
             this.typeViewSelect = typeViewSelect;
@@ -210,11 +223,59 @@ namespace WinRedminePlaning
             string[] array;
             int iLine = 0;
 
+            if (item is LoadProject)
+            {
+                LoadProject loadProject = manager.listLoadProject.Find(x => x.Id == this.IDitem);
+                if (loadProject != null)
+                {
+                    LoadYWH loadYWH = loadProject.listLoadYWH.Find(x => x.NumberYear == this.year);
+                    loadMWH = loadYWH.listLoadMWH.Find(x => x.numberMonth == this.month);
+                }
+            }
+
+            if (item is LoadUser)
+            {
+                LoadUser loadUser_cur = (item as LoadUser);
+                if (loadUser_cur.GroupName.Trim() == loadUser_cur.Name.Trim())
+                {
+                    LoadGroup loadGroup = manager.listLoadGroup.Find(x => x.Name.Equals(loadUser_cur.GroupName));
+                    if (loadGroup != null)
+                    {
+                        LoadUser loadUser = loadGroup.listLoadUser.Find(x => x.Id == loadUser_cur.Id);
+                        if (loadUser != null)
+                        {
+                            LoadYWH loadYWH = manager.FindLoadYWH(year, loadUser.listLoadYWH);
+                            loadMWH = loadYWH.listLoadMWH.Find(x => x.numberMonth == this.month);
+                        }
+                        
+                    }
+                }
+                else
+                {
+                    LoadUser loadUser = manager.listLoadUser.Find(x => x.Id == this.IDitem);
+                    if (loadUser != null)
+                    {
+                        LoadYWH loadYWH = loadUser.listLoadYWH.Find(x => x.NumberYear == this.year);
+                        loadMWH = loadYWH.listLoadMWH.Find(x => x.numberMonth == this.month);
+                    }
+                }
+            }            
+
+            if (item is LoadYWH)
+            {
+                LoadYWH loadYWH = manager.listLoadYWH.Find(x => x.NumberYear == (item as LoadYWH).NumberYear);
+                if (loadYWH != null)
+                {
+                    loadMWH = loadYWH.listLoadMWH.Find(x => x.numberMonth == this.month);
+                }
+            }
+
             if (loadMWH != null)
             {
+                loadMWH.GetListLoadProject(this.tracker);
                 loadMWH.listLoadIssue.Sort();
                 loadMWH.listLoadTimeEntry.Sort();
-            }
+            }            
 
             switch (typeView)
             {
@@ -254,7 +315,7 @@ namespace WinRedminePlaning
 
                         string[] line = { loadProject_cur.userProject.Id.ToString(),
                                           loadProject_cur.userProject.Name,                                    
-                                          loadProject_cur.EstimatedMWH.ToString("0.0") };
+                                          loadProject_cur.EstimatedMWH(this.tracker).ToString("0.0") };
                         foreach (string s in line)
                         {
                             list.Add(s);
@@ -276,7 +337,7 @@ namespace WinRedminePlaning
 
                     string[] lineSumShortIssue = { "",
                             "Итого",                            
-                            loadMWH.EstimatedMonthHours.ToString("0.0") };
+                            loadMWH.EstimatedMonthHours(this.tracker).ToString("0.0") };
 
                     foreach (string s in lineSumShortIssue)
                     {
@@ -300,7 +361,7 @@ namespace WinRedminePlaning
 
                         string[] line = { loadProject_cur.userProject.Id.ToString(),
                                           loadProject_cur.userProject.Name,
-                                          loadProject_cur.FactMWH.ToString("0.0") };
+                                          loadProject_cur.FactMWH(this.tracker).ToString("0.0") };
                         foreach (string s in line)
                         {
                             list.Add(s);
@@ -322,7 +383,7 @@ namespace WinRedminePlaning
 
                     string[] lineSumShortTime = { "",
                             "Итого",
-                            loadMWH.FactMonthHours.ToString("0.0") };
+                            loadMWH.FactMonthHours(this.tracker).ToString("0.0") };
 
                     foreach (string s in lineSumShortTime)
                     {
@@ -342,41 +403,44 @@ namespace WinRedminePlaning
                 case TypeView.LoadIssueDWH:
                     foreach (LoadIssue loadIssue in loadMWH.listLoadIssue)
                     {
-                        User user = manager.redmineData.listUser.Find(x => x.Id == loadIssue.issue.AssignedTo.Id);
-                        list.Clear();
+                        if (this.tracker.Contains(loadIssue.issue.Tracker.Name) || this.tracker.Equals("план"))
+                        {
+                            User user = manager.redmineData.listUser.Find(x => x.Id == loadIssue.issue.AssignedTo.Id);
+                            list.Clear();
 
-                        string userName = "";
-                        if (user != null)
-                            userName = user.LastName + " " + user.FirstName;
-                        else
-                            userName = loadIssue.issue.AssignedTo.Name;
+                            string userName = "";
+                            if (user != null)
+                                userName = user.LastName + " " + user.FirstName;
+                            else
+                                userName = loadIssue.issue.AssignedTo.Name;
 
-                        string[] line = { loadIssue.issue.Id.ToString(),
+                            string[] line = { loadIssue.issue.Id.ToString(),
                                     loadIssue.issue.Project.Name,
                                     loadIssue.issue.Subject,
                                     loadIssue.dateStartIssue.ToShortDateString(),
                                     loadIssue.dateFinishIssue.ToShortDateString(),
                                     loadIssue.estimatedIssueHours.ToString("0.0"),
                                     userName };
-                        foreach (string s in line)
-                        {
-                            list.Add(s);
+                            foreach (string s in line)
+                            {
+                                list.Add(s);
+                            }
+
+                            foreach (LoadDWH loadDWH in loadIssue.listLoadDWH)
+                            {
+                                list.Add(loadDWH.hoursDay.ToString("0.0"));
+                            }
+                            array = list.Select(i => i.ToString()).ToArray();
+                            lvi = new ListViewItem(array);
+                            listLoadDWH.Items.Add(lvi);
+
+                            SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
+
+                            if (this.typeViewSelect == TypeView.LoadUser)
+                                SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
+
+                            iLine++;
                         }
-
-                        foreach (LoadDWH loadDWH in loadIssue.listLoadDWH)
-                        {
-                            list.Add(loadDWH.hoursDay.ToString("0.0"));
-                        }
-                        array = list.Select(i => i.ToString()).ToArray();
-                        lvi = new ListViewItem(array);
-                        listLoadDWH.Items.Add(lvi);
-
-                        SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
-
-                        if (this.typeViewSelect == TypeView.LoadUser)
-                            SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
-
-                        iLine++;
                     }
 
                     list.Clear();
@@ -388,7 +452,7 @@ namespace WinRedminePlaning
                             "",
                             loadMWH.dateStartMonth.ToShortDateString(),
                             loadMWH.dateFinishMonth.ToShortDateString(),
-                            loadMWH.EstimatedMonthHours.ToString("0.0"),
+                            loadMWH.EstimatedMonthHours(this.tracker).ToString("0.0"),
                             "" };
 
                     foreach (string s in lineSum)
@@ -418,41 +482,44 @@ namespace WinRedminePlaning
 
                     foreach (LoadTimeEntry loadTime in loadMWH.listLoadTimeEntry)
                     {
-                        User user = manager.redmineData.listUser.Find(x => x.Id == loadTime.userTime.time.User.Id);
-                        list.Clear();
+                        if (this.tracker.Contains(loadTime.userTime.time.Activity.Name) || this.tracker.Equals("факт"))
+                        {
+                            User user = manager.redmineData.listUser.Find(x => x.Id == loadTime.userTime.time.User.Id);
+                            list.Clear();
 
-                        string userName = "";
-                        if (user != null)
-                            userName = user.LastName + " " + user.FirstName;
-                        else
-                            userName = loadTime.userTime.nameUser;
+                            string userName = "";
+                            if (user != null)
+                                userName = user.LastName + " " + user.FirstName;
+                            else
+                                userName = loadTime.userTime.nameUser;
 
-                        string[] line = { loadTime.userTime.time.Id.ToString(),
+                            string[] line = { loadTime.userTime.time.Id.ToString(),
                                           loadTime.userTime.nameProject,
                                           loadTime.userTime.subject,
                                           loadTime.dateStart.ToShortDateString(),
                                           loadTime.dateFinish.ToShortDateString(),
                                           loadTime.factMonthHours.ToString("0.0"),
                                           userName };
-                        foreach (string s in line)
-                        {
-                            list.Add(s);
+                            foreach (string s in line)
+                            {
+                                list.Add(s);
+                            }
+
+                            foreach (LoadDWH loadDWH in loadTime.listLoadDWH)
+                            {
+                                list.Add(loadDWH.factDayHours.ToString("0.0"));
+                            }
+                            array = list.Select(i => i.ToString()).ToArray();
+                            lvi = new ListViewItem(array);
+                            listLoadDWH.Items.Add(lvi);
+
+                            SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
+
+                            if (this.typeViewSelect == TypeView.LoadUser)
+                                SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
+
+                            iLine++;
                         }
-
-                        foreach (LoadDWH loadDWH in loadTime.listLoadDWH)
-                        {
-                            list.Add(loadDWH.factDayHours.ToString("0.0"));
-                        }
-                        array = list.Select(i => i.ToString()).ToArray();
-                        lvi = new ListViewItem(array);
-                        listLoadDWH.Items.Add(lvi);
-
-                        SetColorValue(listLoadDWH, iLine, array, 0, Color.Yellow, Operation.Equal);
-
-                        if (this.typeViewSelect == TypeView.LoadUser)
-                            SetColorValue(listLoadDWH, iLine, array, 8, Color.Red, Operation.More);
-
-                        iLine++;
                     }
 
                     list.Clear();
@@ -464,7 +531,7 @@ namespace WinRedminePlaning
                                          "",
                                          loadMWH.dateStartMonth.ToShortDateString(),
                                          loadMWH.dateFinishMonth.ToShortDateString(),
-                                         loadMWH.FactMonthHours.ToString("0.0"),
+                                         loadMWH.FactMonthHours(this.tracker).ToString("0.0"),
                                          "" };
 
                     foreach (string s in lineSumTime)
@@ -521,13 +588,15 @@ namespace WinRedminePlaning
             switch (typeView)
             {
                 case TypeView.LoadIssueDWH:
-                    issueMonthForm = new IssueDayForm(loadMWH, manager, TypeView.LoadShortIssueDWH, this.typeViewSelect);
+                    issueMonthForm = new IssueDayForm(loadMWH, manager,this.year, this.month, 
+                                                      TypeView.LoadShortIssueDWH, this.typeViewSelect, this.tracker);
                     manager.Update += issueMonthForm.UpdateIssueInfo;
                     issueMonthForm.Text = this.Text;
                     issueMonthForm.Show();
                     break;
                 case TypeView.LoadTimeDWH:
-                    issueMonthForm = new IssueDayForm(loadMWH, manager, TypeView.LoadShortTimeDWH, this.typeViewSelect);
+                    issueMonthForm = new IssueDayForm(loadMWH, manager, this.year, this.month, 
+                                                      TypeView.LoadShortTimeDWH, this.typeViewSelect, this.tracker);
                     manager.Update += issueMonthForm.UpdateIssueInfo;
                     issueMonthForm.Text = this.Text;
                     issueMonthForm.Show();
