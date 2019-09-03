@@ -12,7 +12,7 @@ namespace WinRedminePlaning
 {
     class Manager
     {
-        string host = "188.242.201.77";
+        string host = "http://redmine.starsyst.com";
         string apiKey = "70b1a875928636d8d3895248309344ea2bca6a5f";
         RedmineManager redmineManager;
         private int maxMonthHours;
@@ -128,7 +128,7 @@ namespace WinRedminePlaning
                 foreach (Issue issue in redmineManager.GetObjects<Issue>(parametr))
                 {
                     listIssue.Add(issue);
-                    if (issue.Id == 937)
+                    if (issue.Id == 1435)
                     {
                         Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(),
                                                                               new NameValueCollection { { "include", "journals" } });
