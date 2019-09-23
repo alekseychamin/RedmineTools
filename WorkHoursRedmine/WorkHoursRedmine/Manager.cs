@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WinRedminePlaning
-{
+{    
     class Manager
     {
         string host = "http://redmine.starsyst.com";
         string apiKey = "70b1a875928636d8d3895248309344ea2bca6a5f";
         RedmineManager redmineManager;
-        private int maxMonthHours;
-
+        private int maxMonthHours;        
+        
         public List<UserRedmine> listUserRedmine = new List<UserRedmine>();        
         public List<MonthHours> listMonthHours = new List<MonthHours>();
         public MonthValueHours monthValueHours;
         public List<Issue> listIssue = new List<Issue>();
         public List<Project> listProject = new List<Project>();
-        public List<User> listUser = new List<User>();
+        public List<User> listUser = new List<User>();        
         public int MaxMonthHours
         {
             get
@@ -35,7 +35,7 @@ namespace WinRedminePlaning
         public Manager()
         {
             try
-            {
+            {                
                 redmineManager = new RedmineManager(host, apiKey);
                 monthValueHours = new MonthValueHours(listMonthHours);
             }
@@ -67,7 +67,7 @@ namespace WinRedminePlaning
             listIssue.Clear();
             listProject.Clear();
             listUserRedmine.Clear();
-            listUser.Clear();
+            listUser.Clear();            
 
             NameValueCollection parametr = new NameValueCollection { { "user_id", "*" } };
             try
@@ -275,7 +275,7 @@ namespace WinRedminePlaning
                     }
                     userRedmine.listMounthUserTimeEntry.Sort();
 
-                    GetExcelTimeEntry(userRedmine);
+                    GetExcelTimeEntry(userRedmine);                    
                 }
             }
         }

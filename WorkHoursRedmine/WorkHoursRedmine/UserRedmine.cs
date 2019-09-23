@@ -14,7 +14,7 @@ namespace WinRedminePlaning
     {
         public int CurYear { get; set; }
         public int CurMonth { get; set; }
-        private List<MonthHours> listMonthHours;
+        private List<MonthHours> listMonthHours;        
         public int Value
         {
             get
@@ -31,13 +31,13 @@ namespace WinRedminePlaning
                             value = monthHours.Value[CurMonth];
                         }
                     }
-                }
+                }                
                 return value;
             }
         }
         public MonthValueHours(List<MonthHours> listMonthHours)
         {
-            this.listMonthHours = listMonthHours;
+            this.listMonthHours = listMonthHours;            
         }
     }
     class MonthHours
