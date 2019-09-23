@@ -42,6 +42,10 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.button9 = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.rTProject = new System.Windows.Forms.RichTextBox();
+            this.rBRedmineProject = new System.Windows.Forms.RadioButton();
+            this.rBSelectedProject = new System.Windows.Forms.RadioButton();
+            this.rBBothProject = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -58,13 +62,13 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(381, 313);
+            this.panel1.Size = new System.Drawing.Size(381, 440);
             this.panel1.TabIndex = 1;
             // 
             // button8
             // 
             this.button8.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button8.Location = new System.Drawing.Point(29, 92);
+            this.button8.Location = new System.Drawing.Point(29, 112);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(318, 23);
             this.button8.TabIndex = 7;
@@ -75,7 +79,7 @@
             // button3
             // 
             this.button3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button3.Location = new System.Drawing.Point(29, 69);
+            this.button3.Location = new System.Drawing.Point(29, 89);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(318, 23);
             this.button3.TabIndex = 6;
@@ -86,7 +90,7 @@
             // button2
             // 
             this.button2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button2.Location = new System.Drawing.Point(29, 46);
+            this.button2.Location = new System.Drawing.Point(29, 66);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(318, 23);
             this.button2.TabIndex = 5;
@@ -97,7 +101,7 @@
             // button1
             // 
             this.button1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button1.Location = new System.Drawing.Point(29, 23);
+            this.button1.Location = new System.Drawing.Point(29, 43);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(318, 23);
             this.button1.TabIndex = 4;
@@ -108,7 +112,7 @@
             // but_loadRedmine
             // 
             this.but_loadRedmine.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.but_loadRedmine.Location = new System.Drawing.Point(29, 0);
+            this.but_loadRedmine.Location = new System.Drawing.Point(29, 20);
             this.but_loadRedmine.Name = "but_loadRedmine";
             this.but_loadRedmine.Size = new System.Drawing.Size(318, 23);
             this.but_loadRedmine.TabIndex = 0;
@@ -119,7 +123,7 @@
             // button7
             // 
             this.button7.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button7.Location = new System.Drawing.Point(29, 58);
+            this.button7.Location = new System.Drawing.Point(29, 61);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(318, 23);
             this.button7.TabIndex = 10;
@@ -130,7 +134,7 @@
             // button6
             // 
             this.button6.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button6.Location = new System.Drawing.Point(29, 31);
+            this.button6.Location = new System.Drawing.Point(29, 34);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(318, 23);
             this.button6.TabIndex = 9;
@@ -141,7 +145,7 @@
             // button5
             // 
             this.button5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button5.Location = new System.Drawing.Point(29, 12);
+            this.button5.Location = new System.Drawing.Point(29, 16);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(318, 23);
             this.button5.TabIndex = 8;
@@ -152,7 +156,7 @@
             // button4
             // 
             this.button4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button4.Location = new System.Drawing.Point(29, 12);
+            this.button4.Location = new System.Drawing.Point(29, 11);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(318, 23);
             this.button4.TabIndex = 7;
@@ -162,11 +166,15 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.rBBothProject);
+            this.panel2.Controls.Add(this.rBSelectedProject);
+            this.panel2.Controls.Add(this.rBRedmineProject);
+            this.panel2.Controls.Add(this.rTProject);
             this.panel2.Controls.Add(this.button4);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 261);
+            this.panel2.Location = new System.Drawing.Point(0, 293);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(381, 52);
+            this.panel2.Size = new System.Drawing.Size(381, 147);
             this.panel2.TabIndex = 2;
             // 
             // panel3
@@ -175,15 +183,15 @@
             this.panel3.Controls.Add(this.button7);
             this.panel3.Controls.Add(this.button6);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 174);
+            this.panel3.Location = new System.Drawing.Point(0, 201);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(381, 87);
+            this.panel3.Size = new System.Drawing.Size(381, 92);
             this.panel3.TabIndex = 3;
             // 
             // button9
             // 
             this.button9.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button9.Location = new System.Drawing.Point(29, 3);
+            this.button9.Location = new System.Drawing.Point(29, 6);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(318, 23);
             this.button9.TabIndex = 11;
@@ -195,24 +203,67 @@
             // 
             this.panel4.Controls.Add(this.button5);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(0, 123);
+            this.panel4.Location = new System.Drawing.Point(0, 146);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(381, 51);
+            this.panel4.Size = new System.Drawing.Size(381, 55);
             this.panel4.TabIndex = 4;
+            // 
+            // rTProject
+            // 
+            this.rTProject.Location = new System.Drawing.Point(29, 40);
+            this.rTProject.Name = "rTProject";
+            this.rTProject.Size = new System.Drawing.Size(318, 75);
+            this.rTProject.TabIndex = 9;
+            this.rTProject.Text = "";
+            // 
+            // rBRedmineProject
+            // 
+            this.rBRedmineProject.AutoSize = true;
+            this.rBRedmineProject.Checked = true;
+            this.rBRedmineProject.Location = new System.Drawing.Point(29, 121);
+            this.rBRedmineProject.Name = "rBRedmineProject";
+            this.rBRedmineProject.Size = new System.Drawing.Size(123, 17);
+            this.rBRedmineProject.TabIndex = 10;
+            this.rBRedmineProject.TabStop = true;
+            this.rBRedmineProject.Text = "проекты из redmine";
+            this.rBRedmineProject.UseVisualStyleBackColor = true;
+            // 
+            // rBSelectedProject
+            // 
+            this.rBSelectedProject.AutoSize = true;
+            this.rBSelectedProject.Location = new System.Drawing.Point(163, 121);
+            this.rBSelectedProject.Name = "rBSelectedProject";
+            this.rBSelectedProject.Size = new System.Drawing.Size(126, 17);
+            this.rBSelectedProject.TabIndex = 11;
+            this.rBSelectedProject.Text = "указанные проекты";
+            this.rBSelectedProject.UseVisualStyleBackColor = true;
+            // 
+            // rBBothProject
+            // 
+            this.rBBothProject.AutoSize = true;
+            this.rBBothProject.Location = new System.Drawing.Point(304, 121);
+            this.rBBothProject.Name = "rBBothProject";
+            this.rBBothProject.Size = new System.Drawing.Size(43, 17);
+            this.rBBothProject.TabIndex = 12;
+            this.rBBothProject.Text = "все";
+            this.rBBothProject.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(381, 313);
+            this.ClientSize = new System.Drawing.Size(381, 440);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Main";
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -234,6 +285,10 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.RichTextBox rTProject;
+        private System.Windows.Forms.RadioButton rBRedmineProject;
+        private System.Windows.Forms.RadioButton rBBothProject;
+        private System.Windows.Forms.RadioButton rBSelectedProject;
     }
 }
 

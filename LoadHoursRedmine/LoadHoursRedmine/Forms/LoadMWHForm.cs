@@ -51,7 +51,7 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadYWH:
-                    tabIndex = 3;                    
+                    tabIndex = 4;                    
                     break;
                 case TypeView.LoadExperiedUser:
                     this.listLoadMWH.ContextMenuStrip = contextMenuStrip1;
@@ -159,28 +159,33 @@ namespace WinRedminePlaning
 
         private void AddLineLoad(LoadYWH loadYWH, ref List<string> list)
         {
-            if (list.Find(x => x.Contains("план")) != null)
+            string tracker = list.Find(x => x.Contains("план"));
+            if (tracker != null)
             {
                 for (int i = 0; i <= 11; i++)
                 {
                     //string sl = loadYWH.listLoadMWH[i].EstimatedMonthHours.ToString("0.0") + "/" +
                     //            loadYWH.listLoadMWH[i].EstimatedMontHumans.ToString("0.0");
-                    string sl = loadYWH.listLoadMWH[i].EstimatedMontHumans.ToString("0.0") + "/" +
-                                loadYWH.listLoadMWH[i].EstimatedMonthHours.ToString("0.0");
+                    string sl = loadYWH.listLoadMWH[i].EstimatedMontHumans(tracker).ToString("0.0") + "/" +
+                                loadYWH.listLoadMWH[i].EstimatedMonthHours(tracker).ToString("0.0");
                     list.Add(sl);
 
                 }
             }
             else
             {
-                for (int i = 0; i <= 11; i++)
+                tracker = list.Find(x => x.Contains("факт"));
+                if (tracker != null)
                 {
-                    //string sl = loadYWH.listLoadMWH[i].FactMonthHours.ToString("0.0") + "/" +
-                    //            loadYWH.listLoadMWH[i].FactMontHumans.ToString("0.0");
-                    string sl = loadYWH.listLoadMWH[i].FactMontHumans.ToString("0.0") + "/" +
-                                loadYWH.listLoadMWH[i].FactMonthHours.ToString("0.0") + "/" +
-                                loadYWH.listLoadMWH[i].monthHours.ToString(); 
-                    list.Add(sl);
+                    for (int i = 0; i <= 11; i++)
+                    {
+                        //string sl = loadYWH.listLoadMWH[i].FactMonthHours.ToString("0.0") + "/" +
+                        //            loadYWH.listLoadMWH[i].FactMontHumans.ToString("0.0");
+                        string sl = loadYWH.listLoadMWH[i].FactMontHumans(tracker).ToString("0.0") + "/" +
+                                    loadYWH.listLoadMWH[i].FactMonthHours(tracker).ToString("0.0") + "/" +
+                                    loadYWH.listLoadMWH[i].monthHours.ToString();
+                        list.Add(sl);
+                    }
                 }
             }            
         }
@@ -198,7 +203,15 @@ namespace WinRedminePlaning
         private void SetLineToListView(List<string> list, LoadYWH loadYWH, ListView listOut)
         {
             string[] the_array = list.Select(i => i.ToString()).ToArray();
+            
+            
             ListViewItem lvi = new ListViewItem(the_array);
+
+            //if (the_array[1].Equals("план"))
+            //{
+            //    lvi.Font = new Font(lvi.Font, FontStyle.Italic);
+            //}
+            
             lvi.Tag = loadYWH;
             listOut.Items.Add(lvi);
 
@@ -227,13 +240,13 @@ namespace WinRedminePlaning
 
             if (value.Contains("план"))
             {                
-                sl = loadYWHcur.EstimatedYHumans.ToString("0.0") + "/" + loadYWHcur.EstimatedYWH.ToString("0.0");
-                perc = loadYWHcur.EstimatedPercentYHumans.ToString("0") + " %";
+                sl = loadYWHcur.EstimatedYHumans(value).ToString("0.0") + "/" + loadYWHcur.EstimatedYWH(value).ToString("0.0");
+                perc = loadYWHcur.EstimatedPercentYHumans(value).ToString("0") + " %";
             }
             else
             {                
-                sl = loadYWHcur.FactYHumans.ToString("0.0") + "/" + loadYWHcur.FactYWH.ToString("0.0");
-                perc = loadYWHcur.FactPercentYHumans.ToString("0") + " %";
+                sl = loadYWHcur.FactYHumans(value).ToString("0.0") + "/" + loadYWHcur.FactYWH(value).ToString("0.0");
+                perc = loadYWHcur.FactPercentYHumans(value).ToString("0") + " %";
             }
 
            listLine = new List<string>();
@@ -296,8 +309,9 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadYWH:
-                    listLine.Add("");
+                    listLine.Add("");                    
                     listLine.Add(value);
+                    listLine.Add(perc);
                     listLine.Add(sl);
                     break;
             }
@@ -306,25 +320,25 @@ namespace WinRedminePlaning
 
             SetLineToListView(listLine, loadYWHcur, listOut);
 
-            string[] lineLoadColor = listLine.Select(i => i.ToString()).ToArray();
+            //string[] lineLoadColor = listLine.Select(i => i.ToString()).ToArray();
 
             List<Color> listColor = new List<Color>();
             
-            if (value.Equals("план"))
+            if (value.Contains("план"))
             {
-                listColor.Add(loadYWHcur.YearEstimatedColor);
+                listColor.Add(loadYWHcur.YearEstimatedColor(value));
                 foreach (LoadMWH loadMWH in loadYWHcur.listLoadMWH)
                 {
-                    listColor.Add(loadMWH.MonthEstimatedColor);
+                    listColor.Add(loadMWH.MonthEstimatedColor(value));
                 }                                
             }
 
-            if (value.Equals("факт"))
+            if (value.Contains("факт"))
             {
-                listColor.Add(loadYWHcur.YearFactColor);
+                listColor.Add(loadYWHcur.YearFactColor(value));
                 foreach (LoadMWH loadMWH in loadYWHcur.listLoadMWH)
                 {
-                    listColor.Add(loadMWH.MonthFactColor);
+                    listColor.Add(loadMWH.MonthFactColor(value));
                 }
             }
 
@@ -333,6 +347,23 @@ namespace WinRedminePlaning
             iLine++;
 
             //------------------------------------------------//
+        }
+
+        private void MakeLineTrackerToListView(ref int iLine, int numberYear, LoadProject loadProject)
+        {
+            List<string> listLine = new List<string>();
+            LoadYWH loadYWHcur = loadProject.listLoadYWH.Find(x => x.NumberYear == numberYear);
+            if (loadYWHcur != null)
+            {
+                foreach (string tracker in loadYWHcur.listEstimTracker)
+                {
+                    listLine.Add(tracker);
+                    SetLineToListView(listLine, loadYWHcur, listLoadMWH);
+                    iLine++;
+                    listLine.Clear();
+                }                
+            }
+            
         }
 
         private void AddLineNameGroup(ref int iLine, 
@@ -358,7 +389,24 @@ namespace WinRedminePlaning
                     iLine++;
 
                     MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadUser: loadUser);
-                    MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadUser: loadUser);                    
+
+                    LoadYWH loadYWHcur = loadUser.listLoadYWH.Find(x => x.NumberYear == numberYear);
+                    if (loadYWHcur != null)
+                    {
+                        foreach (string tracker in loadYWHcur.listEstimTracker)
+                        {
+                            MakeLineToListView(ref iLine, numberYear, "план " + tracker, ref listLine, listOut, loadUser: loadUser);
+                        }
+                    }
+
+                    MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadUser: loadUser);
+                    if (loadYWHcur != null)
+                    {
+                        foreach (string tracker in loadYWHcur.listTimeTracker)
+                        {
+                            MakeLineToListView(ref iLine, numberYear, "факт " + tracker, ref listLine, listOut, loadUser: loadUser);
+                        }
+                    }
                 }                
             }
 
@@ -389,7 +437,25 @@ namespace WinRedminePlaning
                 {
                     //вывод на следующей строке данных по факту и плану
                     MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadUser: loadUser);
+
+                    LoadYWH loadYWHcur = loadUser.listLoadYWH.Find(x => x.NumberYear == numberYear);
+                    if (loadYWHcur != null)
+                    {
+                        foreach (string tracker in loadYWHcur.listEstimTracker)
+                        {
+                            MakeLineToListView(ref iLine, numberYear, "план " + tracker, ref listLine, listOut, loadUser: loadUser);
+                        }
+                    }
+
                     MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadUser: loadUser);
+
+                    if (loadYWHcur != null)
+                    {
+                        foreach (string tracker in loadYWHcur.listTimeTracker)
+                        {
+                            MakeLineToListView(ref iLine, numberYear, "факт " + tracker, ref listLine, listOut, loadUser: loadUser);
+                        }
+                    }
                 }
             }
 
@@ -421,11 +487,29 @@ namespace WinRedminePlaning
                 iLine++;
 
                 MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadProject: loadProject);
+                LoadYWH loadYWHcur = loadProject.listLoadYWH.Find(x => x.NumberYear == numberYear);
+                if (loadYWHcur != null)
+                {
+                    foreach (string tracker in loadYWHcur.listEstimTracker)
+                    {
+                        MakeLineToListView(ref iLine, numberYear, "план " + tracker, ref listLine, listOut, loadProject: loadProject);
+                    }
+                }
+                //MakeLineTrackerToListView(ref iLine, numberYear, loadProject);
                 MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadProject: loadProject);
+                if (loadYWHcur != null)
+                {
+                    foreach (string tracker in loadYWHcur.listTimeTracker)
+                    {
+                        MakeLineToListView(ref iLine, numberYear, "факт " + tracker, ref listLine, listOut, loadProject: loadProject);
+                    }
+                }
+
+                //MakeLineTrackerToListView(ref iLine, numberYear, loadProject);
 
                 //if (typeView == TypeView.LoadProject)
                 //{
-                    
+
                 //}
 
                 if (typeView == TypeView.LoadProjectUser)                {
@@ -444,7 +528,25 @@ namespace WinRedminePlaning
                         iLine++;                        
 
                         MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadUser: lU);
+
+                        loadYWHcur = lU.listLoadYWH.Find(x => x.NumberYear == numberYear);
+                        if (loadYWHcur != null)
+                        {
+                            foreach (string tracker in loadYWHcur.listEstimTracker)
+                            {
+                                MakeLineToListView(ref iLine, numberYear, "план " + tracker, ref listLine, listOut, loadUser: lU);
+                            }
+                        }
+
                         MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadUser: lU);
+
+                        if (loadYWHcur != null)
+                        {
+                            foreach (string tracker in loadYWHcur.listTimeTracker)
+                            {
+                                MakeLineToListView(ref iLine, numberYear, "факт " + tracker, ref listLine, listOut, loadUser: lU);
+                            }
+                        }
                     }
                 }
             }
@@ -458,7 +560,24 @@ namespace WinRedminePlaning
                 iLine++;
 
                 MakeLineToListView(ref iLine, numberYear, "план", ref listLine, listOut, loadYWH: loadYWH);
+                
+                if (loadYWH != null)
+                {
+                    foreach (string tracker in loadYWH.listEstimTracker)
+                    {
+                        MakeLineToListView(ref iLine, numberYear, "план " + tracker, ref listLine, listOut, loadYWH: loadYWH);
+                    }
+                }
+
                 MakeLineToListView(ref iLine, numberYear, "факт", ref listLine, listOut, loadYWH: loadYWH);
+
+                if (loadYWH != null)
+                {
+                    foreach (string tracker in loadYWH.listTimeTracker)
+                    {
+                        MakeLineToListView(ref iLine, numberYear, "факт " + tracker, ref listLine, listOut, loadYWH: loadYWH);
+                    }
+                }
             }            
         }
 
@@ -745,9 +864,10 @@ namespace WinRedminePlaning
                     break;
 
                 case TypeView.LoadYWH:
-                    tabIndex = 3;
-                    listLoadMWH.Columns.Add("№", -2, HorizontalAlignment.Left);
-                    listLoadMWH.Columns.Add("Название", -2, HorizontalAlignment.Left);                    
+                    tabIndex = 4;
+                    listLoadMWH.Columns.Add("№", -2, HorizontalAlignment.Left);                    
+                    listLoadMWH.Columns.Add("Название", -2, HorizontalAlignment.Left);
+                    listLoadMWH.Columns.Add("% загрузки", -2, HorizontalAlignment.Left);
                     listLoadMWH.Columns.Add("Итого", -2, HorizontalAlignment.Left);
                     break;
             }
@@ -788,7 +908,7 @@ namespace WinRedminePlaning
             //if (typeView == TypeView.LoadTimeDWH)
             //    text = "Факт на ";
 
-            issueMonthForm = new IssueDayForm(loadProject, manager, typeView, typeViewSelect);
+            issueMonthForm = new IssueDayForm(loadProject, manager, typeView, typeViewSelect, "");
             manager.Update += issueMonthForm.UpdateIssueInfo;
             //DateTime dateText = new DateTime(year, month, 1);
             issueMonthForm.Text = text + loadProject.userProject.Name;
@@ -804,7 +924,7 @@ namespace WinRedminePlaning
             //if (typeView == TypeView.LoadTimeDWH)
             //    text = "Факт на ";
 
-            issueMonthForm = new IssueDayForm(loadUser, manager, typeView, typeViewSelect);
+            issueMonthForm = new IssueDayForm(loadUser, manager, typeView, typeViewSelect, "");
             manager.Update += issueMonthForm.UpdateIssueInfo;
             //DateTime dateText = new DateTime(year, month, 1);
             issueMonthForm.Text = text + loadUser.user.LastName + " " + loadUser.user.FirstName;
@@ -812,16 +932,28 @@ namespace WinRedminePlaning
         }
 
 
-        private void ShowIssueDayForm(LoadMWH loadMWH, int year, int month, TypeView typeView)
+        private void ShowIssueDayForm(LoadMWH loadMWH, int year, int month, TypeView typeView, string tracker)
         {
             string text = "";
 
             if (typeView == TypeView.LoadIssueDWH)
-                text = "Запланировано на ";
+            {
+                text = "План на ";
+                if (loadMWH.item != null)
+                {
+                    text = loadMWH.item.Name + " " + tracker + " план на ";
+                }
+            }
             if (typeView == TypeView.LoadTimeDWH)
+            {
                 text = "Факт на ";
+                if (loadMWH.item != null)
+                {
+                    text = loadMWH.item.Name + " " + tracker + " факт на ";
+                }
+            }
 
-            issueMonthForm = new IssueDayForm(loadMWH, manager, typeView, typeViewSelect);
+            issueMonthForm = new IssueDayForm(loadMWH, manager, year, month, typeView, typeViewSelect, tracker);
             manager.Update += issueMonthForm.UpdateIssueInfo;
             DateTime dateText = new DateTime(year, month, 1);
             issueMonthForm.Text = text + dateText.ToString("MMMM yyyy");
@@ -921,19 +1053,19 @@ namespace WinRedminePlaning
                                     if (loadMWH != null)
                                     {
                                         //loadMWH.GetListLoadProject();
-
-                                        if (listLoadMWH.Items[listLoadMWH.SelectedIndices[i]].SubItems[1].Text.Contains("план"))
+                                        string tracker = listLoadMWH.Items[listLoadMWH.SelectedIndices[i]].SubItems[1].Text;
+                                        if (tracker.Contains("план"))
                                         {
                                             //ShowIssueDayForm(loadMWH, year, month, TypeView.LoadShortIssueDWH);
                                             //MessageBox.Show("plan");
-                                            ShowIssueDayForm(loadMWH, year, month, TypeView.LoadIssueDWH);
+                                            ShowIssueDayForm(loadMWH, year, month, TypeView.LoadIssueDWH, tracker);
                                         }
 
-                                        if (listLoadMWH.Items[listLoadMWH.SelectedIndices[i]].SubItems[1].Text.Contains("факт"))
+                                        if (tracker.Contains("факт"))
                                         {
                                             //ShowIssueDayForm(loadMWH, year, month, TypeView.LoadShortTimeDWH);
                                             //MessageBox.Show("plan");
-                                            ShowIssueDayForm(loadMWH, year, month, TypeView.LoadTimeDWH);
+                                            ShowIssueDayForm(loadMWH, year, month, TypeView.LoadTimeDWH, tracker);
                                         }
                                     }
                                     //MessageBox.Show("i = " + i.ToString() + "lvi.index = " + lvi.Index.ToString());

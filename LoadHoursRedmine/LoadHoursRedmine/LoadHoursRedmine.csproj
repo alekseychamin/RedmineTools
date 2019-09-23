@@ -61,8 +61,8 @@
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="redmine-net451-api, Version=2.0.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\redmine-api.2.0.14\lib\net451\redmine-net451-api.dll</HintPath>
+    <Reference Include="redmine-net451-api, Version=2.0.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\redmine-api.2.0.17\lib\net451\redmine-net451-api.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

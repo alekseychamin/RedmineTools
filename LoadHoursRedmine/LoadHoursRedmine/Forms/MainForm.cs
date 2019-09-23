@@ -15,11 +15,11 @@ namespace WinRedminePlaning
     {
         Manager manager;
         //Dictionary<int, string> mounth = new Dictionary<int, string>();
-        Dictionary<string, string> bossName = new Dictionary<string, string>();
+        //Dictionary<string, string> bossName = new Dictionary<string, string>();
         PrintForm printForm;        
         LoadMWHForm mwhLoadForm;
 
-        string[] activityNotWorkHours = new string[3] { "Отпуск", "Больничный", "Отгул" };
+        //string[] activityNotWorkHours = new string[3] { "Отпуск", "Больничный", "Отгул" };
 
         public MainForm()
         {
@@ -27,10 +27,10 @@ namespace WinRedminePlaning
             RedmineData redmineData = new RedmineData();
             manager = new Manager(redmineData);
         }
-        
-        private void GetDateFromRedmine()
+
+        private void GetDateFromRedmine(bool redmineProject, bool selectedProject, bool bothProject, string textProject)
         {
-            manager.GetIssue_ProjectFromRedmine();            
+            manager.GetIssue_ProjectFromRedmine(redmineProject, selectedProject, bothProject, textProject);            
             manager.GetUser_GroupFromRedmine();
             manager.GetTimeEntryFromRedmine();
         }
@@ -84,7 +84,12 @@ namespace WinRedminePlaning
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            GetDateFromRedmine();            
+            string textProject = rTProject.Text;
+            bool redmineProject = rBRedmineProject.Checked;
+            bool selProject = rBSelectedProject.Checked;
+            bool bothProject = rBBothProject.Checked;
+            
+            GetDateFromRedmine(redmineProject, selProject, bothProject, textProject);
 
             manager.CreateListLoadYWH();
             manager.CreateListLoadUser();
