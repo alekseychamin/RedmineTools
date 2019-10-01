@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,9 +23,15 @@ namespace WinRedminePlaning
 
         public MainForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            TextProgressBar progressBar = new TextProgressBar();
+            progressBar.Dock = DockStyle.Fill;
+            panelBar.Controls.Add(progressBar);
+            manager = Manager.GetInstance(progressBar);
 
-            manager = new Manager();
+            ToolStripMenuItem emailSendMenuItem = new ToolStripMenuItem("Отправить сообщение специалистам");
+            contextMenuStrip1.Items.Add(emailSendMenuItem);
+            emailSendMenuItem.Click += emailSend_Click;
 
             mounth.Add(1, "январь");
             mounth.Add(2, "февраль");
@@ -41,7 +48,8 @@ namespace WinRedminePlaning
 
             bossName.Add("Испытатель", "Гульнев А.В.");
             bossName.Add("Конструктор", "Чамин А.Н.");
-            bossName.Add("Программист", "Чамин А.Н.");
+            bossName.Add("Программист ПЛК", "Чамин А.Н.");
+            bossName.Add("Программист SCADA", "Чамин А.Н.");
             bossName.Add("Схемотехник", "Чамин А.Н.");
             bossName.Add("ТРП", "Чамин А.Н.");
             bossName.Add("Менеджер", "Першин П.И.");
@@ -82,6 +90,20 @@ namespace WinRedminePlaning
             listViewTimeEntry.Columns.Add("Ком-рий", -2, HorizontalAlignment.Left);
         }
 
+        private void emailSend_Click(object sender, EventArgs e)
+        {
+            if (listViewTimeEntry.Items.Count > 0)
+            {
+                if (listViewTimeEntry.SelectedIndices.Count > 0)
+                {
+                    for (int i = 0; i < listViewTimeEntry.SelectedIndices.Count; i++)
+                    {
+
+                    }
+                }
+            }
+        }        
+
         private void ShowUserTimeEntry(int Id)
         {
             if (Id > 0)
@@ -95,12 +117,12 @@ namespace WinRedminePlaning
                     {
                         string[] line = { num.ToString(),
                                           userTimeEntry.ProjectName,
-                                          userTimeEntry.ActivtyName,
+                                          userTimeEntry.ActivityName,
                                           userTimeEntry.IssueName,
                                           userTimeEntry.DateStart.ToShortDateString(),
                                           userTimeEntry.DateFinish.ToShortDateString(),
                                           userTimeEntry.Hours.ToString(),
-                                          userTimeEntry.Comment };                        
+                                          userTimeEntry.Comment };
                         ListViewItem lvi = new ListViewItem(line);
                         listViewTimeEntry.Items.Add(lvi);
                         num++;
@@ -110,7 +132,7 @@ namespace WinRedminePlaning
                     {
                         column.Width = -2;
                     }
-                }                
+                }
                 //RedmineProject redmProject = projects.ListProject.Find(x => x.Value.Id == Id);
                 //if (redmProject != null)
                 //{
@@ -124,10 +146,17 @@ namespace WinRedminePlaning
             }
         }
 
+        private void ShowUserRedmineThread()
+        {
+            //ShowUserRedmine();
+            listViewUser.InvokeIfNeeded(ShowUserRedmine);
+        }
+
         private void ShowUserRedmine()
         {
             listViewUser.Items.Clear();
             int num = 1;
+            int iLine = 0;
             foreach (UserRedmine user in manager.listUserRedmine)
             {
                 string[] line = { num.ToString(),
@@ -144,7 +173,10 @@ namespace WinRedminePlaning
                                   user.TotalFreeHours.ToString()};
                 ListViewItem lvi = new ListViewItem(line);
                 listViewUser.Items.Add(lvi);
+                listViewUser.Items[iLine].UseItemStyleForSubItems = false;
+                listViewUser.Items[iLine].SubItems[3].BackColor = user.CellColor;
                 num++;
+                iLine++;
             }
 
             foreach (ColumnHeader column in listViewUser.Columns)
@@ -153,23 +185,60 @@ namespace WinRedminePlaning
             }
         }
 
+        public void ShowUserName(string name)
+        {
+            labelUserName.InvokeIfNeeded(delegate { labelUserName.Text = name; });            
+        }
+
+        public void ShowMonthHours(int hours)
+        {
+            lab_MonthHours.InvokeIfNeeded(delegate { lab_MonthHours.Text = "Кол-во раб. часов: " + hours.ToString(); });            
+        }
+        private void GetDataFromRedmine(object mounth)
+        {
+            but_loadRedmine.InvokeIfNeeded(delegate { but_loadRedmine.Enabled = false; }) ;
+            panelBar.InvokeIfNeeded(delegate { panelBar.Visible = true; });
+            //int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
+            manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
+            manager.GetMounthUserTimeEntry(DateTime.Now.Year, (int)mounth);
+            ShowUserRedmineThread();
+            ShowMonthHours(manager.monthValueHours.Value);
+            ShowUserName("Пользователь: -");
+
+            panelBar.InvokeIfNeeded(delegate { panelBar.Visible = false; });
+            but_loadRedmine.InvokeIfNeeded(delegate { but_loadRedmine.Enabled = true; });
+        }
         private void but_loadRedmine_Click(object sender, EventArgs e)
         {
-            int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
-            manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
-            ShowUserRedmine();
-            labelUserName.Text = "Пользователь: -";
-        }        
+            int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
+            ParameterizedThreadStart getDataFromRedmine = new ParameterizedThreadStart(GetDataFromRedmine);
+            Thread threadGetData = new Thread(getDataFromRedmine);
+            threadGetData.IsBackground = true;
+            threadGetData.Start(mounth);
+
+            //int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
+            //but_loadRedmine.Enabled = false;
+            //manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
+            //manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
+            //lab_MonthHours.Text = "Кол-во раб. часов: " + manager.monthValueHours.Value.ToString();
+            //ShowUserRedmine();
+            //labelUserName.Text = "Пользователь: -";
+            //ShowUserName("Пользователь: -");
+
+            //watch.Stop();
+            //MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds/1000).ToString() + " сек");
+            //but_loadRedmine.Enabled = true;
+        }
 
         private void but_SaveExcel_Click(object sender, EventArgs e)
         {
-            UserRedmine userRedmine = null;            
+            UserRedmine userRedmine = null;
             string filePrint = null;
 
             if (listViewUser.Items.Count != 0)
-            {                                    
+            {
                 try
                 {
                     printForm.Show();
@@ -180,14 +249,14 @@ namespace WinRedminePlaning
                 }
                 catch (ObjectDisposedException)
                 {
-                    printForm = new PrintForm();                                           
+                    printForm = new PrintForm();
                 }
 
                 finally
                 {
                     printForm.Show();
                 }
-              
+
 
                 while (listViewUser.SelectedItems.Count > 0)
                 {
@@ -208,8 +277,8 @@ namespace WinRedminePlaning
 
                 }
             }
-            
-            
+
+
         }
 
         private void listViewUser_MouseClick(object sender, MouseEventArgs e)
@@ -220,16 +289,19 @@ namespace WinRedminePlaning
                 string fullName = lvi.SubItems[1].Text;
                 UserRedmine userRedmine;
                 ShowUserTimeEntry(manager.FindUserRedmine(fullName, out userRedmine));
-                labelUserName.Text = "Пользователь: " + userRedmine.FullName;             
+                //labelUserName.Text = "Пользователь: " + userRedmine.FullName;
+                ShowUserName("Пользователь: " + userRedmine.FullName);
             }
-        }               
+        }
 
         private void comboMounth_SelectionChangeCommitted(object sender, EventArgs e)
         {
             int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
-             
+
             manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
-            listViewTimeEntry.Items.Clear();           
+            //lab_MonthHours.Text = "Кол-во раб. часов: " + manager.monthValueHours.Value.ToString();
+            ShowMonthHours(manager.monthValueHours.Value);
+            listViewTimeEntry.Items.Clear();
             ShowUserRedmine();
 
         }
@@ -242,7 +314,8 @@ namespace WinRedminePlaning
                 string fullName = lvi.SubItems[1].Text;
                 UserRedmine userRedmine;
                 ShowUserTimeEntry(manager.FindUserRedmine(fullName, out userRedmine));
-                labelUserName.Text = "Пользователь: " + userRedmine.FullName;
+                //labelUserName.Text = "Пользователь: " + userRedmine.FullName;
+                ShowUserName("Пользователь: " + userRedmine.FullName);
             }
         }
 

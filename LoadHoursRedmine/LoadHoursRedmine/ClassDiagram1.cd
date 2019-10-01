@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="WinRedminePlaning.IssueDayForm" Collapsed="true">
+    <Position X="38.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAASAAAAAgEACAAAAfAAEAAQAQAACAASACDAA=</HashCode>
+      <FileName>Forms\IssueDayForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.LoadMWHForm" Collapsed="true">
+    <Position X="41.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIAAAAWAAABIAEACgwAAfBABAAQgIIAiAASADBAg=</HashCode>
+      <FileName>Forms\LoadMWHForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.MainForm" Collapsed="true">
+    <Position X="36.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAACAEAAAAAACAAAMGAAAZIAAABAAAAQAAggA=</HashCode>
+      <FileName>Forms\MainForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.PrintForm" Collapsed="true">
+    <Position X="40.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAjAAACAAAAAAAECAABACAAAQAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Forms\PrintForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.ReportForm" Collapsed="true">
+    <Position X="43.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\ReportForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.LoadHours" Collapsed="true">
+    <Position X="36.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAQAAAAgACBAAAAAAAAAAAAA=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.LoadDWH" Collapsed="true">
+    <Position X="28" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAQAABAA=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.LoadGroup" Collapsed="true">
+    <Position X="18.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAEAAEAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="listLoadUser" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="WinRedminePlaning.LoadTimeEntry" Collapsed="true">
+    <Position X="30.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABQAAACAAAAAgAAAAAAAAAAAAAAAAEAAAAAAAEA=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="listLoadDWH" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="WinRedminePlaning.LoadIssue" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="26.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAQAoAAAAAAABBAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="listLoadDWH" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WinRedminePlaning.LoadMWH" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="28.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAFEBAAQAAEAEARAwAAAAAgAAAIAAAAAAgAAAiAAAAE=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="listLoadIssue" />
+      <Property Name="listLoadTimeEntry" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WinRedminePlaning.LoadUser" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAARAgAAAAAAAAAAAAAAACAAAASAAAQE=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="listLoadYWH" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinRedminePlaning.LoadYWH" Collapsed="true">
+    <Position X="23.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIARAgAAAAAAAAAAAAAAAAAAAACAAEAA=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="listLoadMWH" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="WinRedminePlaning.Manager" Collapsed="true">
+    <Position X="34.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgCIAAAFAAAIADAgAAAACAAEAAAAAEAICgAgiEAGAA=</HashCode>
+      <FileName>Manager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.Program" Collapsed="true">
+    <Position X="39" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.UserGroupRedmine" Collapsed="true">
+    <Position X="20.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>UserRedmine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinRedminePlaning.UserIssueEntry" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAABiABAAQIiAAAAAAAAAgAAAAAAAABAAABAAA=</HashCode>
+      <FileName>UserRedmine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WinRedminePlaning.UserRedmine" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAQAAAAEAIRAAAAAICAABAAAAIAAAAAgAAAAAAE=</HashCode>
+      <FileName>UserRedmine.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="listUserGroup" />
+      <Field Name="listUserIssueEntry" />
+      <Field Name="listMounthUserIssueEntry" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WinRedminePlaning.Properties.Settings" Collapsed="true">
+    <Position X="39.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Windows.Forms.Form" Collapsed="true">
+    <Position X="43.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="WinRedminePlaning.IListLoadIssue" Collapsed="true">
+    <Position X="36.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LoadHours.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="WinRedminePlaning.TypeView" Collapsed="true">
+    <Position X="36.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Forms\LoadMWHForm.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

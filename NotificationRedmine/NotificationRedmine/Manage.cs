@@ -120,8 +120,8 @@ namespace NotificationRedmine
             GetUserOpenIssue();
             SetUserIssueNotification();
             SetEmailMessage();
-            //ShowNotification();
-            SendEmail(noEmailSend);            
+            ShowNotification();
+            //SendEmail(noEmailSend);            
         }
 
         public void StartMakeNotification(int type)
@@ -359,6 +359,7 @@ namespace NotificationRedmine
         {
             foreach (var userRedmine in listUserRedmine)
             {
+                Console.WriteLine("Почта " + userRedmine.FullName + " пользователя: " + userRedmine.Value.Email);
                 Console.WriteLine(userRedmine.messageSend);
             }
         }        
