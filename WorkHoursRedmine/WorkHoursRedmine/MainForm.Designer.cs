@@ -37,6 +37,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panelBar = new System.Windows.Forms.Panel();
             this.lab_MonthHours = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.comboMounth = new System.Windows.Forms.ComboBox();
@@ -140,6 +141,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.panelBar);
             this.panel1.Controls.Add(this.lab_MonthHours);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.comboMounth);
@@ -151,6 +153,15 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(821, 32);
             this.panel1.TabIndex = 1;
+            // 
+            // panelBar
+            // 
+            this.panelBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelBar.Location = new System.Drawing.Point(0, 0);
+            this.panelBar.Name = "panelBar";
+            this.panelBar.Size = new System.Drawing.Size(821, 32);
+            this.panelBar.TabIndex = 5;
+            this.panelBar.Visible = false;
             // 
             // lab_MonthHours
             // 
@@ -256,6 +267,7 @@
         private System.Windows.Forms.Button butReportExcel;
         private System.Windows.Forms.Label lab_MonthHours;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Panel panelBar;
     }
 }
 

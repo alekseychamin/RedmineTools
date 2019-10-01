@@ -3,6 +3,7 @@ using Redmine.Net.Api.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,17 @@ namespace WinRedminePlaning
 {    
     class Manager
     {
+        private static Manager instance;
+
         string host = "http://redmine.starsyst.com";
         string apiKey = "70b1a875928636d8d3895248309344ea2bca6a5f";
+
         RedmineManager redmineManager;
-        private int maxMonthHours;        
-        
+        private int maxMonthHours;
+        private int countTotalRecord;
+        private int curReadRecord;
+        private TextProgressBar progressBar;
+
         public List<UserRedmine> listUserRedmine = new List<UserRedmine>();        
         public List<MonthHours> listMonthHours = new List<MonthHours>();
         public MonthValueHours monthValueHours;
@@ -32,8 +39,9 @@ namespace WinRedminePlaning
         }
         public ExcelMethods excelMethods = new ExcelMethods();
 
-        public Manager()
+        private Manager(TextProgressBar progressBar)
         {
+            this.progressBar = progressBar;
             try
             {                
                 redmineManager = new RedmineManager(host, apiKey);
@@ -43,6 +51,14 @@ namespace WinRedminePlaning
             {
                 Console.WriteLine("Error! " + ex.Message);
             }
+        }
+
+        public static Manager GetInstance(TextProgressBar progressBar)
+        {
+            if (instance == null)
+                instance = new Manager(progressBar);
+
+            return instance;
         }
 
         /*private bool checkName(string[] noNameForReport, string name)
@@ -61,23 +77,77 @@ namespace WinRedminePlaning
 
             return res;
         }*/
-                
+        private void SetInitProgBar(TextProgressBar progressBar, int startValue, int maxValue, int step)
+        {
+            progressBar.InvokeIfNeeded(delegate { progressBar.Value = startValue; });
+            progressBar.InvokeIfNeeded(delegate { progressBar.Maximum = maxValue; });
+            progressBar.InvokeIfNeeded(delegate { progressBar.Step = step; });
+        }
         public void GetUserFromRedmine(Dictionary<string, string> bossName) //params string[] noNameForReport)
         {
+            NameValueCollection parametr;
+            countTotalRecord = 0;
+            curReadRecord = 0;
+
             listIssue.Clear();
             listProject.Clear();
             listUserRedmine.Clear();
-            listUser.Clear();            
+            listUser.Clear();
 
-            NameValueCollection parametr = new NameValueCollection { { "user_id", "*" } };
+            progressBar.InvokeIfNeeded(delegate { progressBar.DisplayStyle = ProgressBarDisplayText.CustomText; });
+            progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Загрузка записей, подождите пожалуйста."; });
+            progressBar.InvokeIfNeeded(delegate { progressBar.Minimum = 0; });
+
+            
+            SetInitProgBar(progressBar, 0, 5, 1);
+
             try
             {
-                foreach (var user in redmineManager.GetObjects<User>(parametr))
+                //parametr = new NameValueCollection { { "user_id", "*" } };
+                //countTotalRecord += redmineManager.GetObjects<User>(parametr).Count;
+                //progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                //progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Список № " + progressBar.Value + "/5"; });
+
+                //parametr = new NameValueCollection { { "group_id", "*" } };
+                //countTotalRecord += redmineManager.GetObjects<Group>(parametr).Count;
+                //progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                //progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Список № " + progressBar.Value + "/5"; });
+
+                //parametr = new NameValueCollection { { "status_id", "*" } };
+                //countTotalRecord += redmineManager.GetObjects<Issue>(parametr).Count;
+                //progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                //progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Список № " + progressBar.Value + "/5"; });
+
+                //parametr = new NameValueCollection { { "project_id", "*" } };
+                //countTotalRecord += redmineManager.GetObjects<Project>(parametr).Count;
+                //progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                //progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Список № " + progressBar.Value + "/5"; });
+
+                //parametr = new NameValueCollection { { "user_id", "*" } };
+                //countTotalRecord += redmineManager.GetObjects<TimeEntry>(parametr).Count;
+                //progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                //progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Список № " + progressBar.Value + "/5"; });
+
+                //progressBar.InvokeIfNeeded(delegate { progressBar.Value = 0; });
+                //progressBar.InvokeIfNeeded(delegate { progressBar.Maximum = countTotalRecord; });
+                //progressBar.InvokeIfNeeded(delegate { progressBar.Step = 1; });
+
+                parametr = new NameValueCollection { { "user_id", "*" } };
+                List<User> listUserRedm = redmineManager.GetObjects<User>(parametr);
+
+                countTotalRecord = listUserRedm.Count;
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);                
+                foreach (var user in listUserRedm)
                 {
                     UserRedmine userRedmine = new UserRedmine(this.monthValueHours);
                     userRedmine.bossName = bossName;
                     userRedmine.Value = user;
                     listUser.Add(user);
+                    curReadRecord++;
+                    progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                    progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Запись № " + progressBar.Value +
+                                                        "/ " + countTotalRecord; });
+                    Debug.WriteLine(curReadRecord);
 
                     bool isNameWorkHour = false;
                     string res = "";
@@ -111,11 +181,23 @@ namespace WinRedminePlaning
                 }
 
                 parametr = new NameValueCollection { { "group_id", "*" } };
-                foreach (Group group in redmineManager.GetObjects<Group>(parametr))
+                List<Group> listGroupRedm = redmineManager.GetObjects<Group>(parametr);
+
+                countTotalRecord = listGroupRedm.Count;
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);                
+                foreach (Group group in listGroupRedm)
                 {
+                    curReadRecord++;
+                    progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
+                                                        "/ " + countTotalRecord;
+                    });
+                    Debug.WriteLine(curReadRecord);
+
                     UserGroup userGroup = new UserGroup(group.Name, group.Id);
-                    foreach (User user in redmineManager.GetObjects<User>(new NameValueCollection { { "group_id", group.Id.ToString() } }))
-                    {
+                    listUserRedm = redmineManager.GetObjects<User>(new NameValueCollection { { "group_id", group.Id.ToString() } });
+                    foreach (User user in listUserRedm)
+                    {                        
                         UserRedmine userRedmine = listUserRedmine.Find(x => x.Value.Id == user.Id);
                         if (userRedmine != null)
                         {
@@ -125,9 +207,19 @@ namespace WinRedminePlaning
                 }
 
                 parametr = new NameValueCollection { { "status_id", "*" } };
-                foreach (Issue issue in redmineManager.GetObjects<Issue>(parametr))
+                List<Issue> listIssueRedm = redmineManager.GetObjects<Issue>(parametr);
+
+                countTotalRecord = listIssueRedm.Count;
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);                
+                foreach (Issue issue in listIssueRedm)
                 {
                     listIssue.Add(issue);
+                    curReadRecord++;
+                    progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
+                                                        "/ " + countTotalRecord;
+                    });
+                    Debug.WriteLine(curReadRecord);
                     if (issue.Id == 1435)
                     {
                         Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(),
@@ -146,17 +238,39 @@ namespace WinRedminePlaning
                 }
 
                 parametr = new NameValueCollection { { "project_id", "*" } };
-                foreach (Project project in redmineManager.GetObjects<Project>(parametr))
+                List<Project> listProjectRedm = redmineManager.GetObjects<Project>(parametr);
+
+                countTotalRecord = listProjectRedm.Count;
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);                
+                foreach (Project project in listProjectRedm)
                 {
                     listProject.Add(project);
-                }
-
+                    curReadRecord++;
+                    progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
+                                                        "/ " + countTotalRecord;
+                    });
+                    Debug.WriteLine(curReadRecord);
+                    Debug.WriteLine("str # 249");
+                }                
+                
+                
                 parametr = new NameValueCollection { { "user_id", "*" } };
-                foreach (var time in redmineManager.GetObjects<TimeEntry>(parametr))
-                {
-                    UserRedmine userRedmine = listUserRedmine.Find(x => x.Value.Id == time.User.Id);
-                    Project project = listProject.Find(x => x.Id == time.Project.Id);                    
+                List<TimeEntry> listTimeEntryRedm = redmineManager.GetObjects<TimeEntry>(parametr);
 
+                countTotalRecord = listTimeEntryRedm.Count;
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);
+                foreach (var time in listTimeEntryRedm)
+                {                    
+                    UserRedmine userRedmine = listUserRedmine.Find(x => x.Value.Id == time.User.Id);
+                    Project project = listProject.Find(x => x.Id == time.Project.Id);
+                    curReadRecord++;
+                    progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
+                                                        "/ " + countTotalRecord;
+                    });
+                    Debug.WriteLine(curReadRecord);
+                    Debug.WriteLine("str # 269");
                     if (userRedmine != null)
                     {                        
                         if (project != null)
