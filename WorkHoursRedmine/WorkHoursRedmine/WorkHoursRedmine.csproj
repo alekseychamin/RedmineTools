@@ -72,7 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExcelMethods.cs" />
+    <Compile Include="ExtensionTimeEntry.cs" />
     <Compile Include="ExtensionInvoke.cs" />
+    <Compile Include="ExtensionUserRedmine.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

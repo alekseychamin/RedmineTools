@@ -196,21 +196,29 @@ namespace WinRedminePlaning
         }
         private void GetDataFromRedmine(object mounth)
         {
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+
             but_loadRedmine.InvokeIfNeeded(delegate { but_loadRedmine.Enabled = false; }) ;
             panelBar.InvokeIfNeeded(delegate { panelBar.Visible = true; });
             //int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
+            
             manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
+            //manager.GetDataFromRedmine(); // проверка метода для получения данных из redmine с помощью LINQ
             manager.GetMounthUserTimeEntry(DateTime.Now.Year, (int)mounth);
+
             ShowUserRedmineThread();
             ShowMonthHours(manager.monthValueHours.Value);
             ShowUserName("Пользователь: -");
 
             panelBar.InvokeIfNeeded(delegate { panelBar.Visible = false; });
             but_loadRedmine.InvokeIfNeeded(delegate { but_loadRedmine.Enabled = true; });
+
+            //watch.Stop();
+            //MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds / 1000).ToString() + " сек");
         }
         private void but_loadRedmine_Click(object sender, EventArgs e)
         {
-            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            
 
             int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
             ParameterizedThreadStart getDataFromRedmine = new ParameterizedThreadStart(GetDataFromRedmine);
@@ -227,8 +235,7 @@ namespace WinRedminePlaning
             //labelUserName.Text = "Пользователь: -";
             //ShowUserName("Пользователь: -");
 
-            //watch.Stop();
-            //MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds/1000).ToString() + " сек");
+            
             //but_loadRedmine.Enabled = true;
         }
 
