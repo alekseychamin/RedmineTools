@@ -264,6 +264,23 @@ namespace WinRedminePlaning
                     }
                 }
 
+                //parametr = new NameValueCollection { { "status_id", "*" } };//{ "status_id", "*" }
+                //Issue issueIdRedm = redmineManager.GetObject<Issue>("1435", parametr);
+
+                Issue issue_jornals = redmineManager.GetObject<Issue>("1435", new NameValueCollection { { "include", "journals" } });
+                if (issue_jornals != null)
+                {
+                    foreach (var journal in issue_jornals.Journals)
+                    {
+                        string note = journal.Notes;
+                        if (!note.Equals(""))
+                        {
+                            MonthHours monthHours = new MonthHours(note);
+                            listMonthHours.Add(monthHours);
+                        }
+                    }
+                }
+
                 parametr = new NameValueCollection { { "created_on", ">=" + GetFirstDateCurYear() } };//{ "status_id", "*" }
 
                 List<Issue> listIssueRedm = redmineManager.GetObjects<Issue>(parametr);
@@ -282,21 +299,21 @@ namespace WinRedminePlaning
                     });
                     Debug.WriteLine(curReadRecord);
                     Debug.WriteLine(issue.CreatedOn.Value);
-                    if (issue.Id == 1435)
-                    {
-                        Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(),
-                                                                              new NameValueCollection { { "include", "journals" } });
+                    //if (issue.Id == 1435)
+                    //{
+                    //    Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(),
+                    //                                                          new NameValueCollection { { "include", "journals" } });
 
-                        foreach (var journal in issue_jornals.Journals)
-                        {
-                            string note = journal.Notes;
-                            if (!note.Equals(""))
-                            {
-                                MonthHours monthHours = new MonthHours(note);
-                                listMonthHours.Add(monthHours);
-                            }
-                        }
-                    }
+                    //    foreach (var journal in issue_jornals.Journals)
+                    //    {
+                    //        string note = journal.Notes;
+                    //        if (!note.Equals(""))
+                    //        {
+                    //            MonthHours monthHours = new MonthHours(note);
+                    //            listMonthHours.Add(monthHours);
+                    //        }
+                    //    }
+                    //}
                 }
 
                 parametr = new NameValueCollection { { "project_id", "*" } };
