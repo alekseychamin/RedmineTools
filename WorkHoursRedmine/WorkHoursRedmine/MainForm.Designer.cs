@@ -45,6 +45,7 @@
             this.but_SaveExcel = new System.Windows.Forms.Button();
             this.but_loadRedmine = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.textYear = new System.Windows.Forms.MaskedTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -148,6 +149,7 @@
             this.panel1.Controls.Add(this.butReportExcel);
             this.panel1.Controls.Add(this.but_SaveExcel);
             this.panel1.Controls.Add(this.but_loadRedmine);
+            this.panel1.Controls.Add(this.textYear);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 648);
             this.panel1.Name = "panel1";
@@ -167,7 +169,7 @@
             // 
             this.lab_MonthHours.AutoSize = true;
             this.lab_MonthHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lab_MonthHours.Location = new System.Drawing.Point(470, 11);
+            this.lab_MonthHours.Location = new System.Drawing.Point(509, 11);
             this.lab_MonthHours.Name = "lab_MonthHours";
             this.lab_MonthHours.Size = new System.Drawing.Size(114, 13);
             this.lab_MonthHours.TabIndex = 4;
@@ -177,7 +179,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(318, 10);
+            this.label3.Location = new System.Drawing.Point(306, 10);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(45, 13);
             this.label3.TabIndex = 3;
@@ -185,8 +187,9 @@
             // 
             // comboMounth
             // 
+            this.comboMounth.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboMounth.FormattingEnabled = true;
-            this.comboMounth.Location = new System.Drawing.Point(364, 7);
+            this.comboMounth.Location = new System.Drawing.Point(352, 7);
             this.comboMounth.Name = "comboMounth";
             this.comboMounth.Size = new System.Drawing.Size(100, 21);
             this.comboMounth.TabIndex = 2;
@@ -226,6 +229,17 @@
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // textYear
+            // 
+            this.textYear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textYear.Location = new System.Drawing.Point(457, 7);
+            this.textYear.Mask = "0000";
+            this.textYear.Name = "textYear";
+            this.textYear.Size = new System.Drawing.Size(46, 20);
+            this.textYear.TabIndex = 0;
+            this.textYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textYear.ValidatingType = typeof(int);
             // 
             // MainForm
             // 
@@ -268,6 +282,7 @@
         private System.Windows.Forms.Label lab_MonthHours;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Panel panelBar;
+        private System.Windows.Forms.MaskedTextBox textYear;
     }
 }
 

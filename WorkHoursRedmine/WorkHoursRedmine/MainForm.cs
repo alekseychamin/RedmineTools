@@ -24,10 +24,12 @@ namespace WinRedminePlaning
         public MainForm()
         {
             InitializeComponent();
+            int curYear = DateTime.Now.Year;
+            textYear.Text = curYear.ToString();
             TextProgressBar progressBar = new TextProgressBar();
             progressBar.Dock = DockStyle.Fill;
             panelBar.Controls.Add(progressBar);
-            manager = Manager.GetInstance(progressBar);
+            manager = Manager.GetInstance(progressBar, textYear);
 
             ToolStripMenuItem emailSendMenuItem = new ToolStripMenuItem("Отправить сообщение специалистам");
             contextMenuStrip1.Items.Add(emailSendMenuItem);
@@ -204,7 +206,8 @@ namespace WinRedminePlaning
             
             manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
             //manager.GetDataFromRedmine(); // проверка метода для получения данных из redmine с помощью LINQ
-            manager.GetMounthUserTimeEntry(DateTime.Now.Year, (int)mounth);
+            //manager.GetMounthUserTimeEntry(DateTime.Now.Year, (int)mounth);
+            manager.GetMounthUserTimeEntry(int.Parse(textYear.Text), (int)mounth);
 
             ShowUserRedmineThread();
             ShowMonthHours(manager.monthValueHours.Value);
@@ -305,7 +308,8 @@ namespace WinRedminePlaning
         {
             int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
 
-            manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
+            //manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
+            manager.GetMounthUserTimeEntry(int.Parse(textYear.Text), mounth);
             //lab_MonthHours.Text = "Кол-во раб. часов: " + manager.monthValueHours.Value.ToString();
             ShowMonthHours(manager.monthValueHours.Value);
             listViewTimeEntry.Items.Clear();

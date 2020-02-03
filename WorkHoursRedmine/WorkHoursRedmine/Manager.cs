@@ -23,6 +23,7 @@ namespace WinRedminePlaning
         private int countTotalRecord;
         private int curReadRecord;
         private TextProgressBar progressBar;
+        private Control textYear;
 
         public List<UserRedmine> listUserRedmine = new List<UserRedmine>();
         public List<MonthHours> listMonthHours = new List<MonthHours>();
@@ -39,9 +40,10 @@ namespace WinRedminePlaning
         }
         public ExcelMethods excelMethods = new ExcelMethods();
 
-        private Manager(TextProgressBar progressBar)
+        private Manager(TextProgressBar progressBar, Control textYear)
         {
             this.progressBar = progressBar;
+            this.textYear = textYear;
             try
             {
                 redmineManager = new RedmineManager(host, apiKey);
@@ -53,10 +55,10 @@ namespace WinRedminePlaning
             }
         }
 
-        public static Manager GetInstance(TextProgressBar progressBar)
+        public static Manager GetInstance(TextProgressBar progressBar, Control textYear)
         {
             if (instance == null)
-                instance = new Manager(progressBar);
+                instance = new Manager(progressBar, textYear);
 
             return instance;
         }
@@ -142,7 +144,8 @@ namespace WinRedminePlaning
 
         private string GetFirstDateCurYear()
         {
-            int year = DateTime.Now.Year;
+            //int year = DateTime.Now.Year;
+            int year = int.Parse(textYear.Text);
             DateTime firstDateCurYear = new DateTime(year, 1, 1);
 
             return firstDateCurYear.ToString("yyyy-MM-dd");
