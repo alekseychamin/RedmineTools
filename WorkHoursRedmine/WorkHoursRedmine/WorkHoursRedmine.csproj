@@ -55,8 +55,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="redmine-net451-api, Version=2.0.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\redmine-api.2.0.14\lib\net451\redmine-net451-api.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -72,7 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExcelMethods.cs" />
+    <Compile Include="ExtensionTimeEntry.cs" />
     <Compile Include="ExtensionInvoke.cs" />
+    <Compile Include="ExtensionUserRedmine.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +152,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="redmine-net451-api.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WinRedminePlaning
-{    
+{
     class Manager
     {
         private static Manager instance;
@@ -23,13 +23,14 @@ namespace WinRedminePlaning
         private int countTotalRecord;
         private int curReadRecord;
         private TextProgressBar progressBar;
+        private Control textYear;
 
-        public List<UserRedmine> listUserRedmine = new List<UserRedmine>();        
+        public List<UserRedmine> listUserRedmine = new List<UserRedmine>();
         public List<MonthHours> listMonthHours = new List<MonthHours>();
         public MonthValueHours monthValueHours;
         public List<Issue> listIssue = new List<Issue>();
         public List<Project> listProject = new List<Project>();
-        public List<User> listUser = new List<User>();        
+        public List<User> listUser = new List<User>();
         public int MaxMonthHours
         {
             get
@@ -39,11 +40,12 @@ namespace WinRedminePlaning
         }
         public ExcelMethods excelMethods = new ExcelMethods();
 
-        private Manager(TextProgressBar progressBar)
+        private Manager(TextProgressBar progressBar, Control textYear)
         {
             this.progressBar = progressBar;
+            this.textYear = textYear;
             try
-            {                
+            {
                 redmineManager = new RedmineManager(host, apiKey);
                 monthValueHours = new MonthValueHours(listMonthHours);
             }
@@ -53,10 +55,10 @@ namespace WinRedminePlaning
             }
         }
 
-        public static Manager GetInstance(TextProgressBar progressBar)
+        public static Manager GetInstance(TextProgressBar progressBar, Control textYear)
         {
             if (instance == null)
-                instance = new Manager(progressBar);
+                instance = new Manager(progressBar, textYear);
 
             return instance;
         }
@@ -83,23 +85,86 @@ namespace WinRedminePlaning
             progressBar.InvokeIfNeeded(delegate { progressBar.Maximum = maxValue; });
             progressBar.InvokeIfNeeded(delegate { progressBar.Step = step; });
         }
+
+        private void ClearLists()
+        {
+            listIssue.Clear();
+            listProject.Clear();
+            listUserRedmine.Clear();
+            listUser.Clear();
+        }
+        /// <summary>
+        /// разработка метода с применением технологии LINQ
+        /// </summary>
+        public void GetDataFromRedmine()
+        {
+            NameValueCollection parametr;
+            ClearLists();
+
+            progressBar.InvokeIfNeeded(delegate { progressBar.DisplayStyle = ProgressBarDisplayText.CustomText; });
+            progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Загрузка записей, подождите пожалуйста."; });
+            progressBar.InvokeIfNeeded(delegate { progressBar.Minimum = 0; });
+
+            SetInitProgBar(progressBar, 0, 5, 1);
+
+            try
+            {
+                // получение списка пользователей redmine
+                parametr = new NameValueCollection { { "user_id", "*" } };
+                List<User> listUserRedm = redmineManager.GetObjects<User>(parametr);
+                progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+
+                // получение списка групп пользователей redmine
+                parametr = new NameValueCollection { { "group_id", "*" } };
+                List<Group> listGroupRedm = redmineManager.GetObjects<Group>(parametr);
+                progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+
+                // получение списка задач из redmine
+                parametr = new NameValueCollection { { "created_on", ">=2019-01-01" } };//{ "status_id", "*" }
+                List<Issue> listIssueRedm = redmineManager.GetObjects<Issue>(parametr);
+                progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+
+                // получение списка проектов из redmine
+                parametr = new NameValueCollection { { "project_id", "*" } };
+                List<Project> listProjectRedm = redmineManager.GetObjects<Project>(parametr);
+                progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+
+                // получение списка трудозатра из redmine
+                parametr = new NameValueCollection { { "spent_on", ">=2019-01-01" } };//{ "user_id", "*" }
+                List<TimeEntry> listTimeEntryRedm = redmineManager.GetObjects<TimeEntry>(parametr);
+                progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private string GetFirstDateCurYear()
+        {
+            //int year = DateTime.Now.Year;
+            int year = int.Parse(textYear.Text);
+            DateTime firstDateCurYear = new DateTime(year, 1, 1);
+
+            return firstDateCurYear.ToString("yyyy-MM-dd");
+        }
+
         public void GetUserFromRedmine(Dictionary<string, string> bossName) //params string[] noNameForReport)
         {
             NameValueCollection parametr;
             countTotalRecord = 0;
             curReadRecord = 0;
 
-            listIssue.Clear();
-            listProject.Clear();
-            listUserRedmine.Clear();
-            listUser.Clear();
+            ClearLists();
 
             progressBar.InvokeIfNeeded(delegate { progressBar.DisplayStyle = ProgressBarDisplayText.CustomText; });
             progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Загрузка записей, подождите пожалуйста."; });
             progressBar.InvokeIfNeeded(delegate { progressBar.Minimum = 0; });
 
-            
-            SetInitProgBar(progressBar, 0, 5, 1);
+
+            //SetInitProgBar(progressBar, 0, 5, 1);
 
             try
             {
@@ -136,38 +201,32 @@ namespace WinRedminePlaning
                 List<User> listUserRedm = redmineManager.GetObjects<User>(parametr);
 
                 countTotalRecord = listUserRedm.Count;
-                SetInitProgBar(progressBar, 0, countTotalRecord, 1);                
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);
                 foreach (var user in listUserRedm)
                 {
-                    UserRedmine userRedmine = new UserRedmine(this.monthValueHours);
-                    userRedmine.bossName = bossName;
-                    userRedmine.Value = user;
-                    listUser.Add(user);
-                    curReadRecord++;
-                    progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
-                    progressBar.InvokeIfNeeded(delegate { progressBar.CustomText = "Запись № " + progressBar.Value +
-                                                        "/ " + countTotalRecord; });
-                    Debug.WriteLine(curReadRecord);
-
-                    bool isNameWorkHour = false;
-                    string res = "";
-                    foreach (var customField in user.CustomFields)
+                    if (user.IsCustomFieldEqual("Учет трудозатратах/месяц"))
                     {
-                        if (customField.Name.Contains("Учет трудозатратах/месяц"))
-                        {
-                            res = customField.Values[0].Info;
-                            if (res.ToLower().Contains("1"))
-                                isNameWorkHour = true;                            
-                        }
-                    }
-
-                    if (isNameWorkHour)
-                    {
+                        listUser.Add(user);
                         //userRedmine.listIssue = this.listIssue;
+
+                        UserRedmine userRedmine = new UserRedmine(this.monthValueHours);
+                        userRedmine.bossName = bossName;
+                        userRedmine.Value = user;
                         userRedmine.listProject = this.listProject;
+
+                        curReadRecord++;
+                        progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                        progressBar.InvokeIfNeeded(delegate
+                        {
+                            progressBar.CustomText = "Запись № " + progressBar.Value +
+                          "/ " + countTotalRecord;
+                        });
+
                         listUserRedmine.Add(userRedmine);
+
+                        Debug.WriteLine(curReadRecord);
                     }
-                    
+
 
                     //parametr = new NameValueCollection { { "user_id", user.Id.ToString() } };
                     //int count = redmineManager.GetObjects<TimeEntry>(parametr).Count;
@@ -184,20 +243,22 @@ namespace WinRedminePlaning
                 List<Group> listGroupRedm = redmineManager.GetObjects<Group>(parametr);
 
                 countTotalRecord = listGroupRedm.Count;
-                SetInitProgBar(progressBar, 0, countTotalRecord, 1);                
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);
                 foreach (Group group in listGroupRedm)
                 {
                     curReadRecord++;
                     progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
-                    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
-                                                        "/ " + countTotalRecord;
+                    progressBar.InvokeIfNeeded(delegate
+                    {
+                        progressBar.CustomText = "Запись № " + progressBar.Value +
+                       "/ " + countTotalRecord;
                     });
-                    Debug.WriteLine(curReadRecord);
+
 
                     UserGroup userGroup = new UserGroup(group.Name, group.Id);
                     listUserRedm = redmineManager.GetObjects<User>(new NameValueCollection { { "group_id", group.Id.ToString() } });
                     foreach (User user in listUserRedm)
-                    {                        
+                    {
                         UserRedmine userRedmine = listUserRedmine.Find(x => x.Value.Id == user.Id);
                         if (userRedmine != null)
                         {
@@ -206,85 +267,171 @@ namespace WinRedminePlaning
                     }
                 }
 
-                parametr = new NameValueCollection { { "status_id", "*" } };
+                //parametr = new NameValueCollection { { "status_id", "*" } };//{ "status_id", "*" }
+                //Issue issueIdRedm = redmineManager.GetObject<Issue>("1435", parametr);
+
+                Issue issue_jornals = redmineManager.GetObject<Issue>("1435", new NameValueCollection { { "include", "journals" } });
+                if (issue_jornals != null)
+                {
+                    foreach (var journal in issue_jornals.Journals)
+                    {
+                        string note = journal.Notes;
+                        if (!note.Equals(""))
+                        {
+                            MonthHours monthHours = new MonthHours(note);
+                            listMonthHours.Add(monthHours);
+                        }
+                    }
+                }
+
+                parametr = new NameValueCollection { { "created_on", ">=" + GetFirstDateCurYear() } };//{ "status_id", "*" }
+
                 List<Issue> listIssueRedm = redmineManager.GetObjects<Issue>(parametr);
 
                 countTotalRecord = listIssueRedm.Count;
-                SetInitProgBar(progressBar, 0, countTotalRecord, 1);                
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);
                 foreach (Issue issue in listIssueRedm)
                 {
                     listIssue.Add(issue);
                     curReadRecord++;
                     progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
-                    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
-                                                        "/ " + countTotalRecord;
+                    progressBar.InvokeIfNeeded(delegate
+                    {
+                        progressBar.CustomText = "Запись № " + progressBar.Value +
+                       "/ " + countTotalRecord;
                     });
                     Debug.WriteLine(curReadRecord);
-                    if (issue.Id == 1435)
-                    {
-                        Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(),
-                                                                              new NameValueCollection { { "include", "journals" } });
+                    Debug.WriteLine(issue.CreatedOn.Value);
+                    //if (issue.Id == 1435)
+                    //{
+                    //    Issue issue_jornals = redmineManager.GetObject<Issue>(issue.Id.ToString(),
+                    //                                                          new NameValueCollection { { "include", "journals" } });
 
-                        foreach (var journal in issue_jornals.Journals)
-                        {
-                            string note = journal.Notes;
-                            if (!note.Equals(""))
-                            {
-                                MonthHours monthHours = new MonthHours(note);
-                                listMonthHours.Add(monthHours);
-                            }
-                        }
-                    }
+                    //    foreach (var journal in issue_jornals.Journals)
+                    //    {
+                    //        string note = journal.Notes;
+                    //        if (!note.Equals(""))
+                    //        {
+                    //            MonthHours monthHours = new MonthHours(note);
+                    //            listMonthHours.Add(monthHours);
+                    //        }
+                    //    }
+                    //}
                 }
 
                 parametr = new NameValueCollection { { "project_id", "*" } };
                 List<Project> listProjectRedm = redmineManager.GetObjects<Project>(parametr);
 
                 countTotalRecord = listProjectRedm.Count;
-                SetInitProgBar(progressBar, 0, countTotalRecord, 1);                
+                SetInitProgBar(progressBar, 0, countTotalRecord, 1);
                 foreach (Project project in listProjectRedm)
                 {
                     listProject.Add(project);
                     curReadRecord++;
                     progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
-                    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
-                                                        "/ " + countTotalRecord;
+                    progressBar.InvokeIfNeeded(delegate
+                    {
+                        progressBar.CustomText = "Запись № " + progressBar.Value +
+                       "/ " + countTotalRecord;
                     });
-                    Debug.WriteLine(curReadRecord);
-                    Debug.WriteLine("str # 249");
-                }                
-                
-                
-                parametr = new NameValueCollection { { "user_id", "*" } };
+                }
+
+
+                parametr = new NameValueCollection { { "spent_on", ">=" + GetFirstDateCurYear() } };//{ "user_id", "*" }
                 List<TimeEntry> listTimeEntryRedm = redmineManager.GetObjects<TimeEntry>(parametr);
+
+                //List<TimeEntry> listTimeEntryUnique = new List<TimeEntry>();
+
+                TimeEntry timeUniqe;
+
+                for (int i = 0; i < listTimeEntryRedm.Count; i++)
+                {
+                    TimeEntry timeI = listTimeEntryRedm[i];
+                    timeUniqe = timeI;
+
+                    int j = i + 1;
+                    while (j < listTimeEntryRedm.Count)
+                    {
+                        TimeEntry timeJ = listTimeEntryRedm[j];
+                        if ((timeI.User.Id == timeJ.User.Id) &
+                             (timeI.Project.Id == timeJ.Project.Id) &
+                             (timeI.Activity.Id == timeJ.Activity.Id) &
+                             (timeI.Id != timeJ.Id) &
+                             (timeI.SpentOn.Value.Date.Month == timeJ.SpentOn.Value.Date.Month))
+                        {
+
+                            // TODO добавить поиск даты старта и даты финиша суммарной задчи timeI
+                            DateTime startDateTimeI = timeI.GetDateValue("Дата старта", TypeDates.Start);
+                            DateTime finishDateTimeI = timeI.GetDateValue("Дата завершения", TypeDates.Finish);
+
+                            DateTime startDateTimeJ = timeJ.GetDateValue("Дата старта", TypeDates.Start);
+                            DateTime finishDateTimeJ = timeJ.GetDateValue("Дата завершения", TypeDates.Finish);
+
+                            if (startDateTimeI.CompareTo(startDateTimeJ) > 0)
+                            {
+                                timeI.SetDateValue("Дата старта", startDateTimeJ);
+                            }
+
+                            if (finishDateTimeI.CompareTo(finishDateTimeJ) < 0)
+                            {
+                                timeI.SetDateValue("Дата завершения", finishDateTimeJ);
+                            }
+
+                            timeI.Hours += timeJ.Hours;
+                            listTimeEntryRedm.Remove(timeJ);
+                        }
+                        else j++;
+                    }
+                }
 
                 countTotalRecord = listTimeEntryRedm.Count;
                 SetInitProgBar(progressBar, 0, countTotalRecord, 1);
-                foreach (var time in listTimeEntryRedm)
+
+                var qTimeEntryAll = from time in listTimeEntryRedm
+                                    from userRedmine in listUserRedmine
+                                    from project in listProject
+                                    where time.User.Id == userRedmine.Value.Id
+                                    where ((time.Project.Id == project.Id) & project.IsPublic)
+                                    select new
+                                    {
+                                        listIssue = userRedmine.listIssue,
+                                        listProject = userRedmine.listProject,
+                                        userRedmine = userRedmine,
+                                        listUser = listUser,
+                                        Value = time
+                                    };                
+
+                foreach (var time in qTimeEntryAll)
                 {                    
-                    UserRedmine userRedmine = listUserRedmine.Find(x => x.Value.Id == time.User.Id);
-                    Project project = listProject.Find(x => x.Id == time.Project.Id);
-                    curReadRecord++;
-                    progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
-                    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
-                                                        "/ " + countTotalRecord;
-                    });
-                    Debug.WriteLine(curReadRecord);
-                    Debug.WriteLine("str # 269");
-                    if (userRedmine != null)
-                    {                        
-                        if (project != null)
-                        {
-                            if (project.IsPublic)
-                            {
-                                UserTimeEntry userTimeEntry = new UserTimeEntry(userRedmine.listIssue, userRedmine.listProject, 
-                                                                                userRedmine, listUser);
-                                userTimeEntry.Value = time;
-                                userRedmine.listUserTimeEntry.Add(userTimeEntry);
-                            }
-                        }                        
-                    }
+                    UserTimeEntry userTimeEntry = new UserTimeEntry(time.listIssue, time.listProject,
+                                                                    time.userRedmine, time.listUser);
+                    userTimeEntry.Value = time.Value;
+                    time.userRedmine.listUserTimeEntry.Add(userTimeEntry);
                 }
+
+                //foreach (var time in listTimeEntryRedm)
+                //{                    
+                //    UserRedmine userRedmine = listUserRedmine.Find(x => x.Value.Id == time.User.Id);
+                //    Project project = listProject.Find(x => x.Id == time.Project.Id);
+                //    curReadRecord++;
+                //    progressBar.InvokeIfNeeded(delegate { progressBar.PerformStep(); });
+                //    progressBar.InvokeIfNeeded(delegate {progressBar.CustomText = "Запись № " + progressBar.Value +
+                //                                        "/ " + countTotalRecord;
+                //    });                    
+                //    if (userRedmine != null)
+                //    {                        
+                //        if (project != null)
+                //        {
+                //            if (project.IsPublic)
+                //            {
+                //                UserTimeEntry userTimeEntry = new UserTimeEntry(userRedmine.listIssue, userRedmine.listProject, 
+                //                                                                userRedmine, listUser);
+                //                userTimeEntry.Value = time;
+                //                userRedmine.listUserTimeEntry.Add(userTimeEntry);
+                //            }
+                //        }                        
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -298,41 +445,35 @@ namespace WinRedminePlaning
         {
             bool isEqual = false;
 
-            ExcelUserTimeEntry excelUserTimeEntry = listExcelTimeEntry.Find(x => ((x.ProjectName == userTimeEntry.ProjectName) & 
-                                                                                  (x.IssueName == userTimeEntry.IssueName) & 
+            ExcelUserTimeEntry excelUserTimeEntry = listExcelTimeEntry.Find(x => ((x.ProjectName == userTimeEntry.ProjectName) &
+                                                                                  (x.IssueName == userTimeEntry.IssueName) &
                                                                                   (x.Comment == userTimeEntry.Comment) &
                                                                                   (x.ActivityName == userTimeEntry.ActivityName)));
 
             if (excelUserTimeEntry != null)
             {
-                isEqual = true;                
-            }                       
+                isEqual = true;
+            }
 
             return isEqual;
         }
 
-        private void FindEqualTimeEntry(UserTimeEntry iUserTimeEntry, 
+        private void FindEqualTimeEntry(UserTimeEntry iUserTimeEntry,
                                         List<UserTimeEntry> listUserTimeEntry, out ExcelUserTimeEntry excelTimeEntry)
-        {            
-            excelTimeEntry = new ExcelUserTimeEntry(iUserTimeEntry.ProjectName, iUserTimeEntry.IssueName, 
-                                                    iUserTimeEntry.Comment, iUserTimeEntry.ActivityName, 
-                                                    iUserTimeEntry.HeadName, iUserTimeEntry.DateStart, 
+        {
+            excelTimeEntry = new ExcelUserTimeEntry(iUserTimeEntry.ProjectName, iUserTimeEntry.IssueName,
+                                                    iUserTimeEntry.Comment, iUserTimeEntry.ActivityName,
+                                                    iUserTimeEntry.HeadName, iUserTimeEntry.DateStart,
                                                     iUserTimeEntry.DateFinish, iUserTimeEntry.Hours);
 
             int iIndex = 0;
             while (iIndex < listUserTimeEntry.Count)
             {
                 UserTimeEntry jUserTimeEntry = listUserTimeEntry[iIndex];
-                if (((jUserTimeEntry.ProjectName == iUserTimeEntry.ProjectName) &
-                    (jUserTimeEntry.IssueName == iUserTimeEntry.IssueName) &
+                if ((jUserTimeEntry.ProjectName == iUserTimeEntry.ProjectName) &
                     (jUserTimeEntry.ActivityName == iUserTimeEntry.ActivityName) &
-                    (jUserTimeEntry.Value.Id != iUserTimeEntry.Value.Id)) ||
-                    
-                    ((jUserTimeEntry.ProjectName == iUserTimeEntry.ProjectName) &
-                    (jUserTimeEntry.Comment == iUserTimeEntry.Comment) & 
-                    (jUserTimeEntry.ActivityName == iUserTimeEntry.ActivityName) &
-                    (jUserTimeEntry.Value.Id != iUserTimeEntry.Value.Id)))
-                {                    
+                    (jUserTimeEntry.Value.Id != iUserTimeEntry.Value.Id))
+                {
                     if (jUserTimeEntry.DateFinish > excelTimeEntry.DateFinish)
                     {
                         excelTimeEntry.DateFinish = jUserTimeEntry.DateFinish;
@@ -340,17 +481,17 @@ namespace WinRedminePlaning
                     excelTimeEntry.Hours = excelTimeEntry.Hours + jUserTimeEntry.Hours;
                 }
                 iIndex++;
-            }            
+            }
         }
 
         public void GetExcelTimeEntry(UserRedmine userRedmine)
-        {            
+        {
             userRedmine.listExcelUserTimeEntry.Clear();
 
             int iIndex = 0;
 
             while (iIndex < userRedmine.listMounthUserTimeEntry.Count)
-            {                    
+            {
                 UserTimeEntry iUserTimeEntry = userRedmine.listMounthUserTimeEntry[iIndex];
                 if (!isExistExcelTimeEntry(iUserTimeEntry, userRedmine.listExcelUserTimeEntry))
                 {
@@ -363,7 +504,7 @@ namespace WinRedminePlaning
                     }
                 }
                 iIndex++;
-            }                            
+            }
         }
 
         public void GetMounthUserTimeEntry(int year, int month)
@@ -382,14 +523,14 @@ namespace WinRedminePlaning
                     userRedmine.listMounthUserTimeEntry.Clear();
                     foreach (UserTimeEntry userTimeEntry in userRedmine.listUserTimeEntry)
                     {
-                        if ( (userTimeEntry.DateStart.Month == month) & (userTimeEntry.DateStart.Year == year))
+                        if ((userTimeEntry.DateStart.Month == month) & (userTimeEntry.DateStart.Year == year))
                         {
                             userRedmine.listMounthUserTimeEntry.Add(userTimeEntry);
                         }
                     }
                     userRedmine.listMounthUserTimeEntry.Sort();
 
-                    GetExcelTimeEntry(userRedmine);                    
+                    GetExcelTimeEntry(userRedmine);
                 }
             }
         }
@@ -411,6 +552,6 @@ namespace WinRedminePlaning
             userRedmine = user;
             return Id;
         }
-        
+
     }
 }

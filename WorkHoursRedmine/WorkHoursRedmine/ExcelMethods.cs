@@ -149,7 +149,13 @@ namespace WinRedminePlaning
                             workSheet.Cells[iCurRow, 1].Value2 = num;
 
                             //A = column[2] + iCurRow.ToString();
-                            workSheet.Cells[iCurRow, 2].Value2 = excelUserTimeEntry.IssueName;
+                            workSheet.Cells[iCurRow, 2].Value2 = (!string.IsNullOrEmpty(excelUserTimeEntry.ActivityName) ?
+                                                                  excelUserTimeEntry.ActivityName : string.Empty) +
+                                                                 (!string.IsNullOrEmpty(excelUserTimeEntry.IssueName) ?
+                                                                  "\\" + excelUserTimeEntry.IssueName : string.Empty); 
+                                                                  //+
+                                                                 //(!string.IsNullOrEmpty(excelUserTimeEntry.Comment) ?
+                                                                 // "\\" + excelUserTimeEntry.Comment : string.Empty);
 
                             workSheet.Cells[iCurRow, 3].Value2 = excelUserTimeEntry.ProjectName;
 

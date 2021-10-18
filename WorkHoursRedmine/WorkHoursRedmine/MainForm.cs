@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,13 +22,32 @@ namespace WinRedminePlaning
 
         string[] activityNotWorkHours = new string[3] { "Отпуск", "Больничный", "Отгул" };
 
+        private static Assembly ResolveEventHandler(Object sender, ResolveEventArgs args)
+        {
+            String dllName = new AssemblyName(args.Name).Name + ".dll";
+            var assem = Assembly.GetExecutingAssembly();
+            String resourceName = assem.GetManifestResourceNames().FirstOrDefault(rn =>
+            rn.EndsWith(dllName));
+            if (resourceName == null) return null; // Not found, maybe another handler will find it
+            using (var stream = assem.GetManifestResourceStream(resourceName))
+            {
+                Byte[] assemblyData = new Byte[stream.Length];
+                stream.Read(assemblyData, 0, assemblyData.Length);
+                return Assembly.Load(assemblyData);
+            }
+        }
+
         public MainForm()
         {
             InitializeComponent();
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.AssemblyResolve += ResolveEventHandler;
+            int curYear = DateTime.Now.Year;
+            textYear.Text = curYear.ToString();
             TextProgressBar progressBar = new TextProgressBar();
             progressBar.Dock = DockStyle.Fill;
             panelBar.Controls.Add(progressBar);
-            manager = Manager.GetInstance(progressBar);
+            manager = Manager.GetInstance(progressBar, textYear);
 
             ToolStripMenuItem emailSendMenuItem = new ToolStripMenuItem("Отправить сообщение специалистам");
             contextMenuStrip1.Items.Add(emailSendMenuItem);
@@ -196,21 +216,30 @@ namespace WinRedminePlaning
         }
         private void GetDataFromRedmine(object mounth)
         {
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+
             but_loadRedmine.InvokeIfNeeded(delegate { but_loadRedmine.Enabled = false; }) ;
             panelBar.InvokeIfNeeded(delegate { panelBar.Visible = true; });
             //int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
+            
             manager.GetUserFromRedmine(bossName); //new string[2] { "Арбузов Владимир Леонидович", "Мазилкин Денис Александрович" });
-            manager.GetMounthUserTimeEntry(DateTime.Now.Year, (int)mounth);
+            //manager.GetDataFromRedmine(); // проверка метода для получения данных из redmine с помощью LINQ
+            //manager.GetMounthUserTimeEntry(DateTime.Now.Year, (int)mounth);
+            manager.GetMounthUserTimeEntry(int.Parse(textYear.Text), (int)mounth);
+
             ShowUserRedmineThread();
             ShowMonthHours(manager.monthValueHours.Value);
             ShowUserName("Пользователь: -");
 
             panelBar.InvokeIfNeeded(delegate { panelBar.Visible = false; });
             but_loadRedmine.InvokeIfNeeded(delegate { but_loadRedmine.Enabled = true; });
+
+            //watch.Stop();
+            //MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds / 1000).ToString() + " сек");
         }
         private void but_loadRedmine_Click(object sender, EventArgs e)
         {
-            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            
 
             int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
             ParameterizedThreadStart getDataFromRedmine = new ParameterizedThreadStart(GetDataFromRedmine);
@@ -227,8 +256,7 @@ namespace WinRedminePlaning
             //labelUserName.Text = "Пользователь: -";
             //ShowUserName("Пользователь: -");
 
-            //watch.Stop();
-            //MessageBox.Show("Данные загружены за " + (watch.ElapsedMilliseconds/1000).ToString() + " сек");
+            
             //but_loadRedmine.Enabled = true;
         }
 
@@ -298,7 +326,8 @@ namespace WinRedminePlaning
         {
             int mounth = ((KeyValuePair<int, string>)comboMounth.SelectedItem).Key;
 
-            manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
+            //manager.GetMounthUserTimeEntry(DateTime.Now.Year, mounth);
+            manager.GetMounthUserTimeEntry(int.Parse(textYear.Text), mounth);
             //lab_MonthHours.Text = "Кол-во раб. часов: " + manager.monthValueHours.Value.ToString();
             ShowMonthHours(manager.monthValueHours.Value);
             listViewTimeEntry.Items.Clear();

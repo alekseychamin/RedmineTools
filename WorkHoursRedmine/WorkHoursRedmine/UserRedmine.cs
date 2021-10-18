@@ -278,24 +278,31 @@ namespace WinRedminePlaning
         {
             get
             {
-                //return (DateTime)Value.SpentOn;
-                string res = "";
-                foreach (var customField in Value.CustomFields)
-                {
-                    if (customField.Name.Contains("Дата старта"))
-                    {
-                        res = customField.Values[0].Info;
-                    }
-                }
 
-                if (res != "")
-                {
-                    DateTime date;
-                    date = Convert.ToDateTime(res);
-                    return date;
-                }
-                else
-                    return DateFirstWork;
+                //string res = "";
+                //foreach (var customField in Value.CustomFields)
+                //{
+                //    if (customField.Name.Contains("Дата старта"))
+                //    {
+                //        res = customField.Values[0].Info;
+                //    }
+                //}
+
+                //if (res != "")
+                //{
+                //    DateTime date;
+                //    date = Convert.ToDateTime(res);
+                //    return date;
+                //}
+                //else
+                //    return DateFirstWork;
+
+                return Value.GetDateValue("Дата старта", TypeDates.Start);
+            }
+
+            set
+            {
+                Value.SetDateValue("Дата старта", value);
             }
         }
 
@@ -303,47 +310,36 @@ namespace WinRedminePlaning
         {
             get
             {
-                //DateTime stepDate = DateStart;
-                //DateTime lastDate = GetLastWorkDay(stepDate.Year, stepDate.Month);
+                //string res = "";
+                //DateTime lastWorkDay = GetLastWorkDay(DateFirstWork.Year, DateFirstWork.Month);
 
-                //int countDay = (int)Hours / 8;
-
-                //int i = 1;
-                //while (i <= countDay)
+                //foreach (var customField in Value.CustomFields)
                 //{
-                //    if (stepDate.Equals(lastDate))
-                //        break;
-                //    stepDate = stepDate.AddDays(1);
-                //    if ((stepDate.DayOfWeek != DayOfWeek.Saturday) & (stepDate.DayOfWeek != DayOfWeek.Sunday))
-                //        i++;
+                //    if (customField.Name.Contains("Дата завершения"))
+                //    {
+                //        res = customField.Values[0].Info;
+                //    }
                 //}
 
-                //return stepDate;
+                //if (res != "")
+                //{
+                //    DateTime date;
+                //    date = Convert.ToDateTime(res);
+                //    if (date.CompareTo(lastWorkDay) == 1)
+                //    {
+                //        date = lastWorkDay;
+                //    }
+                //    return date;
+                //}
+                //else
+                //    return lastWorkDay;
 
-                string res = "";
-                DateTime lastWorkDay = GetLastWorkDay(DateFirstWork.Year, DateFirstWork.Month);
+                return Value.GetDateValue("Дата завершения", TypeDates.Finish);
+            }
 
-                foreach (var customField in Value.CustomFields)
-                {
-                    if (customField.Name.Contains("Дата завершения"))
-                    {
-                        res = customField.Values[0].Info;
-                    }
-                }
-
-                if (res != "")
-                {
-                    DateTime date;
-                    date = Convert.ToDateTime(res);
-                    if (date.CompareTo(lastWorkDay) == 1)
-                    {
-                        date = lastWorkDay;
-                    }
-                    return date;
-                }
-                else
-                    return lastWorkDay;
-
+            set
+            {
+                Value.SetDateValue("Дата завершения", value);
             }
         }
 
@@ -351,8 +347,7 @@ namespace WinRedminePlaning
         {
             get
             {
-                DateTime spentOn = (DateTime)Value.SpentOn;
-                //DateTime spentOn = DateStart;
+                DateTime spentOn = (DateTime)Value.SpentOn;                
                 DateTime dateFirstWork = new DateTime(spentOn.Year, spentOn.Month, 1);
 
                 while ((dateFirstWork.DayOfWeek == DayOfWeek.Saturday) | (dateFirstWork.DayOfWeek == DayOfWeek.Sunday))
