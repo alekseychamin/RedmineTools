@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,9 +22,26 @@ namespace WinRedminePlaning
 
         string[] activityNotWorkHours = new string[3] { "Отпуск", "Больничный", "Отгул" };
 
+        private static Assembly ResolveEventHandler(Object sender, ResolveEventArgs args)
+        {
+            String dllName = new AssemblyName(args.Name).Name + ".dll";
+            var assem = Assembly.GetExecutingAssembly();
+            String resourceName = assem.GetManifestResourceNames().FirstOrDefault(rn =>
+            rn.EndsWith(dllName));
+            if (resourceName == null) return null; // Not found, maybe another handler will find it
+            using (var stream = assem.GetManifestResourceStream(resourceName))
+            {
+                Byte[] assemblyData = new Byte[stream.Length];
+                stream.Read(assemblyData, 0, assemblyData.Length);
+                return Assembly.Load(assemblyData);
+            }
+        }
+
         public MainForm()
         {
             InitializeComponent();
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.AssemblyResolve += ResolveEventHandler;
             int curYear = DateTime.Now.Year;
             textYear.Text = curYear.ToString();
             TextProgressBar progressBar = new TextProgressBar();
